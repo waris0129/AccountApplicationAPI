@@ -20,9 +20,13 @@ public class BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Column(nullable = false,updatable = false)
     private String createdBy;
+    @Column(nullable = false,updatable = false)
     private LocalDate createdTime;
+    @Column(nullable = false)
     private String updatedBy;
+    @Column(nullable = false)
     private LocalDate updatedTime;
 
     @PrePersist // prePersist to be updated after performing authentication part
