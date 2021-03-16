@@ -6,8 +6,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import java.math.BigDecimal;
+import java.util.List;
 
 @Entity
 @Getter
@@ -16,10 +19,12 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class InvoiceProduct extends BaseEntity{
 
+
     @OneToOne
-    private Invoice invoiceId;
-    @OneToOne
-    private Product productId;
+    @JoinColumn(name = "invoice_id")
+    private Invoice invoice;
+    @OneToMany
+    private List<Product> products;
     private BigDecimal unitPrice;
     private Integer qty;
 

@@ -1,13 +1,12 @@
 package com.account.entity;
 
+import com.account.enums.ProductCategory;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 
 @Entity
 @Setter
@@ -16,9 +15,13 @@ import javax.persistence.OneToOne;
 @AllArgsConstructor
 public class Category extends BaseEntity{
 
-    private String description;
-    @OneToOne
-    private Company companyId;
+    @Enumerated(EnumType.STRING)
+    private ProductCategory category;
+
+    @ManyToOne
+    @JoinColumn(name = "company_id")
+    private Company company;
+
     private Boolean enabled;
 
 }

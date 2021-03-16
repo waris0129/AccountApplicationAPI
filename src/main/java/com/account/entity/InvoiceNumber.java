@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
 @Entity
@@ -15,8 +17,10 @@ import javax.persistence.OneToOne;
 @AllArgsConstructor
 public class InvoiceNumber extends BaseEntity {
 
-    @OneToOne
-    private Company companyId;
+    @ManyToOne
+    @JoinColumn(name = "company_id")
+    private Company company;
+
     private Integer year;
     private Integer invoiceNumber;
 }

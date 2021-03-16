@@ -1,12 +1,13 @@
 package com.account.entity;
 
+import com.account.enums.InvoiceStatus;
+import com.account.enums.InvoiceType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
@@ -16,16 +17,27 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class Invoice extends BaseEntity {
 
+    @Column(unique = true)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private String invoiceNo;
-    private String invoiceStatus;
+
+    @Enumerated(EnumType.STRING)
+    private InvoiceStatus invoiceStatus;
+
     @OneToOne
     private InvoiceNumber invoiceNumberId;
-    private String invoiceType;
+
+    @Enumerated(EnumType.STRING)
+    private InvoiceType invoiceType;
+
     private LocalDate invoiceDate;
+
     @OneToOne
     private SPTable spTableId;
-    @OneToOne
-    private Company companyId;
+
+    @ManyToOne
+    @JoinColumn(name = "company_id")
+    private Company company;
     private Boolean enabled;
 
 }
