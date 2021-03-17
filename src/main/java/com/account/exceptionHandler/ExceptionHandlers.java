@@ -20,4 +20,13 @@ public class ExceptionHandlers {
     }
 
 
+
+    @ExceptionHandler(AccountingApplicationException.class)
+    public ResponseEntity<ResponseWrapper> accountingApplicationException(AccountingApplicationException accountingApplicationException){
+        String message = accountingApplicationException.getMessage();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ResponseWrapper.builder().code(HttpStatus.BAD_REQUEST.value()).success(false).message(message).build());
+    }
+
+
+
 }

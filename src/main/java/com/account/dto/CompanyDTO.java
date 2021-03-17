@@ -1,5 +1,6 @@
 package com.account.dto;
 
+import com.account.enums.CompanyStatus;
 import com.account.enums.States;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,6 +24,7 @@ public class CompanyDTO{
     private String email;
     private LocalDate establishDate;
     private Boolean enabled;
+    private CompanyStatus companyStatus;
 
 
 }

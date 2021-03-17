@@ -16,7 +16,7 @@ public class MapperUtility {
 
 
     public <T> T convert(Object from, T to){
-        return modelMapper.map(from,(Type)to);
+        return modelMapper.map(from,(Type)to.getClass());
     }
 
 

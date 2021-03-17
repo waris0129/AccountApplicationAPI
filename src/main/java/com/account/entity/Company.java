@@ -1,11 +1,11 @@
 package com.account.entity;
 
+import com.account.enums.CompanyStatus;
 import com.account.enums.States;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.Where;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -45,6 +45,9 @@ public class Company extends BaseEntity{
     @Column(nullable = false)
     private LocalDate establishDate;
     private Boolean enabled;
+
+    @Enumerated(EnumType.STRING)
+    private CompanyStatus companyStatus;
 
 
 }

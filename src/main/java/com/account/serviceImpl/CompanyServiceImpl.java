@@ -3,6 +3,8 @@ package com.account.serviceImpl;
 import com.account.Mapper.MapperUtility;
 import com.account.dto.CompanyDTO;
 import com.account.entity.Company;
+import com.account.enums.CompanyStatus;
+import com.account.exceptionHandler.AccountingApplicationException;
 import com.account.exceptionHandler.CompanyNotFoundException;
 import com.account.exceptionHandler.ExceptionHandlers;
 import com.account.repository.CompanyRepository;
@@ -22,9 +24,20 @@ public class CompanyServiceImpl implements CompanyService {
     private MapperUtility mapperUtility;
 
     @Override
-    public CompanyDTO save(CompanyDTO companyDTO) {
+    public CompanyDTO save(CompanyDTO companyDTO) throws AccountingApplicationException {
 
-        return null;
+        Optional<Company> foundCompany = companyRepository.findByTitle(companyDTO.getTitle());
+        if(foundCompany.isPresent())
+            throw new AccountingApplicationException("Company is already existed");
+
+        companyDTO.setEnabled(true);
+        companyDTO.setCompanyStatus(CompanyStatus.ACTIVE);
+
+        Company company = mapperUtility.convert(companyDTO,new Company());
+
+        Company createCompany = companyRepository.save(company);
+
+        return mapperUtility.convert(createCompany,new CompanyDTO());
     }
 
     @Override
