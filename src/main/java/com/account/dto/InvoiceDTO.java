@@ -3,7 +3,7 @@ package com.account.dto;
 
 import com.account.entity.Company;
 import com.account.entity.InvoiceNumber;
-import com.account.entity.SPTable;
+import com.account.entity.Vendor;
 import com.account.enums.InvoiceStatus;
 import com.account.enums.InvoiceType;
 import lombok.AllArgsConstructor;
@@ -25,7 +25,7 @@ public class InvoiceDTO{
     private InvoiceNumber invoiceNumberId;
     private InvoiceType invoiceType;
     private LocalDate invoiceDate;
-    private SPTable spTableId;
+    private Vendor vendorId;
     private Company company;
     private Boolean enabled;
 

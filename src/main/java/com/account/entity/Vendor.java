@@ -3,6 +3,7 @@ package com.account.entity;
 
 import com.account.enums.RegistrationType;
 import com.account.enums.States;
+import com.account.enums.VendorStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,7 +17,7 @@ import javax.validation.constraints.Email;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class SPTable extends BaseEntity {
+public class Vendor extends BaseEntity {
 
     @Column(nullable = false)
     private String companyName;
@@ -28,7 +29,7 @@ public class SPTable extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "company_id")
-    private Company companyId;
+    private Company company;
 
     @Enumerated(EnumType.STRING)
     private RegistrationType type;
@@ -39,5 +40,10 @@ public class SPTable extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private States state;
 
+    @Enumerated(EnumType.STRING)
+    private VendorStatus status;
+
     private Boolean enabled;
+
+    private Boolean deleted;
 }

@@ -25,7 +25,7 @@ public class Invoice extends BaseEntity {
     private InvoiceStatus invoiceStatus;
 
     @OneToOne
-    private InvoiceNumber invoiceNumberId;
+    private InvoiceNumber invoiceNumber;
 
     @Enumerated(EnumType.STRING)
     private InvoiceType invoiceType;
@@ -33,7 +33,7 @@ public class Invoice extends BaseEntity {
     private LocalDate invoiceDate;
 
     @OneToOne
-    private SPTable spTableId;
+    private Vendor vendor;
 
     @ManyToOne
     @JoinColumn(name = "company_id")

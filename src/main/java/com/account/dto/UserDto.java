@@ -1,10 +1,8 @@
 package com.account.dto;
 
-import com.account.entity.BaseEntity;
-import com.account.entity.Role;
+
 import com.account.enums.UserStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
