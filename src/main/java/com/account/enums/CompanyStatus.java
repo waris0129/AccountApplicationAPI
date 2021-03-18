@@ -2,7 +2,7 @@ package com.account.enums;
 
 public enum CompanyStatus {
 
-    ACTIVE("Active"),IN_ACTIVE("In_Activate"),CLOSED("Closed");
+    ACTIVE("Active"),IN_ACTIVE("In_Activate"),DELETED("Deleted");
 
     private final String value;
 

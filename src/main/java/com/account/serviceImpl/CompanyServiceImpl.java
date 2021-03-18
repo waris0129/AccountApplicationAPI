@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class CompanyServiceImpl implements CompanyService {
@@ -31,7 +32,8 @@ public class CompanyServiceImpl implements CompanyService {
             throw new AccountingApplicationException("Company is already existed");
 
         companyDTO.setEnabled(true);
-        companyDTO.setCompanyStatus(CompanyStatus.ACTIVE);
+        companyDTO.setStatus(CompanyStatus.ACTIVE);
+        companyDTO.setDeleted(false);
 
         Company company = mapperUtility.convert(companyDTO,new Company());
 
@@ -52,17 +54,76 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
-    public CompanyDTO update(CompanyDTO companyDTO) {
-        return null;
+    public CompanyDTO update(String title, CompanyDTO companyDTO) throws CompanyNotFoundException {
+
+        Optional<Company> company = companyRepository.findByTitle(title);
+        if(!company.isPresent())
+            throw new CompanyNotFoundException("Company not found");
+
+        Integer id = company.get().getId();
+        Boolean enable = company.get().getEnabled();
+        Boolean deleted = company.get().getDeleted();
+
+        Company updatedCompany = mapperUtility.convert(companyDTO,new Company());
+        updatedCompany.setId(id);
+        updatedCompany.setEnabled(enable);
+        updatedCompany.setTitle(title);
+        updatedCompany.setDeleted(deleted);
+
+        Company createdCompany = companyRepository.save(updatedCompany);
+
+        return mapperUtility.convert(createdCompany,new CompanyDTO());
     }
 
     @Override
-    public CompanyDTO delete(CompanyDTO companyDTO) {
-        return null;
+    public CompanyDTO update(CompanyDTO companyDTO) throws CompanyNotFoundException {
+
+        String title = companyDTO.getTitle();
+
+        Optional<Company> company = companyRepository.findByTitle(title);
+        if(!company.isPresent())
+            throw new CompanyNotFoundException("Company not found");
+
+        Integer id = company.get().getId();
+        Boolean enable = company.get().getEnabled();
+
+        Company updatedCompany = mapperUtility.convert(companyDTO,new Company());
+        updatedCompany.setId(id);
+        updatedCompany.setEnabled(enable);
+
+        Company createdCompany = companyRepository.save(updatedCompany);
+
+        return mapperUtility.convert(createdCompany,new CompanyDTO());
+    }
+
+    @Override
+    public CompanyDTO delete(String title) throws CompanyNotFoundException {
+
+        Optional<Company> foundCompany = companyRepository.findByTitle(title);
+
+        if(!foundCompany.isPresent())
+            throw new CompanyNotFoundException("Company not found");
+
+        Company deleteCompany = foundCompany.get();
+
+        deleteCompany.setStatus(CompanyStatus.DELETED);
+        deleteCompany.setTitle(deleteCompany.getId()+"_"+title);
+        deleteCompany.setDeleted(true);
+
+
+        Company savedCompany = companyRepository.save(deleteCompany);
+
+
+        return mapperUtility.convert(savedCompany,new CompanyDTO());
     }
 
     @Override
     public List<CompanyDTO> findAllCompanies() {
-        return null;
+
+        List<Company> companyList = companyRepository.findAll();
+
+        List<CompanyDTO> companyDTOList = companyList.stream().map(entity-> mapperUtility.convert(entity,new CompanyDTO())).collect(Collectors.toList());
+
+        return companyDTOList;
     }
 }

@@ -18,6 +18,4 @@ public class Role extends BaseEntity{
     @Column(nullable = false)
     private String name;
 
-    private Boolean enabled;
-
 }

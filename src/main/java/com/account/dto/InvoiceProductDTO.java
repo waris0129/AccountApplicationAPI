@@ -16,6 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 public class InvoiceProductDTO {
 
+    private Integer id;
     private Invoice invoice;
     private List<Product> products;
     private BigDecimal unitPrice;

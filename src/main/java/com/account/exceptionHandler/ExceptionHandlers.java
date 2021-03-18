@@ -28,5 +28,13 @@ public class ExceptionHandlers {
     }
 
 
+    @ExceptionHandler(UserNotFoundInSystem.class)
+    public ResponseEntity<ResponseWrapper> accountingApplicationException(UserNotFoundInSystem userNotFoundInSystem){
+        String message = userNotFoundInSystem.getMessage();
+        if(message.equals(""))
+            message = "User not found in system.";
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ResponseWrapper.builder().code(HttpStatus.BAD_REQUEST.value()).success(false).message(message).build());
+    }
+
 
 }

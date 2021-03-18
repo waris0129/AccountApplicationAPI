@@ -14,6 +14,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class InvoiceNumberDTO {
 
+    private Integer id;
     private Company company;
     private Integer year;
     private Integer invoiceNumber;

@@ -15,7 +15,8 @@ import javax.persistence.Entity;
 @AllArgsConstructor
 public class RoleDTO{
 
+    private Integer id;
     private String name;
-    private Boolean enabled;
+
 
 }

@@ -19,6 +19,7 @@ import javax.validation.constraints.Email;
 @AllArgsConstructor
 public class SPTableDTO{
 
+    private Integer id;
     private String companyName;
     private String phone;
     private String email;

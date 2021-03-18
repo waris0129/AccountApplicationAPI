@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/company")
 public class CompanyController {
@@ -19,7 +21,7 @@ public class CompanyController {
     private CompanyService companyService;
 
     @GetMapping("/new")
-    public CompanyDTO getEmptyCompanyDTOObject(){
+    public CompanyDTO getEmptyCompanyDTOObject(Model model){
         return new CompanyDTO();
     }
 
@@ -31,14 +33,32 @@ public class CompanyController {
     }
 
     @GetMapping("get/{title}")
-    public ResponseEntity<ResponseWrapper> findCompanyByTitle(@PathVariable("title") String title) throws CompanyNotFoundException {
+    public ResponseEntity<ResponseWrapper> findCompanyByTitle(@PathVariable("title") String title,Model model) throws CompanyNotFoundException {
         CompanyDTO foundCompanyDTO = companyService.findByTitle(title);
-        return ResponseEntity.status(HttpStatus.OK).body(ResponseWrapper.builder().code(HttpStatus.CREATED.value()).success(true).message("Company found successfully").data(foundCompanyDTO).build());
+        return ResponseEntity.status(HttpStatus.OK).body(ResponseWrapper.builder().code(HttpStatus.OK.value()).success(true).message("Company found successfully").data(foundCompanyDTO).build());
+    }
+
+    @PutMapping("/update/{title}")
+    public ResponseEntity<ResponseWrapper> updateCompany(@PathVariable("title") String title, @RequestBody CompanyDTO companyDTO, Model model) throws CompanyNotFoundException {
+        CompanyDTO updatedCompany = companyService.update(title, companyDTO);
+        return ResponseEntity.ok(ResponseWrapper.builder().code(HttpStatus.OK.value()).success(true).message("Company updated successfully").data(updatedCompany).build());
     }
 
 
 
+    @DeleteMapping("/delete/{title}")
+    public ResponseEntity<ResponseWrapper> deleteCompany(@PathVariable("title") String title) throws CompanyNotFoundException {
 
+        CompanyDTO companyDTO = companyService.delete(title);
+        return ResponseEntity.ok(ResponseWrapper.builder().code(HttpStatus.OK.value()).success(true).message("Company deleted successfully").build());
+
+    }
+
+    @GetMapping()
+    public ResponseEntity<ResponseWrapper> getAllCompany(){
+        List<CompanyDTO> companyDTOS = companyService.findAllCompanies();
+        return ResponseEntity.status(HttpStatus.OK).body(ResponseWrapper.builder().code(HttpStatus.OK.value()).success(true).message("Get All Company List successfully").data(companyDTOS).build());
+    }
 
 
 }

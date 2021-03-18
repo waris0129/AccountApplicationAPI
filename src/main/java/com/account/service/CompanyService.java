@@ -10,8 +10,9 @@ public interface CompanyService{
 
     CompanyDTO save(CompanyDTO companyDTO) throws AccountingApplicationException;
     CompanyDTO findByTitle(String title) throws CompanyNotFoundException;
-    CompanyDTO update(CompanyDTO companyDTO);
-    CompanyDTO delete(CompanyDTO companyDTO);
+    CompanyDTO update(String title, CompanyDTO companyDTO) throws CompanyNotFoundException;
+    CompanyDTO update(CompanyDTO companyDTO) throws CompanyNotFoundException;
+    CompanyDTO delete(String title) throws CompanyNotFoundException;
     List<CompanyDTO> findAllCompanies();
 
 

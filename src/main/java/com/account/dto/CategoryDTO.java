@@ -14,6 +14,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class CategoryDTO{
 
+    private Integer id;
     private ProductCategory category;
     private Company company;
     private Boolean enabled;

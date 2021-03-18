@@ -19,6 +19,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class InvoiceDTO{
 
+    private Integer id;
     private String invoiceNo;
     private InvoiceStatus invoiceStatus;
     private InvoiceNumber invoiceNumberId;

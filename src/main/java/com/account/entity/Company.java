@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,10 +19,10 @@ import java.time.LocalDate;
 @Setter
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
+@Where(clause = "deleted=false")
 public class Company extends BaseEntity{
 
-    @Column(unique = true,nullable = false,updatable = false)
+    @Column(nullable = false)
     private String title;
 
     @Column(nullable = false)
@@ -38,7 +39,7 @@ public class Company extends BaseEntity{
     @Column(nullable = false,updatable = false)
     private String representative;
 
-    @Email
+    @Email(message = "Email should be valid")
     @Column(nullable = false)
     private String email;
 
@@ -47,7 +48,8 @@ public class Company extends BaseEntity{
     private Boolean enabled;
 
     @Enumerated(EnumType.STRING)
-    private CompanyStatus companyStatus;
+    private CompanyStatus status;
 
+    private Boolean deleted;
 
 }

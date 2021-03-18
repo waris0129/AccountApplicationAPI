@@ -15,6 +15,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ProductDTO{
 
+    private Integer id;
     private String name;
     private String description;
     private Integer qty;
