@@ -9,10 +9,10 @@ import java.util.List;
 public interface UserService {
 
     UserDto save(UserDto userDto) throws AccountingApplicationException;
-    UserDto update(String email, UserDto userDto);
+    UserDto update(String email, UserDto userDto) throws UserNotFoundInSystem;
     UserDto update(UserDto userDto);
     UserDto getUser(String email) throws UserNotFoundInSystem;
-    UserDto deleteUser(String email);
+    UserDto deleteUser(String email) throws UserNotFoundInSystem;
     List<UserDto> getUserList();
     List<UserDto> getUserByRole(String role);
 

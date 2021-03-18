@@ -2,16 +2,20 @@ package com.account.serviceImpl;
 
 import com.account.Mapper.MapperUtility;
 import com.account.dto.UserDto;
+import com.account.entity.Company;
 import com.account.entity.User;
+import com.account.enums.UserStatus;
 import com.account.exceptionHandler.AccountingApplicationException;
 import com.account.exceptionHandler.UserNotFoundInSystem;
 import com.account.repository.UserRepository;
 import com.account.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -33,6 +37,7 @@ public class UserServiceImpl implements UserService {
 
         user.setEnabled(true);
         user.setDeleted(false);
+        user.setStatus(UserStatus.ACTIVE);
 
         User created = userRepository.save(user);
 
@@ -42,8 +47,33 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto update(String email, UserDto userDto) {
-        return null;
+    public UserDto update(String email, UserDto userDto) throws UserNotFoundInSystem {
+
+        Optional<User> foundUser = userRepository.findUserByEmail(email);
+
+        if(!foundUser.isPresent())
+            throw new UserNotFoundInSystem("");
+
+        User user = foundUser.get();
+        Company company = user.getCompany();
+        Boolean enable = user.getEnabled();
+        Boolean deleted = user.getDeleted();
+        Integer userId = user.getId();
+        UserStatus status = user.getStatus();
+
+        User updateUser = mapperUtility.convert(userDto,new User());
+        updateUser.setCompany(company);
+        updateUser.setEnabled(enable);
+        updateUser.setDeleted(deleted);
+        updateUser.setId(userId);
+        updateUser.setEmail(email);
+        updateUser.setStatus(status);
+
+        User savedUser = userRepository.save(updateUser);
+
+        UserDto updatedDTO = mapperUtility.convert(savedUser,new UserDto());
+
+        return updatedDTO;
     }
 
     @Override
@@ -65,17 +95,41 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto deleteUser(String email) {
-        return null;
+    public UserDto deleteUser(String email) throws UserNotFoundInSystem {
+
+        Optional<User> foundUser = userRepository.findUserByEmail(email);
+
+        if(!foundUser.isPresent())
+            throw new UserNotFoundInSystem("");
+
+        User user = foundUser.get();
+        user.setDeleted(true);
+        user.setStatus(UserStatus.DELETED);
+        user.setEmail(user.getId()+"_"+email);
+
+        User deletedUser = userRepository.save(user);
+
+        UserDto deletedUserDTO = mapperUtility.convert(deletedUser,new UserDto());
+
+        return deletedUserDTO;
     }
 
     @Override
     public List<UserDto> getUserList() {
-        return null;
+
+        List<User> users = userRepository.findAll();
+
+        List<UserDto> userDtoList = users.stream().map(entity->mapperUtility.convert(entity,new UserDto())).collect(Collectors.toList());
+
+        return userDtoList;
     }
 
     @Override
     public List<UserDto> getUserByRole(String role) {
-        return null;
+
+        List<User> users = userRepository.getAllByRole(role);
+        List<UserDto> userDtoList = users.stream().map(entity->mapperUtility.convert(entity,new UserDto())).collect(Collectors.toList());
+
+        return userDtoList;
     }
 }

@@ -2,7 +2,7 @@ package com.account.enums;
 
 public enum UserStatus {
 
-    ACTIVE("Active"),PEND("Pend"),CANCEL("Cancel");
+    ACTIVE("Active"),PEND("Pend"),DELETED("Deleted");
 
     private final String value;
 

@@ -1,5 +1,6 @@
 package com.account.entity;
 
+import com.account.enums.UserStatus;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -41,6 +42,9 @@ public class User extends BaseEntity{
     private Role role;
 
     private Boolean deleted;
+
+    @Enumerated(EnumType.STRING)
+    private UserStatus status;
 
 
 }

@@ -2,6 +2,7 @@ package com.account.dto;
 
 import com.account.entity.BaseEntity;
 import com.account.entity.Role;
+import com.account.enums.UserStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -22,11 +23,11 @@ public class UserDto {
     private String firstname;
     private String lastname;
     private String password;
-    @JsonIgnore
     private Boolean enabled;
     private String phone;
     private CompanyDTO company;
     private RoleDTO role;
+    private UserStatus status;
 
     @JsonIgnore
     private Boolean deleted;
