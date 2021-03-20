@@ -11,10 +11,14 @@ import com.account.exceptionHandler.AccountingApplicationException;
 import com.account.exceptionHandler.UserNotFoundInSystem;
 import com.account.repository.VendorRepository;
 import com.account.service.VendorService;
+import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class VendorServiceImpl implements VendorService {
@@ -111,12 +115,25 @@ public class VendorServiceImpl implements VendorService {
     @Override
     public List<VendorDTO> getAllVendorList() {
 
+        List<Vendor> vendorList = vendorRepository.findAll();
 
-        return null;
+        List<VendorDTO> vendorDTOList = vendorList.stream().map(entity-> mapperUtility.convert(entity,new VendorDTO())).collect(Collectors.toList());
+
+        return vendorDTOList;
     }
 
     @Override
-    public List<VendorDTO> getAllVendorByStatus(String status) {
-        return null;
+    public List<VendorDTO> getAllVendorByStatus(String status) throws AccountingApplicationException {
+        List<Vendor> vendorList = null;
+        Optional<VendorStatus> status1 = Arrays.stream(VendorStatus.values()).filter(p -> p.getValue().equalsIgnoreCase(status)).findAny();
+
+        if(status1.isPresent())
+            vendorList = vendorRepository.getAllVendorByStatus(status1.get());
+        else
+            throw new AccountingApplicationException("Only ACTIVE and PEND are supported");
+
+        List<VendorDTO> vendorDTOList = vendorList.stream().map(entity-> mapperUtility.convert(entity,new VendorDTO())).collect(Collectors.toList());
+
+        return vendorDTOList;
     }
 }

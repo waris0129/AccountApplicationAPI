@@ -13,6 +13,6 @@ public interface VendorService {
     VendorDTO update(String companyName, VendorDTO vendorDTO) throws UserNotFoundInSystem;
     VendorDTO delete(String companyName) throws UserNotFoundInSystem;
     List<VendorDTO> getAllVendorList();
-    List<VendorDTO> getAllVendorByStatus(String status);
+    List<VendorDTO> getAllVendorByStatus(String status) throws AccountingApplicationException;
 
 }

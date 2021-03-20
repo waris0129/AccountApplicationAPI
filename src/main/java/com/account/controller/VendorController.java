@@ -13,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController()
 @RequestMapping("/vendor")
 public class VendorController {
@@ -60,6 +62,22 @@ public class VendorController {
         VendorDTO  vendorDTO = vendorService.delete(companyName);
 
         return ResponseEntity.ok(ResponseWrapper.builder().code(HttpStatus.OK.value()).success(true).message("User is deleted successfully").build());
+    }
+
+
+    @GetMapping("/all")
+    public ResponseEntity<ResponseWrapper> getAllVendor(){
+        List<VendorDTO> vendorDTOList = vendorService.getAllVendorList();
+
+        return ResponseEntity.ok(ResponseWrapper.builder().code(HttpStatus.OK.value()).success(true).message("Get all vendor list successfully").data(vendorDTOList).build());
+    }
+
+
+    @GetMapping("/all/{status}")
+    public ResponseEntity<ResponseWrapper> getAllVendorByStatus(@PathVariable("status") String status) throws AccountingApplicationException {
+        List<VendorDTO> vendorDTOList = vendorService.getAllVendorByStatus(status);
+
+        return ResponseEntity.ok(ResponseWrapper.builder().code(HttpStatus.OK.value()).success(true).message("Get all vendor list by status successfully").data(vendorDTOList).build());
     }
 
 
