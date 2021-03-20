@@ -54,5 +54,14 @@ public class VendorController {
     }
 
 
+    @DeleteMapping("/delete/{companyName}")
+    public ResponseEntity<ResponseWrapper> delete(@PathVariable("companyName") String companyName) throws UserNotFoundInSystem {
+
+        VendorDTO  vendorDTO = vendorService.delete(companyName);
+
+        return ResponseEntity.ok(ResponseWrapper.builder().code(HttpStatus.OK.value()).success(true).message("User is deleted successfully").build());
+    }
+
+
 
 }

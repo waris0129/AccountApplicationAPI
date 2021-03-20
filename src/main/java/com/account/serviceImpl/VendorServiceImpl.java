@@ -91,12 +91,27 @@ public class VendorServiceImpl implements VendorService {
     }
 
     @Override
-    public VendorDTO delete(String companyName) {
-        return null;
+    public VendorDTO delete(String companyName) throws UserNotFoundInSystem {
+
+        Vendor foundVendor = vendorRepository.getByCompanyName(companyName);
+
+        if(foundVendor == null)
+            throw new UserNotFoundInSystem("");
+
+        foundVendor.setDeleted(true);
+        foundVendor.setStatus(VendorStatus.DELETED);
+
+        Vendor deleteVendor = vendorRepository.save(foundVendor);
+
+        VendorDTO dto = mapperUtility.convert(deleteVendor,new VendorDTO());
+
+        return dto;
     }
 
     @Override
     public List<VendorDTO> getAllVendorList() {
+
+
         return null;
     }
 

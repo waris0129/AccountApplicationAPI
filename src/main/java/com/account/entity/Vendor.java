@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -17,6 +18,7 @@ import javax.validation.constraints.Email;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Where(clause = "deleted=false")
 public class Vendor extends BaseEntity {
 
     @Column(nullable = false)
