@@ -1,10 +1,10 @@
 package com.account.entity;
 
-import com.account.enums.ProductCategory;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 
@@ -13,10 +13,10 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Where(clause = "enabled=true")
 public class Category extends BaseEntity{
 
-    @Enumerated(EnumType.STRING)
-    private ProductCategory category;
+    private String category;
 
     @ManyToOne
     @JoinColumn(name = "company_id")

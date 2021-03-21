@@ -20,10 +20,10 @@ public class ProductDTO{
     private String description;
     private Integer qty;
     private Integer price;
-    private Category categoryId;
+    private Category category;
     private Unit unit;
     private Integer lowLimitAlert;
     private Integer tax;
-    private Company company;
+    private CompanyDTO company;
     private Boolean enabled;
 }
