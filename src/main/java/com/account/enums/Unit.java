@@ -2,7 +2,7 @@ package com.account.enums;
 
 public enum Unit {
 
-    LB("LB"),GALLON("Gallon"), PACK("Pack"),INCH("Inch"),PIECE("Piece");
+    LB("LB"),GALLON("Gallon"), PACK("Pack"),INCH("Inch"),PIECE("Piece"),UNIT("Unit");
 
     private final String value;
 

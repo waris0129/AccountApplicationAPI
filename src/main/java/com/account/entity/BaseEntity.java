@@ -8,6 +8,8 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Getter
 @Setter
@@ -23,24 +25,24 @@ public class BaseEntity {
     @Column(nullable = false,updatable = false)
     private String createdBy;
     @Column(nullable = false,updatable = false)
-    private LocalDate createdTime;
+    private LocalDateTime createdTime;
     @Column(nullable = false)
     private String updatedBy;
     @Column(nullable = false)
-    private LocalDate updatedTime;
+    private LocalDateTime updatedTime;
 
     @PrePersist // prePersist to be updated after performing authentication part
     public void onPrePersist(){
         createdBy = "Admin";
-        createdTime = LocalDate.now();
+        createdTime = LocalDateTime.now();
         updatedBy = "Admin";
-        updatedTime = LocalDate.now();
+        updatedTime = LocalDateTime.now();
     }
 
     @PreUpdate // preUpdate to be updated after performing authentication part
     public void onPreUpdate(){
         updatedBy = "Admin";
-        updatedTime = LocalDate.now();
+        updatedTime = LocalDateTime.now();
     }
 
 
