@@ -22,7 +22,6 @@ public class InvoiceDTO{
     private Integer id;
     private String invoiceNo;
     private InvoiceStatus invoiceStatus;
-    private InvoiceNumber invoiceNumberId;
     private InvoiceType invoiceType;
     private LocalDate invoiceDate;
     private Vendor vendorId;

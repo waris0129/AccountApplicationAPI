@@ -3,3 +3,7 @@ VALUES ('Root','2021-01-05 00:00:00','Root','2021-01-05 00:00:00','Root'),
        ('Root','2021-01-05 00:00:00','Root','2021-01-05 00:00:00','Admin'),
        ('Root','2021-01-05 00:00:00','Root','2021-01-05 00:00:00','Manager'),
        ('Root','2021-01-05 00:00:00','Root','2021-01-05 00:00:00','Employee');
+
+
+insert into company values ('1','Admin','2021-03-21 18:12:00.348868','Admin','2021-03-21 18:12:00.348895','7900 Brompton st','','false','waris0129@gmail.com','true','2020-11-01','Waris Nigmat','TEXAS','ACTIVE','AAA Company','778900');
+

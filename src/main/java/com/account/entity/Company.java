@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.Where;
+import org.springframework.stereotype.Component;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -20,6 +21,7 @@ import java.time.LocalDate;
 @Getter
 @NoArgsConstructor
 @Where(clause = "deleted=false")
+@Component
 public class Company extends BaseEntity{
 
     @Column(nullable = false)

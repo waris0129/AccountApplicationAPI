@@ -17,15 +17,10 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class Invoice extends BaseEntity {
 
-    @Column(unique = true)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private String invoiceNo;
 
     @Enumerated(EnumType.STRING)
     private InvoiceStatus invoiceStatus;
-
-    @OneToOne
-    private InvoiceNumber invoiceNumber;
 
     @Enumerated(EnumType.STRING)
     private InvoiceType invoiceType;

@@ -4,18 +4,20 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.stereotype.Component;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class InvoiceNumber extends BaseEntity {
+@Component
+public class InvoiceNumber{
+
+    @Id
+    private Integer id;
 
     @ManyToOne
     @JoinColumn(name = "company_id")

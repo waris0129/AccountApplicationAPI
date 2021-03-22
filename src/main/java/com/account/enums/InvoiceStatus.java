@@ -2,7 +2,7 @@ package com.account.enums;
 
 public enum InvoiceStatus {
 
-    APPROVED("Approved"), PENDING("Pending"), CANCEL("Cancel"), REVIEW("Review");
+    APPROVED(" "), PENDING("Pending"), CANCEL("Cancel"), REVIEW("Review");
 
     private final String value;
 
