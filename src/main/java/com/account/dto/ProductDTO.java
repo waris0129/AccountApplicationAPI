@@ -16,6 +16,7 @@ import lombok.Setter;
 public class ProductDTO{
 
     private Integer id;
+    private String inventoryNo;
     private String name;
     private String description;
     private Integer qty;

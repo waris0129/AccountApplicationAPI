@@ -6,6 +6,7 @@ import com.account.entity.Category;
 import com.account.entity.Company;
 import com.account.entity.Product;
 import com.account.exceptionHandler.AccountingApplicationException;
+import com.account.repository.CompanyRepository;
 import com.account.repository.ProductRepository;
 import com.account.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,15 +23,20 @@ public class ProductServiceImpl implements ProductService {
     private MapperUtility mapperUtility;
     @Autowired
     private ProductRepository productRepository;
+    @Autowired
+    private CompanyRepository companyRepository;
+
+    private static Integer number = 0;
 
     @Override
     public ProductDTO saveProduct(ProductDTO productDTO) throws AccountingApplicationException {
 
+        String companyTitle = companyRepository.findById(1).get().getTitle();
+
+
         productDTO.setName(productDTO.getName().toUpperCase());
         productDTO.setEnabled(true);
-
-        if(productRepository.findByName(productDTO.getName()).isPresent())
-            throw new AccountingApplicationException("Product is already existed in system");
+        productDTO.setInventoryNo(companyTitle.toUpperCase().substring(0,3).trim()+"_"+productDTO.getName().toUpperCase()+"_00"+ ++number);
 
         Product product = mapperUtility.convert(productDTO, new Product());
         Product savedProduct = productRepository.save(product);
@@ -43,6 +49,19 @@ public class ProductServiceImpl implements ProductService {
     public ProductDTO findProductByName(String name) throws AccountingApplicationException {
 
         Optional<Product> foundProduct = productRepository.findByName(name.toUpperCase());
+
+        if(!foundProduct.isPresent())
+            throw new AccountingApplicationException("Product not found in system");
+
+        ProductDTO productDTO = mapperUtility.convert(foundProduct.get(),new ProductDTO());
+
+        return productDTO;
+    }
+
+
+    @Override
+    public ProductDTO findProductByInventoryNo(String inventoryNo) throws AccountingApplicationException {
+        Optional<Product> foundProduct = productRepository.findByInventoryNo(inventoryNo.toUpperCase());
 
         if(!foundProduct.isPresent())
             throw new AccountingApplicationException("Product not found in system");

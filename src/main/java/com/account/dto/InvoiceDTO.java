@@ -24,8 +24,8 @@ public class InvoiceDTO{
     private InvoiceStatus invoiceStatus;
     private InvoiceType invoiceType;
     private LocalDate invoiceDate;
-    private Vendor vendorId;
-    private Company company;
+    private VendorDTO vendor;
+    private CompanyDTO company;
     private Boolean enabled;
 
 }

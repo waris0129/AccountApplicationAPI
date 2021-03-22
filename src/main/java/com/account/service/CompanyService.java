@@ -14,6 +14,7 @@ public interface CompanyService{
     CompanyDTO update(CompanyDTO companyDTO) throws CompanyNotFoundException;
     CompanyDTO delete(String title) throws CompanyNotFoundException;
     List<CompanyDTO> findAllCompanies();
+    CompanyDTO findById(Integer id);
 
 
 

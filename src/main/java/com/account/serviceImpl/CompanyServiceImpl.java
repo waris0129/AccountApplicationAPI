@@ -25,6 +25,11 @@ public class CompanyServiceImpl implements CompanyService {
     private MapperUtility mapperUtility;
 
     @Override
+    public CompanyDTO findById(Integer id) {
+        return mapperUtility.convert(companyRepository.findById(id).get(),new CompanyDTO());
+    }
+
+    @Override
     public CompanyDTO save(CompanyDTO companyDTO) throws AccountingApplicationException {
 
         Optional<Company> foundCompany = companyRepository.findByTitle(companyDTO.getTitle());

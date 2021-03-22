@@ -7,3 +7,6 @@ VALUES ('Root','2021-01-05 00:00:00','Root','2021-01-05 00:00:00','Root'),
 
 insert into company values ('1','Admin','2021-03-21 18:12:00.348868','Admin','2021-03-21 18:12:00.348895','7900 Brompton st','','false','waris0129@gmail.com','true','2020-11-01','Waris Nigmat','TEXAS','ACTIVE','AAA Company','778900');
 
+insert into category values ('1','Admin','2021-03-21 20:38:44.742944','Admin','2021-03-21 20:38:44.742972','CAR','true','1');
+
+

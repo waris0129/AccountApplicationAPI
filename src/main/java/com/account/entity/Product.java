@@ -17,6 +17,8 @@ import javax.persistence.*;
 @Where(clause = "enabled=true")
 public class Product extends BaseEntity{
 
+
+    private String inventoryNo;
     private String name;
     private String description;
     private Integer qty;

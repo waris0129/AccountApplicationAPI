@@ -17,8 +17,8 @@ import java.util.List;
 public class InvoiceProductDTO {
 
     private Integer id;
-    private Invoice invoice;
-    private List<Product> products;
+    private InvoiceDTO invoice;
+    private List<ProductDTO> products;
     private BigDecimal unitPrice;
     private Integer qty;
 

@@ -40,6 +40,13 @@ public class ProductController {
         return ResponseEntity.ok(ResponseWrapper.builder().code(200).success(true).message("Product is found successfully").data(productDTO1).build());
     }
 
+    @GetMapping("/inventory/{inventoryNo}")
+    public ResponseEntity<ResponseWrapper> findProductByInventoryNo(@PathVariable("inventoryNo") String inventoryNo) throws AccountingApplicationException {
+
+        ProductDTO productDTO1 = productService.findProductByInventoryNo(inventoryNo);
+        return ResponseEntity.ok(ResponseWrapper.builder().code(200).success(true).message("Product is found successfully").data(productDTO1).build());
+    }
+
     @PutMapping("/update/{name}")
     public ResponseEntity<ResponseWrapper> updateProduct(@PathVariable("name") String name,@RequestBody ProductDTO productDTO) throws AccountingApplicationException {
 
