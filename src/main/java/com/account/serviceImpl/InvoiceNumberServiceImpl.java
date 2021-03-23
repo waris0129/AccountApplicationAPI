@@ -47,7 +47,7 @@ public class InvoiceNumberServiceImpl implements InvoiceNumberService {
 
         invoiceNumberRepository.save(invoiceNumber);
 
-        String createNumber = "#"+company.getTitle().toUpperCase().substring(0,4).trim()+"-"+
+        String createNumber = company.getTitle().toUpperCase().substring(0,4).trim()+"-"+
                               year+"-00"+number;
 
 

@@ -8,7 +8,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 @Getter
 @Setter
@@ -18,9 +20,5 @@ public class InvoiceProductDTO {
 
     private Integer id;
     private InvoiceDTO invoice;
-    private List<ProductDTO> products;
-    private BigDecimal unitPrice;
-    private Integer qty;
-
-
+    private List<SingleInvoiceProductDTO> singleInvoiceProductDTO;
 }

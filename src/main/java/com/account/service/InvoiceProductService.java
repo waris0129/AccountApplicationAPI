@@ -1,15 +1,14 @@
 package com.account.service;
 
 import com.account.dto.InvoiceProductDTO;
-import com.account.dto.ProductDTO;
-import com.account.entity.Product;
+import com.account.dto.SingleInvoiceProductDTO;
+import com.account.exceptionHandler.AccountingApplicationException;
 import com.account.exceptionHandler.CompanyNotFoundException;
-
-import java.util.List;
+import com.account.exceptionHandler.UserNotFoundInSystem;
 
 public interface InvoiceProductService {
 
-    InvoiceProductDTO createInvoiceView() throws CompanyNotFoundException;
-    InvoiceProductDTO addProductItem(ProductDTO productDTO) throws CompanyNotFoundException;
-
+    InvoiceProductDTO createNewInvoiceProductTemplate(String vendorName) throws CompanyNotFoundException, UserNotFoundInSystem;
+    InvoiceProductDTO addProductItem(String invoiceNumber, SingleInvoiceProductDTO singleInvoiceProductDTO) throws CompanyNotFoundException;
+    InvoiceProductDTO getInvoice(String invoiceNo) throws AccountingApplicationException;
 }

@@ -1,61 +1,95 @@
 package com.account.serviceImpl;
 
-import com.account.dto.InvoiceDTO;
-import com.account.dto.InvoiceProductDTO;
-import com.account.dto.ProductDTO;
-import com.account.dto.VendorDTO;
-import com.account.entity.InvoiceNumber;
+import com.account.Mapper.MapperUtility;
+import com.account.dto.*;
+import com.account.entity.InvoiceProduct;
+import com.account.entity.SingleInvoiceProduct;
+import com.account.enums.InvoiceStatus;
+import com.account.exceptionHandler.AccountingApplicationException;
 import com.account.exceptionHandler.CompanyNotFoundException;
-import com.account.repository.CompanyRepository;
+import com.account.exceptionHandler.UserNotFoundInSystem;
+import com.account.repository.InvoiceProductRepository;
+import com.account.repository.InvoiceRepository;
 import com.account.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
+import java.util.Optional;
 
 @Service
 public class InvoiceProductServiceImpl implements InvoiceProductService {
-
-    private InvoiceProductDTO invoiceProductDTO = new InvoiceProductDTO();
 
     @Autowired
     private InvoiceNumberService invoiceNumberService;
     @Autowired
     private CompanyService companyService;
-
-
     @Autowired
     private VendorService vendorService;
+    @Autowired
+    private InvoiceProductRepository invoiceProductRepository;
+    @Autowired
+    private MapperUtility mapperUtility;
+    @Autowired
+    private InvoiceRepository invoiceRepository;
 
 
     @Override
-    public InvoiceProductDTO createInvoiceView(){
+    public InvoiceProductDTO createNewInvoiceProductTemplate(String vendorName) throws UserNotFoundInSystem {
 
-        String invoiceNo = invoiceNumberService.createInvoiceNumber();
-
-        InvoiceDTO invoiceDTO = new InvoiceDTO();
-        invoiceDTO.setInvoiceNo(invoiceNo);
-        invoiceDTO.setCompany(companyService.findById(1));
-
-        List<VendorDTO> vendorDTO = vendorService.getAllVendorList();
-
-        invoiceProductDTO.setInvoice(invoiceDTO);
-        invoiceProductDTO.setProducts(new ArrayList<ProductDTO>());
-
-
-
-        return invoiceProductDTO;
-    }
-
-    @Override
-    public InvoiceProductDTO addProductItem(ProductDTO productDTO) throws CompanyNotFoundException {
 
 
 
         return null;
     }
+
+    @Override
+    public InvoiceProductDTO addProductItem(String invoiceNumber,SingleInvoiceProductDTO singleInvoiceProductDTO) throws CompanyNotFoundException {
+
+//        Optional<InvoiceProduct> foundEntity = invoiceProductRepository.findByInvoiceNumber(invoiceNumber);
+//
+//        InvoiceProductDTO dto = null;
+//
+//        if(invoiceProductDTO.getInvoice().getInvoiceNo().equalsIgnoreCase(invoiceNumber))
+//            dto = invoiceProductDTO;
+//        else if (foundEntity.isPresent())
+//            dto = mapperUtility.convert(foundEntity.get(),new InvoiceProductDTO());
+//
+//        dto.getSingleInvoiceProductDTO().add(singleInvoiceProductDTO);
+//
+//        InvoiceProduct invoiceProduct = mapperUtility.convert(dto,new InvoiceProduct());
+//
+//        InvoiceProduct savedInvoiceProduct = invoiceProductRepository.save(invoiceProduct);
+//
+//        InvoiceProductDTO savedDTO = mapperUtility.convert(savedInvoiceProduct,new InvoiceProductDTO());
+
+
+        return null;
+    }
+
+
+
+    @Override
+    public InvoiceProductDTO getInvoice(String invoiceNumber) throws AccountingApplicationException {
+        InvoiceProductDTO dto = null;
+        Optional<InvoiceProduct> foundEntity = invoiceProductRepository.findByInvoiceNumber(invoiceNumber);
+
+        if (foundEntity.isPresent())
+            dto = mapperUtility.convert(foundEntity.get(),new InvoiceProductDTO());
+        else
+            throw new AccountingApplicationException("Invoice not found in system");
+
+
+        return null;
+    }
+
+
+
+
+
+
+
+
+
 }

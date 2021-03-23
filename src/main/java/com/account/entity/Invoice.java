@@ -25,7 +25,7 @@ public class Invoice extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private InvoiceType invoiceType;
 
-    private LocalDate invoiceDate;
+    private LocalDate localDate;
 
     @OneToOne
     private Vendor vendor;
