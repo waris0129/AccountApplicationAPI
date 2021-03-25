@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.bytebuddy.implementation.bind.annotation.IgnoreForBinding;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
@@ -40,4 +41,6 @@ public class Product extends BaseEntity{
     private Company company;
 
     private Boolean enabled;
+
+
 }

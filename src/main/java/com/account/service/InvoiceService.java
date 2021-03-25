@@ -9,8 +9,8 @@ public interface InvoiceService {
     InvoiceDTO createNewInvoiceTemplate(String vendorName, String invoiceType) throws UserNotFoundInSystem;
     InvoiceDTO updateInvoiceStatus(String invoiceNumber, InvoiceDTO invoiceDTO) throws AccountingApplicationException;
     InvoiceDTO updateInvoiceStatus(String invoiceNumber, String status) throws AccountingApplicationException;
-    InvoiceDTO cancelInvoice(String invoiceNumber);
-    InvoiceDTO findInvoice(String invoiceNumber);
+    InvoiceDTO cancelInvoice(String invoiceNumber) throws AccountingApplicationException;
+    InvoiceDTO findInvoice(String invoiceNumber) throws AccountingApplicationException;
 
 
 }

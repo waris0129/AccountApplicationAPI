@@ -98,16 +98,37 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public InvoiceDTO cancelInvoice(String invoiceNumber) {
-        return null;
+    public InvoiceDTO cancelInvoice(String invoiceNumber) throws AccountingApplicationException {
+
+        Optional<Invoice> foundInvoice = invoiceRepository.findByInvoiceNo(invoiceNumber);
+
+        if(!foundInvoice.isPresent())
+            throw new AccountingApplicationException("Invoice not found in system");
+
+        Invoice invoice = foundInvoice.get();
+
+        invoice.setInvoiceStatus(InvoiceStatus.CANCEL);
+        invoice.setEnabled(false);
+
+        Invoice savedInvoice = invoiceRepository.save(invoice);
+
+        InvoiceDTO invoiceDTO = mapperUtility.convert(savedInvoice,new InvoiceDTO());
+
+        return invoiceDTO;
     }
 
     @Override
-    public InvoiceDTO findInvoice(String invoiceNumber) {
+    public InvoiceDTO findInvoice(String invoiceNumber) throws AccountingApplicationException {
 
+        Optional<Invoice> foundInvoice = invoiceRepository.findByInvoiceNo(invoiceNumber);
 
+        if(!foundInvoice.isPresent())
+            throw new AccountingApplicationException("Invoice not found in system");
 
+        Invoice invoice = foundInvoice.get();
 
-        return null;
+        InvoiceDTO invoiceDTO = mapperUtility.convert(invoice, new InvoiceDTO());
+
+        return invoiceDTO;
     }
 }
