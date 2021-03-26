@@ -17,7 +17,7 @@ public class ProductDTO{
 
     private Integer id;
     private String inventoryNo;
-    private String name;
+    private ProductNameDTO name;
     private String description;
     private Integer qty;
     private Integer price;

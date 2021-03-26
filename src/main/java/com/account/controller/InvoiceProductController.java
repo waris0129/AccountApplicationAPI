@@ -28,8 +28,8 @@ public class InvoiceProductController {
     }
 
     @PostMapping("/new/{invoiceNo}")
-    public InvoiceProductDTO addItem(@PathVariable("invoiceNo") String invoiceNo,@RequestParam String inventoryNo, @RequestParam BigDecimal price,@RequestParam Integer qty) throws CompanyNotFoundException, AccountingApplicationException {
-        return invoiceProductService.addProductItem(invoiceNo,inventoryNo,price,qty);
+    public InvoiceProductDTO addItem(@PathVariable("invoiceNo") String invoiceNo,@RequestParam String productName, @RequestParam BigDecimal price,@RequestParam Integer qty) throws CompanyNotFoundException, AccountingApplicationException {
+        return invoiceProductService.addProductItem(invoiceNo,productName,price,qty);
     }
 
 

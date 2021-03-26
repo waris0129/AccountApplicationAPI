@@ -11,7 +11,7 @@ import java.util.List;
 public interface ProductService {
 
     ProductDTO saveProduct(ProductDTO productDTO) throws AccountingApplicationException;
-    ProductDTO findProductByName(String name) throws AccountingApplicationException;
+    List<ProductDTO> findProductByName(String name) throws AccountingApplicationException;
     ProductDTO findProductByInventoryNo(String inventoryNo) throws AccountingApplicationException;
     ProductDTO updateProduct(String name,ProductDTO productDTO) throws AccountingApplicationException;
     ProductDTO deleteProduct(String name) throws AccountingApplicationException;

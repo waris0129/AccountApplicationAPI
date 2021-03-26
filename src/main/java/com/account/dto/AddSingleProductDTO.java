@@ -17,7 +17,7 @@ import java.math.BigDecimal;
 public class AddSingleProductDTO {
 
     private Integer id;
-    private ProductDTO product;
+    private ProductNameDTO product;
     private InvoiceProductDTO invoiceProduct;
     private BigDecimal price;
     private Integer qty;

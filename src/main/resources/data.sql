@@ -11,4 +11,12 @@ insert into category values ('1','Admin','2021-03-21 20:38:44.742944','Admin','2
 
 insert into vendor values ('1','Admin','2021-03-22 23:17:42.060993','Admin','2021-03-22 23:17:42.061022','2344 Professional st','CCC','false','supplier@gmail.com','true','123456789','TEXAS','ACTIVE','SUPPLIER','88090','1');
 
-insert into product values ('1','Admin','2021-03-24 21:01:19.245772','Admin','2021-03-24 21:01:19.245805','Electric car','true','AAA_TESLA_001','2','TESLA','5000','10','12','UNIT','1','1');
+insert into product_name values ('1','Admin','2021-03-25 22:47:48.161614','Admin','2021-03-25 22:47:48.161642','true','TESLA','1','1'),
+                                ('2','Admin','2021-03-25 22:47:48.161614','Admin','2021-03-25 22:47:48.161642','true','TOYOTA','1','1'),
+                                ('3','Admin','2021-03-25 22:47:48.161614','Admin','2021-03-25 22:47:48.161642','true','BMW','1','1');
+
+
+insert into product values ('1','Admin','2021-03-25 22:50:23.470462','Admin','2021-03-25 22:50:23.470479','Electric car','true','AAA_TESLA_001','2','40000','10','12','UNIT','1','1','1'),
+                           ('2','Admin','2021-03-25 22:50:23.470462','Admin','2021-03-25 22:50:23.470479','Electric car','true','AAA_TESLA_002','2','35000','15','12','UNIT','1','1','1'),
+                           ('3','Admin','2021-03-25 22:50:23.470462','Admin','2021-03-25 22:50:23.470479','Electric car','true','AAA_TESLA_003','2','50000','5','12','UNIT','1','1','1');
+

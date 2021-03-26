@@ -5,6 +5,7 @@ import com.account.dto.ProductDTO;
 import com.account.entity.Category;
 import com.account.entity.Company;
 import com.account.entity.Product;
+import com.account.entity.ProductName;
 import com.account.exceptionHandler.AccountingApplicationException;
 import com.account.repository.CompanyRepository;
 import com.account.repository.ProductRepository;
@@ -34,9 +35,9 @@ public class ProductServiceImpl implements ProductService {
         String companyTitle = companyRepository.findById(1).get().getTitle();
 
 
-        productDTO.setName(productDTO.getName().toUpperCase());
+        productDTO.setName(productDTO.getName());
         productDTO.setEnabled(true);
-        productDTO.setInventoryNo(companyTitle.toUpperCase().substring(0,3).trim()+"_"+productDTO.getName().toUpperCase()+"_00"+ ++number);
+        productDTO.setInventoryNo(companyTitle.toUpperCase().substring(0,3).trim()+"_"+productDTO.getName().getProductName().toUpperCase()+"_00"+ ++number);
 
         Product product = mapperUtility.convert(productDTO, new Product());
         Product savedProduct = productRepository.save(product);
@@ -45,17 +46,14 @@ public class ProductServiceImpl implements ProductService {
         return newProductDTO;
     }
 
-    @Override
-    public ProductDTO findProductByName(String name) throws AccountingApplicationException {
+    @Override // List<ProductDTO> re-work
+    public List<ProductDTO> findProductByName(String name) throws AccountingApplicationException {
 
-        Optional<Product> foundProduct = productRepository.findByName(name.toUpperCase());
+        List<Product> foundProduct = productRepository.findByName(name.toUpperCase());
 
-        if(!foundProduct.isPresent())
-            throw new AccountingApplicationException("Product not found in system");
+        List<ProductDTO> productDTOS = foundProduct.stream().map(p->mapperUtility.convert(p,new ProductDTO())).collect(Collectors.toList());
 
-        ProductDTO productDTO = mapperUtility.convert(foundProduct.get(),new ProductDTO());
-
-        return productDTO;
+        return productDTOS;
     }
 
 
@@ -72,11 +70,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductDTO updateProduct(String name, ProductDTO productDTO) throws AccountingApplicationException {
+    public ProductDTO updateProduct(String inventoryNo, ProductDTO productDTO) throws AccountingApplicationException {
 
-        name = name.toUpperCase();
-
-        Optional<Product> foundProduct = productRepository.findByName(name);
+        Optional<Product> foundProduct = productRepository.findByInventoryNo(inventoryNo.toUpperCase());
 
         if(!foundProduct.isPresent())
             throw new AccountingApplicationException("Product not found in system");
@@ -87,10 +83,11 @@ public class ProductServiceImpl implements ProductService {
         Category category = product.getCategory();
         Company company = product.getCompany();
         Boolean enabled = product.getEnabled();
+        ProductName name1 = product.getName();
 
         Product updatedProduct = mapperUtility.convert(productDTO,new Product());
 
-        updatedProduct.setName(name);
+        updatedProduct.setName(name1);
         updatedProduct.setId(id);
         updatedProduct.setCategory(category);
         updatedProduct.setCompany(company);
@@ -104,10 +101,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductDTO deleteProduct(String name) throws AccountingApplicationException {
-        name = name.toUpperCase();
+    public ProductDTO deleteProduct(String inventoryNo) throws AccountingApplicationException {
 
-        Optional<Product> foundProduct = productRepository.findByName(name);
+        Optional<Product> foundProduct = productRepository.findByInventoryNo(inventoryNo.toUpperCase());
 
         if(!foundProduct.isPresent())
             throw new AccountingApplicationException("Product not found in system");

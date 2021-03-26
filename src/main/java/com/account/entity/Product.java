@@ -20,7 +20,11 @@ public class Product extends BaseEntity{
 
 
     private String inventoryNo;
-    private String name;
+
+    @ManyToOne()
+    @JoinColumn(name = "product_register_id")
+    private ProductName name;
+
     private String description;
     private Integer qty;
 

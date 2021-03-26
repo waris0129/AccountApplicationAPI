@@ -20,7 +20,7 @@ public class AddSingleProduct {
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private Product product;
+    private ProductName product;
 
     private BigDecimal price;
     private Integer qty;

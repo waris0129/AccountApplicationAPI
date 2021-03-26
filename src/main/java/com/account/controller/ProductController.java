@@ -36,7 +36,7 @@ public class ProductController {
     @GetMapping("/{name}")
     public ResponseEntity<ResponseWrapper> findProduct(@PathVariable("name") String name) throws AccountingApplicationException {
 
-        ProductDTO productDTO1 = productService.findProductByName(name);
+        List<ProductDTO> productDTO1 = productService.findProductByName(name);
         return ResponseEntity.ok(ResponseWrapper.builder().code(200).success(true).message("Product is found successfully").data(productDTO1).build());
     }
 

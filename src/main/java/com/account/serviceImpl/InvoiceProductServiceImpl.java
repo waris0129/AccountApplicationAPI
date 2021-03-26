@@ -28,7 +28,7 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
     @Autowired
     private MapperUtility mapperUtility;
     @Autowired
-    private ProductService productService;
+    private ProductNameService productNameService;
     @Autowired
     private AddSingleProductRepository addSingleProductRepository;
 
@@ -48,18 +48,18 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
     }
 
     @Override
-    public InvoiceProductDTO addProductItem(String invoiceNumber, String inventoryNo, BigDecimal price, Integer qty) throws AccountingApplicationException {
+    public InvoiceProductDTO addProductItem(String invoiceNumber, String productName, BigDecimal price, Integer qty) throws AccountingApplicationException {
 
         Optional<InvoiceProduct> foundInvoiceProduct = invoiceProductRepository.findByInvoiceNumber(invoiceNumber);
         if(!foundInvoiceProduct.isPresent())
             throw new AccountingApplicationException("Invoice Product not found in system");
         InvoiceProduct invoiceProduct = foundInvoiceProduct.get();
 
-        ProductDTO productDTO = productService.findProductByInventoryNo(inventoryNo);
+        ProductNameDTO productNameDTO = productNameService.findProductNameDTO(productName);
 
         AddSingleProductDTO addItemDTO = new AddSingleProductDTO();
 
-        addItemDTO.setProduct(productDTO);
+        addItemDTO.setProduct(productNameDTO);
         addItemDTO.setPrice(price);
         addItemDTO.setQty(qty);
 
