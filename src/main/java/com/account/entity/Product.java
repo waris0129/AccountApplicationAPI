@@ -24,21 +24,13 @@ public class Product extends BaseEntity{
     @ManyToOne()
     @JoinColumn(name = "product_register_id")
     private ProductName name;
-
-    private String description;
     private Integer qty;
-
     private Integer price;
 
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @Enumerated(EnumType.STRING)
-    private Unit unit;
-
-    private Integer lowLimitAlert;
-    private Integer tax;
 
     @ManyToOne
     @JoinColumn(name = "company_id")

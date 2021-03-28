@@ -18,13 +18,9 @@ public class ProductDTO{
     private Integer id;
     private String inventoryNo;
     private ProductNameDTO name;
-    private String description;
     private Integer qty;
     private Integer price;
-    private Category category;
-    private Unit unit;
-    private Integer lowLimitAlert;
-    private Integer tax;
+    private CategoryDTO category;
     private CompanyDTO company;
     private Boolean enabled;
 }

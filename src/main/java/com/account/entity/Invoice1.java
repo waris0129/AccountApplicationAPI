@@ -1,5 +1,6 @@
 package com.account.entity;
 
+
 import com.account.enums.InvoiceStatus;
 import com.account.enums.InvoiceType;
 import lombok.AllArgsConstructor;
@@ -10,6 +11,8 @@ import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -17,7 +20,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Where(clause = "enabled=true")
-public class Invoice extends BaseEntity {
+public class Invoice1 extends BaseEntity{
 
     private String invoiceNo;
 
@@ -28,6 +31,12 @@ public class Invoice extends BaseEntity {
     private InvoiceType invoiceType;
 
     private LocalDate localDate;
+
+    private Integer year;
+
+    @OneToMany
+    private List<Product> productList = new ArrayList<>();
+
 
     @OneToOne
     private Vendor vendor;

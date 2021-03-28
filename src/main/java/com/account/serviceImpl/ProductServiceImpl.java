@@ -2,6 +2,7 @@ package com.account.serviceImpl;
 
 import com.account.Mapper.MapperUtility;
 import com.account.dto.ProductDTO;
+import com.account.dto.ProductNameDTO;
 import com.account.entity.Category;
 import com.account.entity.Company;
 import com.account.entity.Product;
@@ -9,6 +10,7 @@ import com.account.entity.ProductName;
 import com.account.exceptionHandler.AccountingApplicationException;
 import com.account.repository.CompanyRepository;
 import com.account.repository.ProductRepository;
+import com.account.service.ProductNameService;
 import com.account.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +28,8 @@ public class ProductServiceImpl implements ProductService {
     private ProductRepository productRepository;
     @Autowired
     private CompanyRepository companyRepository;
+    @Autowired
+    private ProductNameService productNameService;
 
     private static Integer number = 0;
 
@@ -36,6 +40,24 @@ public class ProductServiceImpl implements ProductService {
 
 
         productDTO.setName(productDTO.getName());
+        productDTO.setEnabled(true);
+        productDTO.setInventoryNo(companyTitle.toUpperCase().substring(0,3).trim()+"_"+productDTO.getName().getProductName().toUpperCase()+"_00"+ ++number);
+
+        Product product = mapperUtility.convert(productDTO, new Product());
+        Product savedProduct = productRepository.save(product);
+        ProductDTO newProductDTO = mapperUtility.convert(savedProduct,new ProductDTO());
+
+        return newProductDTO;
+    }
+
+    @Override
+    public ProductDTO saveProductByPara(ProductDTO productDTO, Integer price, Integer qty, String name) throws AccountingApplicationException {
+        String companyTitle = companyRepository.findById(1).get().getTitle();
+        ProductNameDTO productNameDTO = productNameService.findProductNameDTO(name);
+
+        productDTO.setName(productNameDTO);
+        productDTO.setPrice(price);
+        productDTO.setQty(qty);
         productDTO.setEnabled(true);
         productDTO.setInventoryNo(companyTitle.toUpperCase().substring(0,3).trim()+"_"+productDTO.getName().getProductName().toUpperCase()+"_00"+ ++number);
 

@@ -8,7 +8,7 @@ spring:
   profiles:
     active: default
   datasource:
-    url: jdbc:postgresql://localhost:5432/account
+    url: jdbc:postgresql://localhost:5432/accountWarehouse
     username: postgres
     password: waris
     driver-class-name: org.postgresql.Driver

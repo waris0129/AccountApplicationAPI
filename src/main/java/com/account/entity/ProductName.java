@@ -1,6 +1,7 @@
 package com.account.entity;
 
 
+import com.account.enums.Unit;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,6 +21,11 @@ public class ProductName extends BaseEntity{
 
     private Integer id;
     private String productName;
+    private String description;
+    @Enumerated(EnumType.STRING)
+    private Unit unit;
+    private Integer lowLimitAlert;
+    private Integer tax;
     @ManyToOne
     private Category category;
     @ManyToOne

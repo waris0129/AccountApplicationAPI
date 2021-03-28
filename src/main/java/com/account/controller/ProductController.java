@@ -2,6 +2,8 @@ package com.account.controller;
 
 
 import com.account.dto.ProductDTO;
+import com.account.dto.ProductNameDTO;
+import com.account.entity.ProductName;
 import com.account.exceptionHandler.AccountingApplicationException;
 import com.account.exceptionHandler.ResponseWrapper;
 import com.account.service.ProductService;
@@ -10,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -25,10 +28,18 @@ public class ProductController {
     }
 
 
-    @PostMapping("/new")
-    public ResponseEntity<ResponseWrapper> saveProduct(@RequestBody ProductDTO productDTO) throws AccountingApplicationException {
+//    @PostMapping("/new")
+//    public ResponseEntity<ResponseWrapper> saveProduct(@RequestBody ProductDTO productDTO) throws AccountingApplicationException {
+//
+//        ProductDTO productDTO1 = productService.saveProduct(productDTO);
+//        return ResponseEntity.ok(ResponseWrapper.builder().code(201).success(true).message("Product is created successfully").data(productDTO1).build());
+//    }
 
-        ProductDTO productDTO1 = productService.saveProduct(productDTO);
+
+    @PostMapping("/new")
+    public ResponseEntity<ResponseWrapper> saveProductByPara(@RequestBody ProductDTO productDTO, @RequestParam Integer price, @RequestParam Integer qty, @RequestParam String name) throws AccountingApplicationException {
+
+        ProductDTO productDTO1 = productService.saveProductByPara(productDTO, price, qty, name);
         return ResponseEntity.ok(ResponseWrapper.builder().code(201).success(true).message("Product is created successfully").data(productDTO1).build());
     }
 
