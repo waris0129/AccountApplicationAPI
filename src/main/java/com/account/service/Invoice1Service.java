@@ -7,11 +7,10 @@ import com.account.exceptionHandler.CompanyNotFoundException;
 import com.account.exceptionHandler.UserNotFoundInSystem;
 
 public interface Invoice1Service {
-    String createInvoiceNumber();
+    String createInvoiceNumber(String invoiceType);
     InvoiceDTO1 createNewInvoiceTemplate(String vendorName, String invoiceType) throws UserNotFoundInSystem, AccountingApplicationException;
     InvoiceDTO1 updateInvoiceStatus(String invoiceNumber, String status) throws AccountingApplicationException;
     InvoiceDTO1 cancelInvoice(String invoiceNumber) throws AccountingApplicationException;
     InvoiceDTO1 findInvoice(String invoiceNumber) throws AccountingApplicationException;
     InvoiceDTO1 addProductItem(String invoiceNumber, String inventoryNo, Integer price, Integer qty) throws CompanyNotFoundException, AccountingApplicationException;
-
 }

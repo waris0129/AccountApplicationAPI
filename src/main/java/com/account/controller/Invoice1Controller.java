@@ -20,8 +20,8 @@ public class Invoice1Controller {
 
 
     @GetMapping("/createInvoiceNumber")
-    public String createInvoiceNumber(){
-        return invoice1Service.createInvoiceNumber();
+    public String createInvoiceNumber(@RequestParam String invoiceType){
+        return invoice1Service.createInvoiceNumber(invoiceType);
     }
 
     @PostMapping("/new")

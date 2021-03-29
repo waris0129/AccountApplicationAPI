@@ -58,6 +58,7 @@ public class ProductServiceImpl implements ProductService {
         productDTO.setName(productNameDTO);
         productDTO.setPrice(price);
         productDTO.setQty(qty);
+        productDTO.setAvailableStock(qty);
         productDTO.setEnabled(true);
         productDTO.setInventoryNo(companyTitle.toUpperCase().substring(0,3).trim()+"_"+productDTO.getName().getProductName().toUpperCase()+"_00"+ ++number);
 
@@ -150,4 +151,6 @@ public class ProductServiceImpl implements ProductService {
 
         return productDTOList;
     }
+
+
 }

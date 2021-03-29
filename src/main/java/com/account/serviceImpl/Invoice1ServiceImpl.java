@@ -48,19 +48,20 @@ public class Invoice1ServiceImpl implements Invoice1Service {
     }
 
     @Override
-    public String createInvoiceNumber() {
+    public String createInvoiceNumber(String invoiceType) {
 
         invoiceDTO1.setEnabled(true);
         CompanyDTO companyDTO = companyService.findById(1);
         invoiceDTO1.setCompany(companyDTO);
         invoiceDTO1.setYear(year);
+        invoiceDTO1.setInvoiceType(InvoiceType.valueOf(invoiceType.toUpperCase()));
 
         checkYear(year);
 
         number = ++number;
 
         String createNumber = companyDTO.getTitle().toUpperCase().substring(0,4).trim()+"-"+
-                year+"_00"+ number;
+                year+"_"+invoiceType.toUpperCase()+"_00"+ number;
 
         invoiceDTO1.setInvoiceNo(createNumber);
 
@@ -84,7 +85,7 @@ public class Invoice1ServiceImpl implements Invoice1Service {
     @Override
     public InvoiceDTO1 createNewInvoiceTemplate(String vendorName, String invoiceType) throws AccountingApplicationException, UserNotFoundInSystem {
 
-        Optional<Invoice1> foundInvoice = invoice1Repository.findByInvoiceNo(createInvoiceNumber());
+        Optional<Invoice1> foundInvoice = invoice1Repository.findByInvoiceNo(createInvoiceNumber(invoiceType));
 
         if(!foundInvoice.isPresent())
             throw new AccountingApplicationException("Invoice not found in system");
@@ -97,7 +98,6 @@ public class Invoice1ServiceImpl implements Invoice1Service {
 
         invoice1.setVendor(mapperUtility.convert(vendorDTO,new Vendor()));
         invoice1.setInvoiceStatus(InvoiceStatus.PENDING);
-        invoice1.setInvoiceType(InvoiceType.valueOf(invoiceType.toUpperCase()));
         invoice1.setLocalDate(LocalDate.now());
         invoice1.setEnabled(true);
 
@@ -175,6 +175,7 @@ public class Invoice1ServiceImpl implements Invoice1Service {
         productDTO.setInventoryNo(invoiceProduct.getInvoiceNo());
         productDTO.setName(productNameDTO);
         productDTO.setQty(qty);
+        productDTO.setAvailableStock(qty);
         productDTO.setPrice(price);
         productDTO.setCategory(productNameDTO.getCategory());
         productDTO.setCompany(productNameDTO.getCompany());
@@ -190,5 +191,6 @@ public class Invoice1ServiceImpl implements Invoice1Service {
 
         return savedInvoiceProductDTO;
     }
+
 
 }

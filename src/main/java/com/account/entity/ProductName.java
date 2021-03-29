@@ -19,7 +19,6 @@ import javax.persistence.*;
 public class ProductName extends BaseEntity{
 
 
-    private Integer id;
     private String productName;
     private String description;
     @Enumerated(EnumType.STRING)

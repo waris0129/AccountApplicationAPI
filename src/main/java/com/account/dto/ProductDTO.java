@@ -19,6 +19,7 @@ public class ProductDTO{
     private String inventoryNo;
     private ProductNameDTO name;
     private Integer qty;
+    private Integer availableStock;
     private Integer price;
     private CategoryDTO category;
     private CompanyDTO company;

@@ -1,10 +1,7 @@
 package com.account.entity;
 
 import com.account.enums.Unit;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import net.bytebuddy.implementation.bind.annotation.IgnoreForBinding;
 import org.hibernate.annotations.Where;
 
@@ -25,6 +22,7 @@ public class Product extends BaseEntity{
     @JoinColumn(name = "product_register_id")
     private ProductName name;
     private Integer qty;
+    private Integer availableStock;
     private Integer price;
 
     @ManyToOne

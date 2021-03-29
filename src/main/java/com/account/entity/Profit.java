@@ -1,5 +1,6 @@
 package com.account.entity;
 
+import com.account.enums.InvoiceType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,29 +9,38 @@ import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collector;
 
 @Entity
 @Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Profit {
+public class Profit extends BaseEntity{
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Integer id;
+    @OneToOne(fetch = FetchType.LAZY)
+    private Invoice1 salesInvoiceNo;
 
-    private Integer availableStock;
-    private Integer soldStock;
-    private Boolean sold;
-    private Integer cost;
-    private Integer sales;
+    @OneToMany()
+    @JoinColumn(name = "profit_product")
+    private Set<ProductName> productName = new HashSet<>();
+
+    private Integer soldQty;
     private BigDecimal totalCost;
     private BigDecimal totalSales;
     private BigDecimal profit;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Invoice1 invoice1;
+
+
+
+
+
+
+
 
 
 
