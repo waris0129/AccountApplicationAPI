@@ -11,6 +11,7 @@ import com.account.repository.UserRepository;
 import com.account.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,6 +25,8 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
     @Autowired
     private MapperUtility mapperUtility;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public UserDto save(UserDto userDto) throws AccountingApplicationException {
@@ -38,6 +41,7 @@ public class UserServiceImpl implements UserService {
         user.setEnabled(true);
         user.setDeleted(false);
         user.setStatus(UserStatus.ACTIVE);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         User created = userRepository.save(user);
 

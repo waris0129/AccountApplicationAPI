@@ -36,5 +36,12 @@ public class ExceptionHandlers {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ResponseWrapper.builder().code(HttpStatus.BAD_REQUEST.value()).success(false).message(message).build());
     }
 
+    @ExceptionHandler(InvalidTokenException.class)
+    public ResponseEntity<ResponseWrapper> invalidTokenException(InvalidTokenException invalidTokenException){
+        String message = invalidTokenException.getMessage();
+
+        return new ResponseEntity<>(ResponseWrapper.builder().success(false).code(HttpStatus.UNAUTHORIZED.value()).message(message).build(),HttpStatus.UNAUTHORIZED);
+    }
+
 
 }
