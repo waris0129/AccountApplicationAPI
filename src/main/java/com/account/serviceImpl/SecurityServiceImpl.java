@@ -4,6 +4,7 @@ package com.account.serviceImpl;
 import com.account.Mapper.MapperUtility;
 import com.account.dto.UserDto;
 import com.account.entity.User;
+import com.account.exceptionHandler.AccountingApplicationException;
 import com.account.exceptionHandler.InvalidTokenException;
 import com.account.exceptionHandler.UserNotFoundInSystem;
 import com.account.service.SecurityService;
@@ -29,7 +30,7 @@ public class SecurityServiceImpl implements SecurityService {
     private MapperUtility mapperUtil;
 
     @Override
-    public User loadUser(String email) throws InvalidTokenException, UserNotFoundInSystem {
+    public User loadUser(String email) throws UserNotFoundInSystem, AccountingApplicationException {
         UserDto user =  userService.getUser(email);
         return mapperUtil.convert(user,new User());
     }
@@ -45,7 +46,7 @@ public class SecurityServiceImpl implements SecurityService {
             throw new UsernameNotFoundException("user is not found");
 
         UserDetails userDetails = new org.springframework.security.core.userdetails.User(
-                userDTO.getId().toString(),
+                userDTO.getEmail().toString(),
                 userDTO.getPassword(),
                 getAuthorityList(userDTO)
         );

@@ -6,11 +6,13 @@ VALUES ('Root','2021-01-05 00:00:00','Root','2021-01-05 00:00:00','Root'),
 
 
 insert into company (created_by, created_time, updated_by, updated_time, address1, address2, deleted, email, enabled, establish_date, representative, state, status, title, zip)
-values ('Root','2021-03-21 18:12:00.348868','Root','2021-03-21 18:12:00.348895','7900 Brompton st','','false','waris0129@gmail.com','true','2020-11-01','Waris Nigmat','TEXAS','ACTIVE','Warehouse Management Ltd','778900');
+values ('Root','2021-03-21 18:12:00.348868','Root','2021-03-21 18:12:00.348895','7900 Brompton st','','false','waris0129@gmail.com','true','2020-11-01','Waris Nigmat','TEXAS','ACTIVE','Warehouse Management Ltd','778900'),
+       ('Root','2021-03-21 18:12:00.348868','Root','2021-03-21 18:12:00.348895','7900 Brompton st','','false','ginawaris@gmail.com','true','2020-11-01','Gina Mardan','TEXAS','ACTIVE','Start Car LLC','778900');
 
 
 insert into users (created_by, created_time, updated_by, updated_time, deleted, email, enabled, firstname, lastname, password, phone, status, company_id, role_id)
-VALUES ('Root','2021-03-21 18:12:00.348868','Root','2021-03-21 18:12:00.348895','false','waris0129@gmail.com','true','Waris', 'Nigmat','$2a$10$Q7ilQ6Hv11qpU0T7xfMzMeqxoPXkvhTVXxFqg0UL2xvLnhNqB7vba','7739461852','ACTIVE','1','1');
+VALUES ('Root','2021-03-21 18:12:00.348868','Root','2021-03-21 18:12:00.348895','false','waris0129@gmail.com','true','Waris', 'Nigmat','$2a$10$Q7ilQ6Hv11qpU0T7xfMzMeqxoPXkvhTVXxFqg0UL2xvLnhNqB7vba','7739461852','ACTIVE','1','1'),
+       ('Root','2021-03-21 18:12:00.348868','Root','2021-03-21 18:12:00.348895','false','ginawaris@gmail.com','true','Gina', 'Mardan','$2a$10$Q7ilQ6Hv11qpU0T7xfMzMeqxoPXkvhTVXxFqg0UL2xvLnhNqB7vba','7739461852','ACTIVE','2','2');
 
 -- insert into product_name (created_by, created_time, updated_by, updated_time, description, enabled, low_limit_alert, product_name, tax, unit, category_id, company_id)
 -- values ('Admin','2021-03-28 20:42:30.857259','Admin','2021-03-28 20:42:30.857287','Electric car','true','2','TOYOTA','12','UNIT','1','1'),

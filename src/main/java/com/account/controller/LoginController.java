@@ -5,6 +5,7 @@ import com.account.Mapper.MapperUtility;
 import com.account.dto.AuthenticateRequest;
 import com.account.dto.UserDto;
 import com.account.entity.User;
+import com.account.exceptionHandler.AccountingApplicationException;
 import com.account.exceptionHandler.InvalidTokenException;
 import com.account.exceptionHandler.ResponseWrapper;
 import com.account.exceptionHandler.UserNotFoundInSystem;
@@ -36,7 +37,7 @@ public class LoginController {
 
     @PostMapping("/authenticate")
     @Operation(summary = "Login to application")
-    public ResponseEntity<ResponseWrapper> doLogin(@RequestBody AuthenticateRequest request) throws InvalidTokenException, UserNotFoundInSystem {
+    public ResponseEntity<ResponseWrapper> doLogin(@RequestBody AuthenticateRequest request) throws InvalidTokenException, UserNotFoundInSystem, AccountingApplicationException {
 
         String email = request.getEmail();
         String password = request.getPassword();

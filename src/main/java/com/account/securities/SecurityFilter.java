@@ -1,6 +1,7 @@
 package com.account.securities;
 
 import com.account.entity.User;
+import com.account.exceptionHandler.AccountingApplicationException;
 import com.account.exceptionHandler.InvalidTokenException;
 import com.account.exceptionHandler.UserNotFoundInSystem;
 import com.account.service.SecurityService;
@@ -54,7 +55,7 @@ public class SecurityFilter extends OncePerRequestFilter {
 
     }
 
-    private boolean checkIfUserIsValid(String username) throws InvalidTokenException, UserNotFoundInSystem {
+    private boolean checkIfUserIsValid(String username) throws InvalidTokenException, UserNotFoundInSystem, AccountingApplicationException {
         User currentUser = securityService.loadUser(username);
         return currentUser != null && currentUser.getEnabled();
     }

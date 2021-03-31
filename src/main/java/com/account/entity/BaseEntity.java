@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -33,15 +35,21 @@ public class BaseEntity {
 
     @PrePersist // prePersist to be updated after performing authentication part
     public void onPrePersist(){
-        createdBy = "Admin";
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String role = authentication.getAuthorities().toArray()[0].toString();
+
+        createdBy = role;
         createdTime = LocalDateTime.now();
-        updatedBy = "Admin";
+        updatedBy = role;
         updatedTime = LocalDateTime.now();
     }
 
     @PreUpdate // preUpdate to be updated after performing authentication part
     public void onPreUpdate(){
-        updatedBy = "Admin";
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String role = authentication.getAuthorities().toArray()[0].toString();
+
+        updatedBy = role;
         updatedTime = LocalDateTime.now();
     }
 
