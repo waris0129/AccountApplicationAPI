@@ -4,24 +4,38 @@ package com.account.controller;
 import com.account.Mapper.MapperUtility;
 import com.account.dto.AuthenticateRequest;
 import com.account.dto.UserDto;
+import com.account.entity.BaseEntity;
+import com.account.entity.ConfirmationToken;
 import com.account.entity.User;
+import com.account.enums.UserStatus;
 import com.account.exceptionHandler.AccountingApplicationException;
 import com.account.exceptionHandler.InvalidTokenException;
 import com.account.exceptionHandler.ResponseWrapper;
 import com.account.exceptionHandler.UserNotFoundInSystem;
 import com.account.securities.JwtUtil;
+import com.account.service.ConfirmationTokenService;
+import com.account.service.SecurityService;
 import com.account.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+
+import javax.persistence.EntityListeners;
+import javax.persistence.PreUpdate;
+import java.time.LocalDateTime;
+
 
 @RestController
 @Tag(name = "Authentication Controller",description = "Authenticate API")
-public class LoginController {
+public class LoginController{
 
     @Autowired
     private UserService userService;
@@ -32,8 +46,12 @@ public class LoginController {
     @Autowired
     private JwtUtil jwtUtil;
 
-//    @Autowired
-//    private ConfirmationTokenService confirmationTokenService;
+    public static String role;
+
+    @Autowired
+    private ConfirmationTokenService confirmationTokenService;
+    @Autowired
+    private SecurityService securityService;
 
     @PostMapping("/authenticate")
     @Operation(summary = "Login to application")
@@ -60,23 +78,31 @@ public class LoginController {
 
     }
 
-//    @GetMapping("/confirmation")
-//    @Operation(summary = "Confirm account")
-//    public ResponseEntity<ResponseWrapper> confirmUser(@RequestParam String token) throws InvalidTokenException {
-//        ConfirmationToken confirmationToken = confirmationTokenService.readByToken(token);
-//
-//        User user = confirmationToken.getUser();
-//
-//        user.setEnabled(true);
-//
-//        confirmationToken.setIsDeleted(true);
-//
-//        confirmationTokenService.save(confirmationToken);
-//
-//        return ResponseEntity.ok(new ResponseWrapper("User is confirmed",user.getUserName()));
-//    }
+    @GetMapping("/confirmation")
+    public ResponseEntity<ResponseWrapper> confirmUser(@RequestParam String token) throws InvalidTokenException, UserNotFoundInSystem, AccountingApplicationException {
+        ConfirmationToken confirmationToken = confirmationTokenService.readByToken(token);
+
+        User user = confirmationToken.getUser();
+
+        user.setEnabled(true);
+        user.setStatus(UserStatus.ACTIVE);
+
+        confirmationToken.setIsDeleted(true);
+
+        role = user.getRole().getName();
+
+        confirmationTokenService.save(confirmationToken);
+
+        return ResponseEntity.ok(new ResponseWrapper("User is confirmed",user.getEmail()));
+    }
 
 
+    @PreUpdate
+    private void onPreUpdate(BaseEntity baseEntity){
+        baseEntity.setUpdatedTime(LocalDateTime.now());
+        baseEntity.setUpdatedBy(role+" from ConfirmationToken");
+
+    }
 
 
 

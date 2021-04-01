@@ -51,9 +51,9 @@ public class UserServiceImpl implements UserService {
 
         setupCompanyByRole(authentication, user);
 
-        user.setEnabled(true);
+        user.setEnabled(false);
         user.setDeleted(false);
-        user.setStatus(UserStatus.ACTIVE);
+        user.setStatus(UserStatus.PEND);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         User created = userRepository.save(user);
@@ -122,6 +122,8 @@ public class UserServiceImpl implements UserService {
             throw new UserNotFoundInSystem("");
 
         UserDto userDto = mapperUtility.convert(foundUser.get(),new UserDto());
+
+
 
         return userDto;
     }
@@ -216,8 +218,8 @@ public class UserServiceImpl implements UserService {
     private void checkValidGet(String role,UserDto userDto) throws AccountingApplicationException {
 
         if(role.equals("Root")){
-            if(!userDto.getRole().getName().equals("Admin"))
-                throw new AccountingApplicationException("Root user is only allowed to get Admin User");
+            if(!userDto.getRole().getName().equals("Admin")||!userDto.getRole().getName().equals("Root"))
+                throw new AccountingApplicationException("Root user is only allowed to get Root and Admin Users");
         }
 
         if(role.equals("Admin")){

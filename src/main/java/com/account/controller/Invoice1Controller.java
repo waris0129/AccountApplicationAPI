@@ -9,10 +9,12 @@ import com.account.exceptionHandler.UserNotFoundInSystem;
 import com.account.service.Invoice1Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/invoice1")
+@PreAuthorize("hasAuthority('Employee')")
 public class Invoice1Controller {
 
     @Autowired
