@@ -3,17 +3,12 @@ package com.account.serviceImpl;
 import com.account.Mapper.MapperUtility;
 import com.account.dto.CompanyDTO;
 import com.account.entity.Company;
-import com.account.entity.User;
 import com.account.enums.CompanyStatus;
 import com.account.exceptionHandler.AccountingApplicationException;
 import com.account.exceptionHandler.CompanyNotFoundException;
-import com.account.exceptionHandler.ExceptionHandlers;
 import com.account.repository.CompanyRepository;
 import com.account.service.CompanyService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

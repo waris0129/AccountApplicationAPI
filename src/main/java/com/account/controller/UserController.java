@@ -2,18 +2,15 @@ package com.account.controller;
 
 
 import com.account.Mapper.MapperUtility;
-import com.account.dto.CompanyDTO;
 import com.account.dto.UserDto;
 import com.account.entity.User;
 import com.account.exceptionHandler.AccountingApplicationException;
 import com.account.exceptionHandler.ResponseWrapper;
 import com.account.exceptionHandler.UserNotFoundInSystem;
-import com.account.service.ConfirmationTokenService;
 import com.account.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,13 +18,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/user")
-@PreAuthorize("hasAnyAuthority({'Root','Admin'})")
 public class UserController {
 
     @Autowired
     private UserService userService;
-    @Autowired
-    private ConfirmationTokenService confirmationTokenService;
+
     @Autowired
     private MapperUtility mapperUtility;
 
@@ -41,8 +36,6 @@ public class UserController {
     @PostMapping("/new")
     public ResponseEntity<ResponseWrapper> saveUser(@RequestBody UserDto userDto) throws AccountingApplicationException {
         UserDto dto = userService.save(userDto);
-
-        confirmationTokenService.sendEmail(mapperUtility.convert(dto,new User()));
 
         return ResponseEntity.status(HttpStatus.CREATED).body(ResponseWrapper.builder().code(HttpStatus.CREATED.value()).success(true).message("User is created").data(dto).build());
     }

@@ -6,14 +6,12 @@ import com.account.exceptionHandler.ResponseWrapper;
 import com.account.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/category")
-@PreAuthorize("hasAnyAuthority({'Manager','Admin'})")
 public class CategoryController {
 
     @Autowired

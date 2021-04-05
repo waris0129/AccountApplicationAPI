@@ -1,15 +1,11 @@
 package com.account.entity;
 
 
-import com.account.controller.LoginController;
-import com.account.service.ConfirmationTokenService;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+
 
 import javax.persistence.*;
 
@@ -20,7 +16,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @MappedSuperclass
-@EntityListeners(LoginController.class)
 public class BaseEntity {
 
     @Id
@@ -38,29 +33,16 @@ public class BaseEntity {
 
     @PrePersist // prePersist to be updated after performing authentication part
     public void onPrePersist(){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String role = authentication.getAuthorities().toArray()[0].toString();
 
-        createdBy = role;
+        createdBy = "Root";
         createdTime = LocalDateTime.now();
-        updatedBy = role;
+        updatedBy = "Root";
         updatedTime = LocalDateTime.now();
     }
 
     @PreUpdate // preUpdate to be updated after performing authentication part
     public void onPreUpdate(){
-
-        if (this.getUpdatedBy().endsWith("from ConfirmationToken")){
-            String role = this.getUpdatedBy().replace(" from ConfirmationToken","");
-            this.setUpdatedBy(role);
-            return;
-        }
-
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String role = authentication.getAuthorities().toArray()[0].toString();
-
-        updatedBy = role;
+        updatedBy = "Root";;
         updatedTime = LocalDateTime.now();
     }
 
