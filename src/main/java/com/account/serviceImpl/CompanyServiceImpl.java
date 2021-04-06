@@ -8,6 +8,7 @@ import com.account.exceptionHandler.AccountingApplicationException;
 import com.account.exceptionHandler.CompanyNotFoundException;
 import com.account.repository.CompanyRepository;
 import com.account.service.CompanyService;
+import com.account.service.ConfirmationTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +23,8 @@ public class CompanyServiceImpl implements CompanyService {
     private CompanyRepository companyRepository;
     @Autowired
     private MapperUtility mapperUtility;
-
+    @Autowired
+    private ConfirmationTokenService confirmationTokenService;
 
 
     @Override
@@ -37,13 +39,15 @@ public class CompanyServiceImpl implements CompanyService {
         if(foundCompany.isPresent())
             throw new AccountingApplicationException("Company is already existed");
 
-        companyDTO.setEnabled(true);
-        companyDTO.setStatus(CompanyStatus.ACTIVE);
+        companyDTO.setEnabled(false);
+        companyDTO.setStatus(CompanyStatus.IN_ACTIVE);
         companyDTO.setDeleted(false);
 
         Company company = mapperUtility.convert(companyDTO,new Company());
 
         Company createCompany = companyRepository.save(company);
+
+        confirmationTokenService.sendEmail(createCompany);
 
         return mapperUtility.convert(createCompany,new CompanyDTO());
     }
@@ -69,12 +73,14 @@ public class CompanyServiceImpl implements CompanyService {
         Integer id = company.get().getId();
         Boolean enable = company.get().getEnabled();
         Boolean deleted = company.get().getDeleted();
+        CompanyStatus status = company.get().getStatus();
 
         Company updatedCompany = mapperUtility.convert(companyDTO,new Company());
         updatedCompany.setId(id);
         updatedCompany.setEnabled(enable);
         updatedCompany.setTitle(title);
         updatedCompany.setDeleted(deleted);
+        updatedCompany.setStatus(status);
 
         Company createdCompany = companyRepository.save(updatedCompany);
 
@@ -115,6 +121,7 @@ public class CompanyServiceImpl implements CompanyService {
         deleteCompany.setStatus(CompanyStatus.DELETED);
         deleteCompany.setTitle(deleteCompany.getId()+"_"+title);
         deleteCompany.setDeleted(true);
+        deleteCompany.setEnabled(false);
 
 
         Company savedCompany = companyRepository.save(deleteCompany);

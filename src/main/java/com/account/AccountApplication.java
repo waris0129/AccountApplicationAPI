@@ -17,6 +17,4 @@ public class AccountApplication {
     public ModelMapper modelMapper() {
         return new ModelMapper();
     }
-
-
 }

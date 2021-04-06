@@ -3,7 +3,6 @@ package com.account.controller;
 
 import com.account.Mapper.MapperUtility;
 import com.account.dto.UserDto;
-import com.account.entity.User;
 import com.account.exceptionHandler.AccountingApplicationException;
 import com.account.exceptionHandler.ResponseWrapper;
 import com.account.exceptionHandler.UserNotFoundInSystem;
@@ -11,12 +10,13 @@ import com.account.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
+@Controller
 @RequestMapping("/user")
 public class UserController {
 
@@ -28,8 +28,12 @@ public class UserController {
 
 
     @GetMapping("/new")
-    public UserDto getEmptyObject(Model model){
-        return new UserDto();
+    public String getEmptyObject(Model model){
+        UserDto userDto = new UserDto();
+
+        model.addAttribute("user",userDto);
+
+        return "admin-registration";
     }
 
 

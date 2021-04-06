@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="/fragments/head :: header"></head>
+
+<body>
+
+<div class="dashboard-main-wrapper">
+
+    <div th:replace="/fragments/header :: header"></div>
+
+    <div th:replace="/fragments/left-sidebar :: left-sidebar"></div>
+
+    <div class="dashboard-wrapper">
+
+        <div class="dashboard-ecommerce">
+
+            <div class="container-fluid dashboard-content">
+
+                <div class="ecommerce-widget">
+
+                    <div class="row">
+
+                        <div class="col-lg-6 col-md-12">
+
+                            <section class="panel panel-transparent">
+                                <header class="panel-heading">
+                                    <h2 class="panel-title">Company Registration</h2>
+                                </header>
+
+                                <div class="panel-body">
+
+                                    <!-- ------------------------FORM START----------------------------- -->
+                                    <form class="needs-validation" novalidate th:action="@{/owner/company-registration}", method="post" th:object="${company}">
+                                        <div class="row">
+                                            <div class="col-sm-6 col-md-6">
+                                                <div class="form-group">
+                                                    <label for="title" class="col-form-label">Title</label>
+                                                    <input id="title" type="text" placeholder="Company Name" class="form-control"
+                                                           th:field="*{title}" required>
+                                                    <div class="invalid-feedback">
+                                                        invalid input
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-12 col-md-12">
+                                                <div class="form-group">
+                                                    <label for="address" class="col-form-label">address</label>
+                                                    <input id="address" type="text" placeholder="Company Address" class="form-control"
+                                                           th:field="*{address1}" required>
+                                                    <div class="invalid-feedback">
+                                                        invalid input
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-sm-6 col-md-6">
+                                                <div class="form-group">
+                                                    <label for="state" class="col-form-label">Choose State</label>
+                                                    <select name="state" id="state" th:field="*{state}" class="custom-select" required="required">
+                                                        <option th:value=" ''" th:text="Select"></option>
+                                                        <option th:each="eachState : ${stateList}" th:value="${eachState}" th:text="${eachState}"></option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6 col-md-6">
+                                                <div class="form-group">
+                                                    <label for="zip" class="col-form-label">Zip</label>
+                                                    <input id="zip"  type="text" placeholder="Zip" class="form-control"
+                                                           th:field="*{zip}" required>
+                                                    <div class="invalid-feedback">
+                                                        invalid input
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="row">
+                                            <div class="col-sm-6 col-md-6">
+                                                <div class="form-group">
+                                                    <label for="representative" class="col-form-label">Representative</label>
+                                                    <input id="representative" type="text" placeholder="Representative Name" class="form-control"
+                                                           th:field="*{representative}" required>
+                                                    <div class="invalid-feedback">
+                                                        invalid input
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6 col-md-6">
+                                                <div class="form-group">
+                                                    <label for="email" class="col-form-label">Email</label>
+                                                    <input type="email" id="email" placeholder="Email Address" class="form-control"
+                                                           th:field="*{email}" required>
+                                                    <div class="invalid-feedback">
+                                                        invalid input
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="row">
+                                            <div class="col-sm-6 col-md-6">
+                                                <div class="form-group">
+                                                    <label>Project Start Date</label>
+                                                    <input th:field="*{establishDate}"  type="date" class="form-control">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-sm-6 col-md-6 col-lg-12">
+                                                <div class="float-right">
+                                                    <button type="submit" class="btn btn-success">Save</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <!-- ------------------------FORM END----------------------------- -->
+
+                                </div>
+
+                            </section>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- ------------------------TABLE START----------------------------- -->
+
+                <div class="row">
+                    <div class="col-lg-12 col-md-12">
+                        <div class="col-md-12">
+                            <section class="panel">
+                                <header class="panel-heading">
+                                    <h2 class="panel-title">Company Registration List</h2>
+                                </header>
+                                <div class="panel-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-striped">
+                                            <thead>
+                                            <tr>
+                                                <th scope="col">Title</th>
+                                                <th scope="col">Address</th>
+                                                <th scope="col">State</th>
+                                                <th scope="col">Zip</th>
+                                                <th scope="col">Representative</th>
+                                                <th scope="col">Email</th>
+                                                <th scope="col">Establish Date</th>
+                                                <th scope="col">Registration Status</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr th:each="each : ${companyList}">
+                                                <td th:text="${each.title}">Title</td>
+                                                <td th:text="${each.address1+' '+each.address2}">Address</td>
+                                                <td th:text="${each.state.getValue()}">State</td>
+                                                <td th:text="${each.zip}">Zip</td>
+                                                <td th:text="${each.representative}">Representative</td>
+                                                <td th:text="${each.email}">Email</td>
+                                                <td th:text="${each.establishDate}">Establish Date</td>
+                                                <td th:text="${each.status.getValue()}">Registration Status</td>
+                                                <td class="actions">
+                                                    <a th:href="@{/owner/get/company/{title}(title = ${each.getTitle()})}"><button type="button" class="btn btn-warning btn-sm">Update</button></a>
+                                                    <a th:href="@{/owner/delete/company/{title}(title = ${each.getTitle()})}"><button type="button" class="btn btn-danger btn-sm">Delete</button></a>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ------------------------TABLE END----------------------------- -->
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div th:replace="/fragments/footer :: footer"></div>
+
+</div>
+
+    <div th:replace="/fragments/javascript :: js"></div>
+
+
+
+</body>
+
+</html>

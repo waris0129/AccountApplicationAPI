@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Pattern;
@@ -27,7 +28,10 @@ public class CompanyDTO{
     private String representative;
     @Email(message = "Email should be valid")
     private String email;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate establishDate;
+
     private Boolean enabled;
     private CompanyStatus status;
 

@@ -24,7 +24,7 @@ import java.time.LocalDate;
 @Component
 public class Company extends BaseEntity{
 
-    @Column(nullable = false)
+    @Column(nullable = false,updatable = false)
     private String title;
 
     @Column(nullable = false)
@@ -38,11 +38,11 @@ public class Company extends BaseEntity{
     @Column(nullable = false)
     private String zip;
 
-    @Column(nullable = false,updatable = false)
+    @Column(nullable = false)
     private String representative;
 
     @Email(message = "Email should be valid")
-    @Column(nullable = false)
+    @Column(nullable = false,updatable = false)
     private String email;
 
     @Column(nullable = false)
