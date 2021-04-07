@@ -139,4 +139,14 @@ public class CompanyServiceImpl implements CompanyService {
 
         return companyDTOList;
     }
+
+    @Override
+    public List<CompanyDTO> findAllCompaniesByStatus(CompanyStatus status) {
+
+        List<Company> companyList = companyRepository.findAllByStatus(status);
+
+        List<CompanyDTO> companyDTOList = companyList.stream().map(entity-> mapperUtility.convert(entity,new CompanyDTO())).collect(Collectors.toList());
+
+        return companyDTOList;
+    }
 }

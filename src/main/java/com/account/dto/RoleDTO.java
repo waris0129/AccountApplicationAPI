@@ -1,10 +1,8 @@
 package com.account.dto;
 
 import com.account.entity.BaseEntity;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.account.enums.UserRole;
+import lombok.*;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,10 +11,11 @@ import javax.persistence.Entity;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class RoleDTO{
 
     private Integer id;
-    private String name;
+    private UserRole role;
 
 
 }

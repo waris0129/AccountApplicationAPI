@@ -1,6 +1,7 @@
 package com.account.service;
 
 import com.account.dto.CompanyDTO;
+import com.account.enums.CompanyStatus;
 import com.account.exceptionHandler.AccountingApplicationException;
 import com.account.exceptionHandler.CompanyNotFoundException;
 
@@ -15,6 +16,7 @@ public interface CompanyService{
     CompanyDTO delete(String title) throws CompanyNotFoundException;
     List<CompanyDTO> findAllCompanies();
     CompanyDTO findById(Integer id);
+    List<CompanyDTO> findAllCompaniesByStatus(CompanyStatus status);
 
 
 

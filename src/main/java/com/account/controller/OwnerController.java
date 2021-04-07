@@ -1,12 +1,14 @@
 package com.account.controller;
 
 import com.account.dto.CompanyDTO;
+import com.account.dto.RoleDTO;
 import com.account.dto.UserDto;
 import com.account.entity.Company;
 import com.account.entity.ConfirmationToken;
 import com.account.entity.User;
 import com.account.enums.CompanyStatus;
 import com.account.enums.States;
+import com.account.enums.UserRole;
 import com.account.enums.UserStatus;
 import com.account.exceptionHandler.*;
 import com.account.service.CompanyService;
@@ -114,8 +116,12 @@ public class OwnerController {
     @GetMapping("/admin-registration")
     public String getAdminObject(UserDto userDto, Model model){
         UserDto dto = new UserDto();
+        List<CompanyDTO> companyDTOList = companyService.findAllCompaniesByStatus(CompanyStatus.ACTIVE);
+        userDto.setRole(RoleDTO.builder().role(UserRole.ADMIN).id(2).build());
 
         model.addAttribute("user",userDto);
+        model.addAttribute("companyList",companyDTOList);
+
 
         return "owner/admin-registration";
     }
@@ -125,6 +131,8 @@ public class OwnerController {
     @PostMapping("/admin-registration")
     public String saveAdmin(UserDto userDto, Model model) throws AccountingApplicationException {
         UserDto dto = userService.save(userDto);
+
+
 
         return "redirect:/owner/admin-registration";
     }

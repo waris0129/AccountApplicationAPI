@@ -11,7 +11,7 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<User,Integer> {
 
-    @Query("SELECT p FROM User p WHERE p.role.name = ?1")
+    @Query("SELECT p FROM User p WHERE p.role.role = ?1")
     List<User> getAllByRole(String role);
 
 
