@@ -2,7 +2,7 @@ package com.account.enums;
 
 public enum UserRole {
 
-    ADMIN("Admin"),MANAGER("Manager"),EMPLOYEE("Employee"),ROOT("Root");
+    Admin("Admin"),Manager("Manager"),Employee("Employee"),Root("Root");
 
     private final String value;
 

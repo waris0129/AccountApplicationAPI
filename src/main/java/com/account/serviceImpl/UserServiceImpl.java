@@ -4,13 +4,18 @@ import com.account.Mapper.MapperUtility;
 import com.account.dto.UserDto;
 import com.account.entity.Company;
 import com.account.entity.User;
+import com.account.enums.CompanyStatus;
+import com.account.enums.UserRole;
 import com.account.enums.UserStatus;
 import com.account.exceptionHandler.AccountingApplicationException;
 import com.account.exceptionHandler.UserNotFoundInSystem;
 import com.account.repository.UserRepository;
+import com.account.service.ConfirmationTokenService;
 import com.account.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +29,10 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
     @Autowired
     private MapperUtility mapperUtility;
-
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private ConfirmationTokenService confirmationTokenService;
 
     @Override
     public UserDto save(UserDto userDto) throws AccountingApplicationException {
@@ -40,15 +48,24 @@ public class UserServiceImpl implements UserService {
         user.setEnabled(false);
         user.setDeleted(false);
         user.setStatus(UserStatus.PEND);
-        user.setPassword((user.getPassword()));
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         User created = userRepository.save(user);
 
         UserDto createdDTO = mapperUtility.convert(created,new UserDto());
 
+        confirmationTokenService.sendEmail(created);
+
         return createdDTO;
     }
 
+    @Override
+    public UserDto getUserById(Integer id) {
+
+        User user = userRepository.findById(id).get();
+
+        return mapperUtility.convert(user,new UserDto());
+    }
 
     @Override
     public UserDto update(String email, UserDto userDto) throws UserNotFoundInSystem, AccountingApplicationException {
@@ -72,6 +89,36 @@ public class UserServiceImpl implements UserService {
         updateUser.setId(userId);
         updateUser.setEmail(email);
         updateUser.setStatus(status);
+
+        User savedUser = userRepository.save(updateUser);
+
+        UserDto updatedDTO = mapperUtility.convert(savedUser,new UserDto());
+
+        return updatedDTO;
+    }
+
+
+    @Override
+    public UserDto updateById(String id, UserDto userDto) throws UserNotFoundInSystem {
+
+        Optional<User> foundUser = userRepository.findById(Integer.parseInt(id));
+
+        if(!foundUser.isPresent())
+            throw new UserNotFoundInSystem("");
+
+        User user = foundUser.get();
+
+        Boolean enable = user.getEnabled();
+        Boolean deleted = user.getDeleted();
+        Integer userId = user.getId();
+        UserStatus status = user.getStatus();
+
+        User updateUser = mapperUtility.convert(userDto,new User());
+        updateUser.setEnabled(enable);
+        updateUser.setDeleted(deleted);
+        updateUser.setId(userId);
+        updateUser.setStatus(status);
+        updateUser.setPassword(passwordEncoder.encode(userDto.getPassword()));
 
         User savedUser = userRepository.save(updateUser);
 
@@ -121,6 +168,27 @@ public class UserServiceImpl implements UserService {
         return deletedUserDTO;
     }
 
+
+    @Override
+    public UserDto deleteUserById(String id) throws UserNotFoundInSystem {
+        Optional<User> foundUser = userRepository.findById(Integer.parseInt(id));
+
+
+        if(!foundUser.isPresent())
+            throw new UserNotFoundInSystem("");
+
+        User user = foundUser.get();
+        user.setDeleted(true);
+        user.setStatus(UserStatus.DELETED);
+        user.setEmail(user.getId()+"_"+user.getEmail());
+
+        User deletedUser = userRepository.save(user);
+
+        UserDto deletedUserDTO = mapperUtility.convert(deletedUser,new UserDto());
+
+        return deletedUserDTO;
+    }
+
     @Override
     public List<UserDto> getUserList() throws AccountingApplicationException {
 
@@ -133,7 +201,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserDto> getUserByRole(String role) throws AccountingApplicationException {
+    public List<UserDto> getUserByRole(UserRole role){
 
 
         List<User> users = userRepository.getAllByRole(role);
@@ -144,4 +212,23 @@ public class UserServiceImpl implements UserService {
     }
 
 
+    @Override
+    public List<UserDto> getAllByRoleAndStatus(UserRole role, CompanyStatus status) {
+
+        List<User> users = userRepository.getAllByRoleAndStatus(role,status);
+        List<UserDto> userDtoList = users.stream().map(entity->mapperUtility.convert(entity,new UserDto())).collect(Collectors.toList());
+
+
+        return userDtoList;
+    }
+
+
+    @Override
+    public List<UserDto> getUserListByCompany(Integer companyId) {
+        List<User> users = userRepository.getUserListByCompany(companyId);
+
+        List<UserDto> userDtoList = users.stream().map(entity->mapperUtility.convert(entity,new UserDto())).collect(Collectors.toList());
+
+        return userDtoList;
+    }
 }

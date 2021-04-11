@@ -6,6 +6,7 @@ import com.account.dto.ProfitDTO;
 import com.account.entity.Product;
 import com.account.entity.Profit;
 import com.account.exceptionHandler.AccountingApplicationException;
+import com.account.exceptionHandler.CompanyNotFoundException;
 import com.account.exceptionHandler.ResponseWrapper;
 import com.account.exceptionHandler.UserNotFoundInSystem;
 import com.account.service.ProfitService;
@@ -26,7 +27,7 @@ public class ProfitController {
 
 
     @PostMapping("/new")
-    public ResponseEntity<ResponseWrapper> createNewSalesInvoice(@RequestParam String vendor, @RequestParam String type) throws UserNotFoundInSystem, AccountingApplicationException {
+    public ResponseEntity<ResponseWrapper> createNewSalesInvoice(@RequestParam String vendor, @RequestParam String type) throws UserNotFoundInSystem, AccountingApplicationException, CompanyNotFoundException {
 
         InvoiceDTO1 invoiceDTO = profitService.createNewInvoiceTemplate(vendor,type);
 

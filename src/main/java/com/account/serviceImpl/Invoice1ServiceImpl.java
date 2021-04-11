@@ -48,7 +48,7 @@ public class Invoice1ServiceImpl implements Invoice1Service {
     }
 
     @Override
-    public String createInvoiceNumber(String invoiceType) {
+    public String createInvoiceNumber(String invoiceType) throws CompanyNotFoundException {
 
         invoiceDTO1.setEnabled(true);
         CompanyDTO companyDTO = companyService.findById(1);
@@ -83,7 +83,7 @@ public class Invoice1ServiceImpl implements Invoice1Service {
     }
 
     @Override
-    public InvoiceDTO1 createNewInvoiceTemplate(String vendorName, String invoiceType) throws AccountingApplicationException, UserNotFoundInSystem {
+    public InvoiceDTO1 createNewInvoiceTemplate(String vendorName, String invoiceType) throws AccountingApplicationException, UserNotFoundInSystem, CompanyNotFoundException {
 
         Optional<Invoice1> foundInvoice = invoice1Repository.findByInvoiceNo(createInvoiceNumber(invoiceType));
 

@@ -8,6 +8,7 @@ import com.account.entity.Product;
 import com.account.entity.ProductName;
 import com.account.entity.Profit;
 import com.account.exceptionHandler.AccountingApplicationException;
+import com.account.exceptionHandler.CompanyNotFoundException;
 import com.account.exceptionHandler.UserNotFoundInSystem;
 import com.account.repository.ProfitRepository;
 import com.account.service.Invoice1Service;
@@ -46,12 +47,12 @@ public class ProfitServiceImpl implements ProfitService {
 
 
     @Override
-    public String createInvoiceNumber(String invoiceType) {
+    public String createInvoiceNumber(String invoiceType) throws CompanyNotFoundException {
         return invoice1Service.createInvoiceNumber(invoiceType);
     }
 
     @Override
-    public InvoiceDTO1 createNewInvoiceTemplate(String vendorName, String invoiceType) throws UserNotFoundInSystem, AccountingApplicationException {
+    public InvoiceDTO1 createNewInvoiceTemplate(String vendorName, String invoiceType) throws UserNotFoundInSystem, AccountingApplicationException, CompanyNotFoundException {
         profitDTO = new ProfitDTO();
 
         InvoiceDTO1 salesInvoice = invoice1Service.createNewInvoiceTemplate(vendorName, invoiceType);

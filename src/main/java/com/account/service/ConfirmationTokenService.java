@@ -1,5 +1,6 @@
 package com.account.service;
 
+import com.account.dto.UserDto;
 import com.account.entity.Company;
 import com.account.entity.ConfirmationToken;
 import com.account.entity.User;

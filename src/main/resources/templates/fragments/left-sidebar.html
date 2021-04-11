@@ -69,13 +69,12 @@
                   <div id="submenu-2" class="collapse submenu" style="">
                     <ul class="nav flex-column">
                       <li class="nav-item">
-                        <a class="nav-link" th:href="@{/task/create}"
-                          >User Registration
-                          <span class="badge badge-secondary">New</span></a
-                        >
+                        <a class="nav-link" th:href="@{/manager/vendor-registration}">Vendor/Client Registration</a>
                       </li>
                       <li class="nav-item">
-                        <a class="nav-link" th:href="@{/project/manager/status}">Vendor/Client Registration</a>
+                        <a class="nav-link" th:href="@{/manager/user-registration}"
+                          >User Registration
+                          <span class="badge badge-secondary">New</span></a>
                       </li>
  
                     </ul>
@@ -91,7 +90,7 @@
                     aria-expanded="false"
                     data-target="#submenu-3"
                     aria-controls="submenu-3"
-                    ><i class="fas fa-user-graduate"></i>Inventory</a
+                    ><i class="fas fa-warehouse"></i>Inventory</a
                   >
                   <div id="submenu-3" class="collapse submenu" style="">
                     <ul class="nav flex-column">
@@ -120,7 +119,7 @@
                           data-target="#submenu-4"
                           aria-controls="submenu-4"
                   >
-                    <i class="fas fa-chalkboard-teacher"></i>Invoices</a
+                    <i class="fas file-invoice"></i>Invoices</a
                   >
                   <div id="submenu-4" class="collapse submenu" style="">
                     <ul class="nav flex-column">

@@ -4,6 +4,7 @@ import com.account.dto.VendorDTO;
 import com.account.entity.Vendor;
 import com.account.enums.VendorStatus;
 import com.account.exceptionHandler.AccountingApplicationException;
+import com.account.exceptionHandler.CompanyNotFoundException;
 import com.account.exceptionHandler.ResponseWrapper;
 import com.account.exceptionHandler.UserNotFoundInSystem;
 import com.account.repository.VendorRepository;
@@ -31,7 +32,7 @@ public class VendorController {
 
 
     @PostMapping("/new")
-    public ResponseEntity<ResponseWrapper> save(@RequestBody VendorDTO vendorDTO) throws AccountingApplicationException {
+    public ResponseEntity<ResponseWrapper> save(@RequestBody VendorDTO vendorDTO) throws AccountingApplicationException, CompanyNotFoundException {
         // Next: using security context to get User info from token, then passed Company object
         // but currently we need to manually add Company object
         VendorDTO savedDto = vendorService.save(vendorDTO);

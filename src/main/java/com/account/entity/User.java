@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.Where;
+import org.hibernate.annotations.WhereJoinTable;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -37,7 +38,7 @@ public class User extends BaseEntity{
     @JoinColumn(name = "company_id")
     private Company company;
 
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "role_id")
     private Role role;
 

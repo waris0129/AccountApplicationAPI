@@ -2,6 +2,7 @@ package com.account.serviceImpl;
 
 
 import com.account.Mapper.MapperUtility;
+import com.account.dto.UserDto;
 import com.account.entity.Company;
 import com.account.entity.ConfirmationToken;
 import com.account.entity.User;
@@ -69,7 +70,7 @@ public class ConfirmationTokenImpl implements ConfirmationTokenService {
         String url = URL;
         String token = confirmationToken.getToken();
         String subject = "User Confirm Registration";
-        String message = "please click following url: "+url+"/confirmation?token="+token;
+        String message = "please click following url: "+url+"/user/confirmation?token="+token;
 
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setTo(emailTo);
@@ -92,7 +93,7 @@ public class ConfirmationTokenImpl implements ConfirmationTokenService {
         String url = URL;
         String token = confirmationToken.getToken();
         String subject = "Company Confirm Registration";
-        String message = "please click following url: "+url+"/owner/company/confirmation?token="+token;
+        String message = "please click following url: "+url+"/company/confirmation?token="+token;
 
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setTo(emailTo);

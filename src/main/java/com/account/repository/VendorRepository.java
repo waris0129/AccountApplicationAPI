@@ -13,7 +13,10 @@ public interface VendorRepository extends JpaRepository<Vendor,Integer> {
 
     Vendor getByCompanyName(String name);
 
-    @Query("SELECT p from Vendor p where p.status = ?1")
+    @Query("SELECT p from Vendor p where p.status = ?1 and p.company.deleted=false")
     List<Vendor> getAllVendorByStatus(VendorStatus status);
+
+    @Query("SELECT p from Vendor p where p.company.deleted=false ")
+    List<Vendor> getAllVendorList();
 
 }

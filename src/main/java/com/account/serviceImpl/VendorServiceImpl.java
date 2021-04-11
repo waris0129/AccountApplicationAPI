@@ -8,8 +8,10 @@ import com.account.entity.Vendor;
 import com.account.enums.RegistrationType;
 import com.account.enums.VendorStatus;
 import com.account.exceptionHandler.AccountingApplicationException;
+import com.account.exceptionHandler.CompanyNotFoundException;
 import com.account.exceptionHandler.UserNotFoundInSystem;
 import com.account.repository.VendorRepository;
+import com.account.service.CompanyService;
 import com.account.service.VendorService;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,10 +29,12 @@ public class VendorServiceImpl implements VendorService {
     private VendorRepository vendorRepository;
     @Autowired
     private MapperUtility mapperUtility;
+    @Autowired
+    private CompanyService companyService;
 
 
     @Override
-    public VendorDTO save(VendorDTO vendorDTO) throws AccountingApplicationException {
+    public VendorDTO save(VendorDTO vendorDTO) throws AccountingApplicationException, CompanyNotFoundException {
         // Next: using security context to get User info from token, then passed Company object
         // but currently we need to manually add Company object
 
@@ -39,6 +43,10 @@ public class VendorServiceImpl implements VendorService {
         if (foundVendor !=null)
             throw new AccountingApplicationException("Vendor is already existed in System");
 
+
+        CompanyDTO companyDTO = companyService.findById(2);
+
+        vendorDTO.setCompany(companyDTO);
         vendorDTO.setEnabled(true);
         vendorDTO.setDeleted(false);
         vendorDTO.setStatus(VendorStatus.ACTIVE);
@@ -115,7 +123,7 @@ public class VendorServiceImpl implements VendorService {
     @Override
     public List<VendorDTO> getAllVendorList() {
 
-        List<Vendor> vendorList = vendorRepository.findAll();
+        List<Vendor> vendorList = vendorRepository.getAllVendorList();
 
         List<VendorDTO> vendorDTOList = vendorList.stream().map(entity-> mapperUtility.convert(entity,new VendorDTO())).collect(Collectors.toList());
 

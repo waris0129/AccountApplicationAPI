@@ -21,12 +21,12 @@ public class Invoice1Controller {
 
 
     @GetMapping("/createInvoiceNumber")
-    public String createInvoiceNumber(@RequestParam String invoiceType){
+    public String createInvoiceNumber(@RequestParam String invoiceType) throws CompanyNotFoundException {
         return invoice1Service.createInvoiceNumber(invoiceType);
     }
 
     @PostMapping("/new")
-    public ResponseEntity<ResponseWrapper> createNewInvoice(@RequestParam String vendor, @RequestParam String type) throws UserNotFoundInSystem, AccountingApplicationException {
+    public ResponseEntity<ResponseWrapper> createNewInvoice(@RequestParam String vendor, @RequestParam String type) throws UserNotFoundInSystem, AccountingApplicationException, CompanyNotFoundException {
 
         InvoiceDTO1 invoiceDTO = invoice1Service.createNewInvoiceTemplate(vendor,type);
 

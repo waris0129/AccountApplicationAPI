@@ -26,30 +26,31 @@
 
                             <section class="panel panel-transparent">
                                 <header class="panel-heading">
-                                    <h2 class="panel-title">Admin Registration</h2>
+                                    <h2 class="panel-title">Company Update</h2>
                                 </header>
 
                                 <div class="panel-body">
 
                                     <!-- ------------------------FORM START----------------------------- -->
-                                    <form class="needs-validation" novalidate th:action="@{/owner/admin-registration}", method="post" th:object="${user}">
-
+                                    <form class="needs-validation" novalidate th:action="@{/manager/update/vendor/{companyName}(companyName = ${company.companyName})}", method="post" th:object="${company}">
                                         <div class="row">
                                             <div class="col-sm-6 col-md-6">
                                                 <div class="form-group">
-                                                    <label for="firstName" class="col-form-label">First Name</label>
-                                                    <input id="firstName" type="text" placeholder="First Name" class="form-control"
-                                                           th:field="*{firstname}" required>
+                                                    <label for="id" class="col-form-label">Company Name</label>
+                                                    <input id="id" type="text" placeholder="Company Name" class="form-control"
+                                                           th:field="*{companyName}" required>
                                                     <div class="invalid-feedback">
                                                         invalid input
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-sm-6 col-md-">
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-12 col-md-12">
                                                 <div class="form-group">
-                                                    <label for="lastName" class="col-form-label">Last Name</label>
-                                                    <input id="lastName" type="text" placeholder="Last Name" class="form-control"
-                                                           th:field="*{lastname}" required>
+                                                    <label for="address" class="col-form-label">address</label>
+                                                    <input id="address" type="text" placeholder="Company Address" class="form-control"
+                                                           th:field="*{address}" required>
                                                     <div class="invalid-feedback">
                                                         invalid input
                                                     </div>
@@ -60,19 +61,19 @@
                                         <div class="row">
                                             <div class="col-sm-6 col-md-6">
                                                 <div class="form-group">
-                                                    <label for="password" class="col-form-label">Password</label>
-                                                    <input id="password" type="password" placeholder="password" class="form-control"
-                                                           th:field="*{password}" required>
+                                                    <label for="email" class="col-form-label">Email</label>
+                                                    <input type="email" id="email" placeholder="Email Address" class="form-control"
+                                                           th:field="*{email}"  required>
                                                     <div class="invalid-feedback">
                                                         invalid input
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-sm-6 col-md-">
+                                            <div class="col-sm-6 col-md-6">
                                                 <div class="form-group">
-                                                    <label for="phone" class="col-form-label">Phone</label>
-                                                    <input id="phone" type="text" placeholder="Last Name" class="form-control"
-                                                           th:field="*{phone}" required>
+                                                    <label for="zip" class="col-form-label">Zip</label>
+                                                    <input id="zip"  type="text" placeholder="Zip" class="form-control"
+                                                           th:field="*{zipCode}" required>
                                                     <div class="invalid-feedback">
                                                         invalid input
                                                     </div>
@@ -84,50 +85,33 @@
                                         <div class="row">
                                             <div class="col-sm-6 col-md-6">
                                                 <div class="form-group">
-                                                    <label>Email Address</label>
-                                                    <input id="email" type="email" placeholder="Email Address" class="form-control"
-                                                           th:field="*{email}" required>
-                                                    <div class="invalid-feedback">
-                                                        invalid input
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-6 col-md-6">
-                                                <div class="form-group">
-                                                    <label>Choose a Company</label>
-                                                    <select name="company" id="company" th:field="*{company}" class="custom-select" required="required">
+                                                    <label for="state" class="col-form-label">Choose State</label>
+                                                    <select name="state" id="state" th:field="*{state}" class="custom-select" required="required">
                                                         <option th:value=" ''" th:text="Select"></option>
-                                                        <option th:each="co : ${companyList}" th:value="${co.title}" th:text="${co.title}"></option>
+                                                        <option th:each="eachState : ${stateList}" th:value="${eachState}" th:text="${eachState}"></option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6 col-md-6">
+                                                <div class="form-group">
+                                                    <label for="type" class="col-form-label">Choose Register Type</label>
+                                                    <select name="type" id="type" th:field="*{type}" class="custom-select" required="required">
+                                                        <option th:value=" ''" th:text="Select"></option>
+                                                        <option th:each="eachState : ${typeList}" th:value="${eachState}" th:text="${eachState}"></option>
                                                     </select>
                                                 </div>
                                             </div>
                                         </div>
 
-                                        <div class="row">
-                                            <div class="col-sm-12 col-md-12">
-                                                <div class="form-group">
-                                                    <label>Role</label><br>
-                                                    <label class="custom-control custom-radio custom-control-inline">
-                                                        <input type="radio" name="radio-inline"  checked="checked" class="custom-control-input" th:field="*{role}" th:value="2"><span class="custom-control-label">Admin</span>
-                                                    </label>
-                                                    <label class="custom-control custom-radio custom-control-inline">
-                                                        <input disabled type="radio" name="radio-inline" class="custom-control-input" th:field="*{role}" th:value="3"><span class="custom-control-label">Manager</span>
-                                                    </label>
-                                                    <label class="custom-control custom-radio custom-control-inline">
-                                                        <input disabled type="radio" name="radio-inline" class="custom-control-input"  th:field="*{role}" th:value="4"><span class="custom-control-label">Employee</span>
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </div>
+
 
                                         <div class="row">
-                                            <div class="col-sm-6 col-md-6">
+                                            <div class="col-sm-6 col-md-6 col-lg-12">
                                                 <div class="float-left">
                                                     <button type="submit" class="btn btn-success">Save</button>
                                                 </div>
                                             </div>
                                         </div>
-
                                     </form>
                                     <!-- ------------------------FORM END----------------------------- -->
 
@@ -150,33 +134,33 @@
                         <div class="col-md-12">
                             <section class="panel">
                                 <header class="panel-heading">
-                                    <h2 class="panel-title">Admin List</h2>
+                                    <h2 class="panel-title">Company Registration List</h2>
                                 </header>
                                 <div class="panel-body">
                                     <div class="table-responsive">
                                         <table class="table table-striped">
                                             <thead>
                                             <tr>
-                                                <th scope="col">Name</th>
+                                                <th scope="col">Company Name</th>
                                                 <th scope="col">Email</th>
-                                                <th scope="col">Phone</th>
-                                                <th scope="col">Role</th>
+                                                <th scope="col">Zip</th>
+                                                <th scope="col">State</th>
+                                                <th scope="col">Type</th>
                                                 <th scope="col">Status</th>
-                                                <th scope="col">Company</th>
                                                 <th scope="col">Action</th>
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            <tr th:each="each : ${userList}">
-                                                <td th:text="${each.firstname + ' '+ each.lastname}">Name</td>
+                                            <tr th:each="each : ${companyList}">
+                                                <td th:text="${each.companyName}">Company Name</td>
                                                 <td th:text="${each.email}">Email</td>
-                                                <td th:text="${each.phone}">Phone</td>
-                                                <td th:text="${each.role.getRole().getValue()}">Role</td>
-                                                <td th:text="${each.status.getValue()}">Status</td>
-                                                <td th:text="${each.company.title}">Company</td>
+                                                <td th:text="${each.zipCode}">Zip</td>
+                                                <td th:text="${each.state}">State</td>
+                                                <td th:text="${each.type}">Type</td>
+                                                <td th:text="${each.status}">Status</td>
                                                 <td class="actions">
-                                                    <a th:href="@{/owner/get/admin/{id}(id = ${each.getId()})}"><button type="button" class="btn btn-warning btn-sm">Update</button></a>
-                                                    <a th:href="@{/owner/delete/admin/{id}(id = ${each.getId()})}"><button type="button" class="btn btn-danger btn-sm">Delete</button></a>
+                                                    <a th:href="@{/manager/get/vendor/{companyName}(companyName = ${each.companyName})}"><button type="button" class="btn btn-warning btn-sm">Update</button></a>
+                                                    <a th:href="@{/manager/delete/vendor/{companyName}(companyName = ${each.companyName})}"><button type="button" class="btn btn-danger btn-sm">Delete</button></a>
                                                 </td>
                                             </tr>
                                             </tbody>
@@ -200,7 +184,7 @@
 
 </div>
 
-    <div th:replace="/fragments/javascript :: js"></div>
+<div th:replace="/fragments/javascript :: js"></div>
 
 
 

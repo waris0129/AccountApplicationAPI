@@ -26,50 +26,51 @@
 
                             <section class="panel panel-transparent">
                                 <header class="panel-heading">
-                                    <h2 class="panel-title">User Update</h2>
+                                    <h2 class="panel-title">User Registration</h2>
                                 </header>
 
                                 <div class="panel-body">
 
                                     <!-- ------------------------FORM START----------------------------- -->
-                                    <form class="needs-validation" novalidate th:action="@{/user/update/{username}(username = ${user.username})}", method="post" th:object="${user}">
+                                    <form class="needs-validation" novalidate th:action="@{/manager/user-registration}", method="post" th:object="${user}">
                                         <div class="row">
                                             <div class="col-sm-6 col-md-6">
                                                 <div class="form-group">
-                                                    <label for="firstname" class="col-form-label">First Name</label>
-                                                    <input id="firstname" type="text" placeholder="first name" class="form-control"
-                                                           th:field="*{firstName}" required>
+                                                    <label for="firstName" class="col-form-label">First Name</label>
+                                                    <input id="firstName" type="text" placeholder="First Name" class="form-control"
+                                                           th:field="*{firstname}" required>
                                                     <div class="invalid-feedback">
                                                         invalid input
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-sm-6 col-md-6">
+                                            <div class="col-sm-6 col-md-">
                                                 <div class="form-group">
-                                                    <label for="lastname" class="col-form-label">Last Name</label>
-                                                    <input id="lastname" type="text" placeholder="last name" class="form-control"
-                                                           th:field="*{lastName}" required>
+                                                    <label for="lastName" class="col-form-label">Last Name</label>
+                                                    <input id="lastName" type="text" placeholder="Last Name" class="form-control"
+                                                           th:field="*{lastname}" required>
                                                     <div class="invalid-feedback">
                                                         invalid input
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
+
                                         <div class="row">
                                             <div class="col-sm-6 col-md-6">
                                                 <div class="form-group">
-                                                    <label for="emailaddress" class="col-form-label">Email Address</label>
-                                                    <input disabled id="emailaddress" type="email" placeholder="email address" class="form-control"
-                                                           th:field="*{username}" required>
+                                                    <label for="password" class="col-form-label">Password</label>
+                                                    <input id="password" type="password" placeholder="password" class="form-control"
+                                                           th:field="*{password}" required>
                                                     <div class="invalid-feedback">
                                                         invalid input
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-sm-6 col-md-6">
+                                            <div class="col-sm-6 col-md-">
                                                 <div class="form-group">
-                                                    <label for="phonenumber" class="col-form-label">Phone Number</label>
-                                                    <input id="phonenumber" type="tel" pattern="^\d{10}$" placeholder="phone number" class="form-control"
+                                                    <label for="phone" class="col-form-label">Phone</label>
+                                                    <input id="phone" type="text" placeholder="Last Name" class="form-control"
                                                            th:field="*{phone}" required>
                                                     <div class="invalid-feedback">
                                                         invalid input
@@ -77,57 +78,52 @@
                                                 </div>
                                             </div>
                                         </div>
+
+
                                         <div class="row">
                                             <div class="col-sm-6 col-md-6">
                                                 <div class="form-group">
-                                                    <label for="password" class="col-form-label">Password</label>
-                                                    <input id="password"   type="password" placeholder="password" class="form-control"
-                                                           th:field="*{password}" required>
+                                                    <label>Email Address</label>
+                                                    <input id="email" type="email" placeholder="Email Address" class="form-control"
+                                                           th:field="*{email}" required>
                                                     <div class="invalid-feedback">
-                                                        invalid password
+                                                        invalid input
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="col-sm-6 col-md-6">
                                                 <div class="form-group">
-                                                    <label for="repassword" class="col-form-label">Password</label>
-                                                    <input id="repassword" type="password" placeholder="confirm your password" class="form-control"
-                                                           th:field="*{password}" required>
-                                                    <div class="invalid-feedback">
-                                                        invalid password
-                                                    </div>
+                                                    <label >Company</label>
+                                                    <p th:text="${company!=null} ? ${company.title} : ${errorMessage}"></p>
                                                 </div>
                                             </div>
                                         </div>
+
                                         <div class="row">
-                                            <div class="col-sm-6 col-md-6">
+                                            <div class="col-sm-12 col-md-12">
                                                 <div class="form-group">
-                                                    <label>Gender</label><br>
+                                                    <label>Role</label><br>
                                                     <label class="custom-control custom-radio custom-control-inline">
-                                                        <input type="radio" name="radio-inline" checked="" class="custom-control-input" th:field="*{gender}" th:value="MALE"><span class="custom-control-label">Male</span>
+                                                        <input disabled type="radio" name="radio-inline"  checked="checked" class="custom-control-input" th:field="*{role}" th:value="2"><span class="custom-control-label">Admin</span>
                                                     </label>
                                                     <label class="custom-control custom-radio custom-control-inline">
-                                                        <input type="radio" name="radio-inline" class="custom-control-input" th:field="*{gender}" th:value="FEMALE"><span class="custom-control-label">Female</span>
+                                                        <input type="radio" name="radio-inline" class="custom-control-input" th:field="*{role}" th:value="3"><span class="custom-control-label">Manager</span>
                                                     </label>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-6 col-md-6">
-                                                <div class="form-group">
-                                                    <label>Choose a Role</label>
-                                                    <select name="roleid" id="roleid" th:field="*{role}" class="custom-select" required="required">
-                                                        <option th:selected="${user.role}" th:value="${user.role.id}" th:text="${user.role.description}"></option>
-                                                        <option th:each="role : ${roles}" th:value="${role.id}" th:text="${role.description}"></option>
-                                                    </select>
+                                                    <label class="custom-control custom-radio custom-control-inline">
+                                                        <input type="radio" name="radio-inline" class="custom-control-input"  th:field="*{role}" th:value="4"><span class="custom-control-label">Employee</span>
+                                                    </label>
                                                 </div>
                                             </div>
                                         </div>
+
                                         <div class="row">
-                                            <div class="col-sm-6 col-md-6 col-lg-12">
-                                                <div class="float-right">
+                                            <div class="col-sm-6 col-md-6">
+                                                <div class="float-left">
                                                     <button type="submit" class="btn btn-success">Save</button>
                                                 </div>
                                             </div>
                                         </div>
+
                                     </form>
                                     <!-- ------------------------FORM END----------------------------- -->
 
@@ -144,7 +140,7 @@
 
 
                 <!-- ------------------------TABLE START----------------------------- -->
-
+                <br>
                 <div class="row">
                     <div class="col-lg-12 col-md-12">
                         <div class="col-md-12">
@@ -158,23 +154,25 @@
                                             <thead>
                                             <tr>
                                                 <th scope="col">Name</th>
-                                                <th scope="col">Email(username)</th>
-                                                <th scope="col">Gender</th>
+                                                <th scope="col">Email</th>
                                                 <th scope="col">Phone</th>
                                                 <th scope="col">Role</th>
+                                                <th scope="col">Status</th>
+                                                <th scope="col">Company</th>
                                                 <th scope="col">Action</th>
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            <tr th:each="each : ${users}">
-                                                <td th:text="${each.firstName + ' '+ each.lastName}">name</td>
-                                                <td th:text="${each.username}">email</td>
-                                                <td th:text="${each.gender.getValue()}">gender</td>
-                                                <td th:text="${each.phone}">phone</td>
-                                                <td th:text="${each.role.description}">role</td>
+                                            <tr th:each="each : ${userList}">
+                                                <td th:text="${each.firstname + ' '+ each.lastname}">Name</td>
+                                                <td th:text="${each.email}">Email</td>
+                                                <td th:text="${each.phone}">Phone</td>
+                                                <td th:text="${each.role.getRole().getValue()}">Role</td>
+                                                <td th:text="${each.status.getValue()}">Status</td>
+                                                <td th:text="${each.company.title}">Company</td>
                                                 <td class="actions">
-                                                    <a href=""><button disabled type="button" class="btn btn-warning btn-sm">Update</button> </a>
-                                                    <a href=""><button disabled type="button" class="btn btn-danger btn-sm">Delete</button> </a>
+                                                    <a th:href="@{/manager/get/user/{id}(id = ${each.getId()})}"><button type="button" class="btn btn-warning btn-sm">Update</button></a>
+                                                    <a th:href="@{/manager/delete/user/{id}(id = ${each.getId()})}"><button type="button" class="btn btn-danger btn-sm">Delete</button></a>
                                                 </td>
                                             </tr>
                                             </tbody>
@@ -198,7 +196,7 @@
 
 </div>
 
-<div th:replace="/fragments/javascript :: js"></div>
+    <div th:replace="/fragments/javascript :: js"></div>
 
 
 

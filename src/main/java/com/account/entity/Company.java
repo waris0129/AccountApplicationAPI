@@ -9,12 +9,10 @@ import lombok.Setter;
 import org.hibernate.annotations.Where;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
+import javax.persistence.*;
 import javax.validation.constraints.Email;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Setter

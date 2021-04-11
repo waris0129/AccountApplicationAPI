@@ -3,6 +3,7 @@ package com.account.controller;
 
 import com.account.Mapper.MapperUtility;
 import com.account.dto.UserDto;
+import com.account.enums.UserRole;
 import com.account.exceptionHandler.AccountingApplicationException;
 import com.account.exceptionHandler.ResponseWrapper;
 import com.account.exceptionHandler.UserNotFoundInSystem;
@@ -74,7 +75,7 @@ public class UserController {
 
     @GetMapping("/all/{role}")
     public ResponseEntity<ResponseWrapper> getAllUsersByRole(@PathVariable("role") String role) throws AccountingApplicationException {
-        List<UserDto> userDtoList = userService.getUserByRole(role);
+        List<UserDto> userDtoList = userService.getUserByRole(UserRole.valueOf(role));
 
         return ResponseEntity.ok(ResponseWrapper.builder().code(HttpStatus.OK.value()).success(true).message("Get all User list by Role successfully").data(userDtoList).build());
     }

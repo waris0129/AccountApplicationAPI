@@ -59,25 +59,9 @@ public class OwnerController {
     public String saveCompany(@ModelAttribute ("company") CompanyDTO companyDTO, Model model) throws AccountingApplicationException {
 
         CompanyDTO createdCompanyDTO = companyService.save(companyDTO);
-        return "redirect:/owner/company-registration";
-    }
-
-    @GetMapping("/company/confirmation")
-    public String confirmCompanyRegister(@RequestParam String token) throws InvalidTokenException{
-        ConfirmationToken confirmationToken = confirmationTokenService.readByToken(token);
-
-        Company company = confirmationToken.getCompany();
-
-        company.setEnabled(true);
-        company.setStatus(CompanyStatus.ACTIVE);
-
-        confirmationToken.setIsDeleted(true);
-
-        confirmationTokenService.save(confirmationToken);
 
         return "redirect:/owner/company-registration";
     }
-
 
 
     @GetMapping("/get/company/{title}")
@@ -114,13 +98,14 @@ public class OwnerController {
 
 
     @GetMapping("/admin-registration")
-    public String getAdminObject(UserDto userDto, Model model){
+    public String getAdminObject(UserDto userDto, Model model) throws AccountingApplicationException {
         UserDto dto = new UserDto();
+        List<UserDto> userDtoList = userService.getUserByRole(UserRole.Admin);
         List<CompanyDTO> companyDTOList = companyService.findAllCompaniesByStatus(CompanyStatus.ACTIVE);
-        userDto.setRole(RoleDTO.builder().role(UserRole.ADMIN).id(2).build());
 
         model.addAttribute("user",userDto);
         model.addAttribute("companyList",companyDTOList);
+        model.addAttribute("userList",userDtoList);
 
 
         return "owner/admin-registration";
@@ -132,10 +117,47 @@ public class OwnerController {
     public String saveAdmin(UserDto userDto, Model model) throws AccountingApplicationException {
         UserDto dto = userService.save(userDto);
 
+        return "redirect:/owner/admin-registration";
+    }
+
+
+    @GetMapping("/get/admin/{id}")
+    public String findAdmin(@PathVariable("id") String id,Model model) throws AccountingApplicationException {
+        UserDto userDto = userService.getUserById(Integer.parseInt(id));
+        List<UserDto> userDtoList = userService.getUserByRole(UserRole.Admin);
+        List<CompanyDTO> companyDTOList = companyService.findAllCompaniesByStatus(CompanyStatus.ACTIVE);
+
+
+        model.addAttribute("user",userDto);
+        model.addAttribute("companyList",companyDTOList);
+        model.addAttribute("userList",userDtoList);
+
+        return "owner/admin-update";
+    }
+
+    @PostMapping("/update/admin/{id}")
+    public String updateAdmin(@PathVariable("id") String id, @ModelAttribute ("user") UserDto userDto, Model model) throws UserNotFoundInSystem {
+
+        UserDto dto = userService.updateById(id,userDto);
 
 
         return "redirect:/owner/admin-registration";
     }
+
+
+
+    @GetMapping("/delete/admin/{id}")
+    public String deleteAdmin(@PathVariable("id") String id) throws UserNotFoundInSystem {
+
+        UserDto userDto = userService.deleteUserById(id);
+
+        return "redirect:/owner/admin-registration";
+    }
+
+
+
+
+
 
 
 
