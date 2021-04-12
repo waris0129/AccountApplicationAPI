@@ -12,6 +12,6 @@ public interface CategoryService {
     CategoryDTO findCategory(String description) throws AccountingApplicationException;
     CategoryDTO deleteCategory(String description) throws AccountingApplicationException;
     List<CategoryDTO> getAllCategories();
-
+    List<CategoryDTO> getAllCategoriesByCompany(Integer companyID);
 
 }

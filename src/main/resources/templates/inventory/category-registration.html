@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="/fragments/head :: header"></head>
+
+<body>
+
+<div class="dashboard-main-wrapper">
+
+    <div th:replace="/fragments/header :: header"></div>
+
+    <div th:replace="/fragments/left-sidebar :: left-sidebar"></div>
+
+    <div class="dashboard-wrapper">
+
+        <div class="dashboard-ecommerce">
+
+            <div class="container-fluid dashboard-content">
+
+                <div class="ecommerce-widget">
+
+                    <div class="row">
+
+                        <div class="col-lg-6 col-md-12">
+
+                            <section class="panel panel-transparent">
+                                <header class="panel-heading">
+                                    <h2 class="panel-title">Category Registration</h2>
+                                </header>
+
+                                <div class="panel-body">
+
+                                    <!-- ------------------------FORM START----------------------------- -->
+                                    <form class="needs-validation" novalidate th:action="@{/inventory/category-registration}", method="post" th:object="${category}">
+                                       <br>
+                                        <br>
+                                        <div class="row">
+                                            <div class="col-sm-4 col-md-4">
+                                                <div class="form-group">
+                                                    <header class="panel-heading">
+                                                        <h4 class="panel-title">Name</h4>
+                                                    </header>
+                                                    <input id="firstName" type="text" placeholder="First Name" class="form-control"
+                                                           th:field="*{category}" required>
+                                                    <div class="invalid-feedback">
+                                                        invalid input
+                                                    </div>
+                                                    <br>
+                                                    <button type="submit" class="btn btn-success">Add</button>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-8 col-md-8">
+                                                <section class="panel">
+                                                    <header class="panel-heading">
+                                                        <h4 class="panel-title">Category List</h4>
+                                                    </header>
+                                                    <div class="panel-body">
+                                                        <div class="table-responsive">
+                                                            <table class="table table-striped">
+                                                                <thead>
+                                                                <tr>
+                                                                    <th scope="col">Name</th>
+                                                                    <th scope="col">Action</th>
+                                                                </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                <tr th:each="each : ${categoryList}">
+                                                                    <td th:text="${each.category}">Name</td>
+                                                                    <td class="actions">
+                                                                        <a th:href="@{/inventory/delete/{category}(category = ${each.getCategory()})}"><button type="button" class="btn btn-danger btn-sm">Delete</button></a>
+                                                                    </td>
+                                                                </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </section>
+                                            </div>
+                                        </div>
+
+                                    </form>
+                                    <!-- ------------------------FORM END----------------------------- -->
+
+                                </div>
+
+                            </section>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- ------------------------TABLE START----------------------------- -->
+
+
+                <!-- ------------------------TABLE END----------------------------- -->
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div th:replace="/fragments/footer :: footer"></div>
+
+</div>
+
+    <div th:replace="/fragments/javascript :: js"></div>
+
+
+
+</body>
+
+</html>

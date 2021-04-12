@@ -83,4 +83,14 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryDTOList;
 
     }
+
+    @Override
+    public List<CategoryDTO> getAllCategoriesByCompany(Integer companyID) {
+
+        List<Category> categoryList = categoryRepository.getAllCategoriesByCompany(companyID);
+
+        List<CategoryDTO> categoryDTOList = categoryList.stream().map(entity-> mapperUtility.convert(entity,new CategoryDTO())).collect(Collectors.toList());
+
+        return categoryDTOList;
+    }
 }
