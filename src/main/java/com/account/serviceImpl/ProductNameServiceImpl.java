@@ -45,6 +45,23 @@ public class ProductNameServiceImpl implements ProductNameService {
     }
 
     @Override
+    public ProductNameDTO update(String productName, ProductNameDTO productNameDTO) {
+
+        ProductName foundProduct = productNameRepository.findByProductName(productName).get();
+
+        ProductName updateProduct = mapperUtility.convert(productNameDTO,new ProductName());
+
+        updateProduct.setProductName(productNameDTO.getProductName().toUpperCase());
+        updateProduct.setCompany(foundProduct.getCompany());
+        updateProduct.setId(foundProduct.getId());
+        updateProduct.setEnabled(foundProduct.getEnabled());
+
+        ProductName savedProduct = productNameRepository.save(updateProduct);
+
+        return mapperUtility.convert(savedProduct, new ProductNameDTO());
+    }
+
+    @Override
     public ProductNameDTO findProductNameDTO(String productName) throws AccountingApplicationException {
         productName = productName.toUpperCase();
 
@@ -83,6 +100,15 @@ public class ProductNameServiceImpl implements ProductNameService {
     public List<ProductNameDTO> getAllProductNameDTOList() {
 
         List<ProductName> productNameList = productNameRepository.findAll();
+
+        List<ProductNameDTO> productNameDTOList = productNameList.stream().map(entity-> mapperUtility.convert(entity,new ProductNameDTO())).collect(Collectors.toList());
+
+        return productNameDTOList;
+    }
+
+    @Override
+    public List<ProductNameDTO> getAllProductNameDTOByCompany(Integer companyId) {
+        List<ProductName> productNameList = productNameRepository.getAllProductNameDTOByCompany(companyId);
 
         List<ProductNameDTO> productNameDTOList = productNameList.stream().map(entity-> mapperUtility.convert(entity,new ProductNameDTO())).collect(Collectors.toList());
 

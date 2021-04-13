@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="/fragments/head :: header"></head>
+
+<body>
+
+<div class="dashboard-main-wrapper">
+
+    <div th:replace="/fragments/header :: header"></div>
+
+    <div th:replace="/fragments/left-sidebar :: left-sidebar"></div>
+
+    <div class="dashboard-wrapper">
+
+        <div class="dashboard-ecommerce">
+
+            <div class="container-fluid dashboard-content">
+
+                <div class="ecommerce-widget">
+
+                    <div class="row">
+
+                        <div class="col-lg-6 col-md-12">
+
+                            <section class="panel panel-transparent">
+                                <header class="panel-heading">
+                                    <h2 class="panel-title">Product Update</h2>
+                                </header>
+
+                                <div class="panel-body">
+
+                                    <!-- ------------------------FORM START----------------------------- -->
+                                    <form class="needs-validation" novalidate th:action="@{/inventory/product-update/{productName}(productName = ${product.getProductName()})}", method="post" th:object="${product}">
+                                        <div class="row">
+                                            <div class="col-sm-6 col-md-6">
+                                                <div class="form-group">
+                                                    <label for="productName" class="col-form-label">Product Name</label>
+                                                    <input id="productName" type="text" placeholder="Product Name" class="form-control"
+                                                           th:field="*{productName}" required>
+                                                    <div class="invalid-feedback">
+                                                        invalid input
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-sm-12 col-md-12">
+                                                <div class="form-group">
+                                                    <label for="description" class="col-form-label">Product Description</label>
+                                                    <input id="description" type="text" placeholder="Product Description" class="form-control"
+                                                           th:field="*{description}" required>
+                                                    <div class="invalid-feedback">
+                                                        invalid input
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-sm-4 col-md-4">
+                                                <div class="form-group">
+                                                    <label for="unit" class="col-form-label">Unit</label>
+                                                    <select name="unit" id="unit" th:field="*{unit}" class="custom-select" required="required">
+                                                        <option th:value=" ''" th:text="Select"></option>
+                                                        <option th:each="eachUnit : ${unitList}" th:value="${eachUnit}" th:text="${eachUnit}"></option>
+                                                    </select>
+                                                    <div class="invalid-feedback">
+                                                        invalid input
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-4 col-md-4">
+                                                <div class="form-group">
+                                                    <label for="limit" class="col-form-label">LimitAlert</label>
+                                                    <input id="limit" type="text" placeholder="Limit" class="form-control"
+                                                           th:field="*{lowLimitAlert}" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-4 col-md-4">
+                                                <div class="form-group">
+                                                    <label for="tax" class="col-form-label">Tax(%)</label>
+                                                    <input id="tax" type="text" placeholder="Tax" class="form-control"
+                                                           th:field="*{tax}" required>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="row">
+                                            <div class="col-sm-6 col-md-6">
+                                                <div class="form-group">
+                                                    <label for="category" class="col-form-label">Choose Category</label>
+                                                    <select name="category" id="category" th:field="*{category}" class="custom-select" required="required">
+                                                        <option th:selected="${product.category}" th:value="${product.category.category}" th:text="${product.category.category}"></option>
+                                                        <option th:each="eachCategory : ${categoryList}" th:value="${eachCategory.category}" th:text="${eachCategory.getCategory()}"></option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6 col-md-6">
+                                                <div class="form-group">
+                                                    <label >Company</label>
+                                                    <p th:text="${company.title}"></p>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-sm-6 col-md-6">
+                                                <div class="float-left">
+                                                    <button type="submit" class="btn btn-success">Save</button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                    </form>
+                                    <!-- ------------------------FORM END----------------------------- -->
+
+                                </div>
+
+                            </section>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- ------------------------TABLE START----------------------------- -->
+                <br>
+                <div class="row">
+                    <div class="col-lg-12 col-md-12">
+                        <div class="col-md-12">
+                            <section class="panel">
+                                <header class="panel-heading">
+                                    <h2 class="panel-title">Product Registration List</h2>
+                                </header>
+                                <div class="panel-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-striped">
+                                            <thead>
+                                            <tr>
+                                                <th scope="col">Product Name</th>
+                                                <th scope="col">Unit</th>
+                                                <th scope="col">LimitAlert</th>
+                                                <th scope="col">Tax(%)</th>
+                                                <th scope="col">Category</th>
+                                                <th scope="col">Action</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr th:each="each : ${productList}">
+                                                <td th:text="${each.productName}">Product Name</td>
+                                                <td th:text="${each.unit}">Unit</td>
+                                                <td th:text="${each.lowLimitAlert}">LimitAlert</td>
+                                                <td th:text="${each.tax}">Tax</td>
+                                                <td th:text="${each.category.category}">Category</td>
+                                                <td class="actions">
+                                                    <a th:href="@{/inventory/product-update/{productName}(productName = ${product.getProductName()})}"><button type="button" class="btn btn-warning btn-sm">Update</button></a>
+                                                    <a th:href="@{/inventory/product-delete/{productName}(productName = ${product.getProductName()})}"><button type="button" class="btn btn-danger btn-sm">Delete</button></a>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ------------------------TABLE END----------------------------- -->
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div th:replace="/fragments/footer :: footer"></div>
+
+</div>
+
+    <div th:replace="/fragments/javascript :: js"></div>
+
+
+
+</body>
+
+</html>

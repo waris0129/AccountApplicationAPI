@@ -14,6 +14,14 @@ insert into users (created_by, created_time, updated_by, updated_time, deleted, 
 VALUES ('Root','2021-03-21 18:12:00.348868','Root','2021-03-21 18:12:00.348895','false','waris@gmail.com','true','Waris', 'Nigmat','$2a$10$Q7ilQ6Hv11qpU0T7xfMzMeqxoPXkvhTVXxFqg0UL2xvLnhNqB7vba','7739461852','ACTIVE','1','1'),
        ('Root','2021-03-21 18:12:00.348868','Root','2021-03-21 18:12:00.348895','false','ginawaris@gmail.com','true','Gina', 'Mardan','$2a$10$Q7ilQ6Hv11qpU0T7xfMzMeqxoPXkvhTVXxFqg0UL2xvLnhNqB7vba','7739461852','ACTIVE','2','2');
 
+
+insert into category (created_by, created_time, updated_by, updated_time, category, enabled, company_id)
+VALUES ('Root','2021-04-12 22:06:44.639383','Root','2021-04-12 22:06:44.639414','TESLA','true','2'),
+       ('Root','2021-04-12 22:06:44.639383','Root','2021-04-12 22:06:44.639414','TOYOTA','true','2'),
+       ('Root','2021-04-12 22:06:44.639383','Root','2021-04-12 22:06:44.639414','HYUNDAI','true','2'),
+       ('Root','2021-04-12 22:06:44.639383','Root','2021-04-12 22:06:44.639414','FORD','true','2');
+
+
 -- insert into product_name (created_by, created_time, updated_by, updated_time, description, enabled, low_limit_alert, product_name, tax, unit, category_id, company_id)
 -- values ('Admin','2021-03-28 20:42:30.857259','Admin','2021-03-28 20:42:30.857287','Electric car','true','2','TOYOTA','12','UNIT','1','1'),
 --        ('Admin','2021-03-28 20:42:30.857259','Admin','2021-03-28 20:42:30.857287','Electric car','true','2','TESLA','12','UNIT','1','1');

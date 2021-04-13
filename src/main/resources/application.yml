@@ -1,14 +1,14 @@
 app:
   local-url: http://localhost:${server.port}
 server:
-  port: 1010
+  port: 2020
 spring:
   application:
     name: spring-rest-security
   profiles:
     active: default
   datasource:
-    url: jdbc:postgresql://localhost:5432/accountWarehouse
+    url: jdbc:postgresql://localhost:5432/accountMVC
     username: postgres
     password: waris
     driver-class-name: org.postgresql.Driver
