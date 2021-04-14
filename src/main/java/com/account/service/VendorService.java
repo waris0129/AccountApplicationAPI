@@ -1,6 +1,8 @@
 package com.account.service;
 
 import com.account.dto.VendorDTO;
+import com.account.entity.Vendor;
+import com.account.enums.VendorStatus;
 import com.account.exceptionHandler.AccountingApplicationException;
 import com.account.exceptionHandler.CompanyNotFoundException;
 import com.account.exceptionHandler.UserNotFoundInSystem;
@@ -15,5 +17,6 @@ public interface VendorService {
     VendorDTO delete(String companyName) throws UserNotFoundInSystem;
     List<VendorDTO> getAllVendorList();
     List<VendorDTO> getAllVendorByStatus(String status) throws AccountingApplicationException;
+    List<VendorDTO> getAllActiveVendorByCompany(Integer companyId);
 
 }

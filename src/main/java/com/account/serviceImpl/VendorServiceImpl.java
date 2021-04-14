@@ -144,4 +144,14 @@ public class VendorServiceImpl implements VendorService {
 
         return vendorDTOList;
     }
+
+
+    @Override
+    public List<VendorDTO> getAllActiveVendorByCompany(Integer companyId){
+        List<Vendor> vendorList = vendorRepository.getAllActiveVendorByCompany(companyId);
+
+        List<VendorDTO> vendorDTOList = vendorList.stream().map(entity-> mapperUtility.convert(entity,new VendorDTO())).collect(Collectors.toList());
+
+        return vendorDTOList;
+    }
 }

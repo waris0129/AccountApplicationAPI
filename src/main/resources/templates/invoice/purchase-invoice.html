@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="/fragments/head :: header"></head>
+
+<body>
+
+<div class="dashboard-main-wrapper">
+
+    <div th:replace="/fragments/header :: header"></div>
+
+    <div th:replace="/fragments/left-sidebar :: left-sidebar"></div>
+
+    <div class="dashboard-wrapper">
+
+        <div class="dashboard-ecommerce">
+
+            <div class="container-fluid dashboard-content">
+
+                <div class="ecommerce-widget">
+
+                    <div class="row">
+
+                        <div class="col-lg-6 col-md-12">
+
+                            <section class="panel panel-transparent">
+                                <header class="panel-heading">
+                                    <h2 class="panel-title">Purchase Invoice</h2>
+                                </header>
+
+                                <div class="panel-body">
+
+                                    <!-- ------------------------FORM START----------------------------- -->
+                                    <form class="needs-validation" novalidate th:action="@{/invoice/create-purchase}", method="post">
+                                        <div class="row">
+                                            <div class="col-sm-9 col-md-9">
+                                                <div class="form-group">
+                                                    <label for="invoiceNo" class="col-form-label">Choose Purchase No.</label>
+                                                    <select name="invoiceNo" id="invoiceNo" th:field="*{invoiceNumber}" class="custom-select" required="required">
+                                                        <option th:value=" ''" th:text="Select"></option>
+                                                        <option th:each="eachinvoiceNo : ${purchaseInvoiceNoList}" th:value="${eachinvoiceNo.invoiceNo}" th:text="${eachinvoiceNo.invoiceNo}"></option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-sm-5 col-md-5">
+                                                <div class="form-group">
+                                                    <label for="product" class="col-form-label">Choose Product</label>
+                                                    <select name="product" id="product" th:field="*{productNameDTO}"  class="custom-select" required="required">
+                                                        <option th:value=" ''" th:text="Select"></option>
+                                                        <option th:each="eachproduct : ${productNameList}" th:value="${eachproduct.productName}" th:text="${eachproduct.productName}"></option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-3 col-md-3">
+                                                <div class="form-group">
+                                                    <label> Qty</label>
+                                                    <input id="qty" class="form-control"
+                                                           th:field="*{qty}" required>
+                                                    <div class="invalid-feedback">
+                                                        invalid input
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-4 col-md-4">
+                                                <div class="form-group">
+                                                    <label>Purchase Price</label>
+                                                    <input id="cost" class="form-control"
+                                                           th:field="*{price}" required>
+                                                    <div class="invalid-feedback">
+                                                        invalid input
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-sm-6 col-md-6">
+                                                <div class="float-left">
+                                                    <button type="submit" class="btn btn-success">Create Purchase Invoice</button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                    </form>
+                                    <!-- ------------------------FORM END----------------------------- -->
+
+                                </div>
+
+                            </section>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- ------------------------TABLE START----------------------------- -->
+                <br>
+
+
+                <!-- ------------------------TABLE END----------------------------- -->
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div th:replace="/fragments/footer :: footer"></div>
+
+</div>
+
+    <div th:replace="/fragments/javascript :: js"></div>
+
+
+
+</body>
+
+</html>

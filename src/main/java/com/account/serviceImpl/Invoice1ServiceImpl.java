@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -51,7 +52,7 @@ public class Invoice1ServiceImpl implements Invoice1Service {
     public String createInvoiceNumber(String invoiceType) throws CompanyNotFoundException {
 
         invoiceDTO1.setEnabled(true);
-        CompanyDTO companyDTO = companyService.findById(1);
+        CompanyDTO companyDTO = companyService.findById(2); // hard coding it
         invoiceDTO1.setCompany(companyDTO);
         invoiceDTO1.setYear(year);
         invoiceDTO1.setInvoiceType(InvoiceType.valueOf(invoiceType.toUpperCase()));
@@ -193,4 +194,25 @@ public class Invoice1ServiceImpl implements Invoice1Service {
     }
 
 
+    @Override
+    public List<InvoiceDTO1> findAllInvoiceByCompanyId(Integer companyId) {
+
+        List<Invoice1> invoiceDTO1List = invoice1Repository.findAllInvoiceByCompanyId(companyId);
+
+        return invoiceDTO1List.stream().map(p->mapperUtility.convert(p,new InvoiceDTO1())).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<InvoiceDTO1> findAllSalesInvoiceByCompanyId(Integer companyId) {
+        List<Invoice1> invoiceDTO1List = invoice1Repository.findAllSalesInvoiceByCompanyId(companyId);
+
+        return invoiceDTO1List.stream().map(p->mapperUtility.convert(p,new InvoiceDTO1())).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<InvoiceDTO1> findAllPurchaseInvoiceByCompanyId(Integer companyId) {
+        List<Invoice1> invoiceDTO1List = invoice1Repository.findAllPurchaseInvoiceByCompanyId(companyId);
+
+        return invoiceDTO1List.stream().map(p->mapperUtility.convert(p,new InvoiceDTO1())).collect(Collectors.toList());
+    }
 }

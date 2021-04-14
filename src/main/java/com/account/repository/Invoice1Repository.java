@@ -19,6 +19,14 @@ public interface Invoice1Repository extends JpaRepository<Invoice1,Integer> {
     @Query("SELECT p FROM Invoice1 p where p.invoiceNo=?1")
     Optional<Invoice1> findByInvoiceNumber(String invoiceNo);
 
+    @Query("SELECT p FROM Invoice1 p where p.company.id=?1")
+    List<Invoice1> findAllInvoiceByCompanyId(Integer companyId);
 
+
+    @Query("SELECT p FROM Invoice1 p where p.company.id=?1 and p.invoiceType='SALES'")
+    List<Invoice1> findAllSalesInvoiceByCompanyId(Integer companyId);
+
+    @Query("SELECT p FROM Invoice1 p where p.company.id=?1 and p.invoiceType='PURCHASE'")
+    List<Invoice1> findAllPurchaseInvoiceByCompanyId(Integer companyId);
 
 }
