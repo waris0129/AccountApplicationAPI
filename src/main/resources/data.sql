@@ -21,6 +21,16 @@ VALUES ('Root','2021-04-12 22:06:44.639383','Root','2021-04-12 22:06:44.639414',
        ('Root','2021-04-12 22:06:44.639383','Root','2021-04-12 22:06:44.639414','HYUNDAI','true','2'),
        ('Root','2021-04-12 22:06:44.639383','Root','2021-04-12 22:06:44.639414','FORD','true','2');
 
+insert into product_name (created_by, created_time, updated_by, updated_time, description, enabled, low_limit_alert, product_name, tax, unit, category_id, company_id, profit_product)
+VALUES ('Root','2021-04-14 19:56:07.047276','Root','2021-04-14 19:56:07.047293','Mid level SUV compact model','true','2','ESCAPE','12','UNIT','4','2',NULL);
+
+
+insert into vendor (created_by, created_time, updated_by, updated_time, address, company_name, deleted, email, enabled, phone, state, status, type, zip_code, company_id)
+VALUES ('Root','2021-04-14 19:55:48.484748','Root','2021-04-14 19:55:48.484776','houston','UpGenix','false','waris0129@hotmail.com','true','773946','TEXAS','ACTIVE','SUPPLIER','77025','2');
+
+insert into invoice1 (created_by, created_time, updated_by, updated_time, enabled, invoice_no, invoice_status, invoice_type, local_date, year, company_id, vendor_id)
+values ('Root','2021-04-14 19:56:14.233848','Root','2021-04-14 19:56:14.256971','true','STAR-2021_PURCHASE_001','PENDING','PURCHASE','2021-04-14','2021','2','1');
+
 
 -- insert into product_name (created_by, created_time, updated_by, updated_time, description, enabled, low_limit_alert, product_name, tax, unit, category_id, company_id)
 -- values ('Admin','2021-03-28 20:42:30.857259','Admin','2021-03-28 20:42:30.857287','Electric car','true','2','TOYOTA','12','UNIT','1','1'),

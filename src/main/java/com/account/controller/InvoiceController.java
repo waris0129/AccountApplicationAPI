@@ -1,23 +1,21 @@
 package com.account.controller;
 
-import com.account.dto.InvoiceDTO1;
-import com.account.dto.ProductDTO;
-import com.account.dto.ProductNameDTO;
-import com.account.dto.VendorDTO;
+import com.account.dto.*;
 import com.account.enums.InvoiceType;
 import com.account.exceptionHandler.AccountingApplicationException;
 import com.account.exceptionHandler.CompanyNotFoundException;
 import com.account.exceptionHandler.UserNotFoundInSystem;
 import com.account.service.*;
+import org.dom4j.rule.Mode;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 @Controller
@@ -35,6 +33,9 @@ public class InvoiceController {
 
     @Autowired
     private ProductNameService productNameService;
+
+
+
 
 
     @GetMapping("/create-invoice")
@@ -80,15 +81,14 @@ public class InvoiceController {
     @GetMapping("/create-purchase")
     public String getPurchaseInvoiceObject(Model model){
 
+        PurchaseInvoiceDTO purchaseInvoiceDTO = new PurchaseInvoiceDTO();
         List<InvoiceDTO1> purchaseInvoiceNoList = invoice1Service.findAllPurchaseInvoiceByCompanyId(2);
         List<ProductNameDTO> productNameDTOList = productNameService.getAllProductNameDTOByCompany(2);
 
+
         model.addAttribute("purchaseInvoiceNoList",purchaseInvoiceNoList);
         model.addAttribute("productNameList",productNameDTOList);
-        model.addAttribute("qty", new String());
-        model.addAttribute("price",new String());
-        model.addAttribute("productNameDTO",new ProductNameDTO());
-        model.addAttribute("invoiceNumber",new String());
+        model.addAttribute("purchaseInvoiceDTO",purchaseInvoiceDTO);
 
 
         return "invoice/purchase-invoice";
@@ -96,17 +96,26 @@ public class InvoiceController {
 
 
     @PostMapping("/create-purchase")
-    public String AddItemPurchase(Model model) throws CompanyNotFoundException, AccountingApplicationException {
+    public String AddItemPurchase(@ModelAttribute("purchaseInvoiceDTO") PurchaseInvoiceDTO purchaseInvoiceDTO,Model model) throws CompanyNotFoundException, AccountingApplicationException {
 
-        String invoiceNumber = (String) model.getAttribute("invoiceNumber");
-        String productDTO   = (String) model.getAttribute("productNameDTO");
-        Integer price = (Integer) model.getAttribute("price");
-        Integer qty = (Integer) model.getAttribute("qty");
+        String invoiceNumber = purchaseInvoiceDTO.getInvoiceNumber();
+        String productDTO   =  purchaseInvoiceDTO.getProductNameDTO();
+        Integer price =  purchaseInvoiceDTO.getPrice();
+        Integer qty =  purchaseInvoiceDTO.getQty();
 
-        invoice1Service.addProductItem(invoiceNumber,productDTO,price,qty);
+        InvoiceDTO1 invoiceDTO1 = invoice1Service.addProductItem(invoiceNumber,productDTO,price,qty);
+
+        PurchaseInvoiceDTO purchaseInvoiceDTO2 = new PurchaseInvoiceDTO();
+        purchaseInvoiceDTO2.setInvoiceNumber(invoiceNumber);
+
+        List<ProductNameDTO> productNameDTOList = productNameService.getAllProductNameDTOByCompany(2);
 
 
-        return "invoice/purchase-invoice";
+        model.addAttribute("productNameList",productNameDTOList);
+        model.addAttribute("purchaseInvoiceDTO",purchaseInvoiceDTO2);
+        model.addAttribute("selectInvoice",invoiceDTO1);
+
+        return "invoice/add-item-purchase";
     }
 
 
