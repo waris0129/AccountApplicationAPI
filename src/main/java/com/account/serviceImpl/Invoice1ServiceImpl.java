@@ -75,7 +75,7 @@ public class Invoice1ServiceImpl implements Invoice1Service {
 
     private void checkYear(Integer year){
         // check database
-        List<Integer> yearList = invoice1Repository.getAllYearList(1);
+        List<Integer> yearList = invoice1Repository.getAllYearList(2);
 
         if(!yearList.contains(year))
             number = 0;

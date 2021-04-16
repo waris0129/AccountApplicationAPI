@@ -29,7 +29,7 @@ insert into vendor (created_by, created_time, updated_by, updated_time, address,
 VALUES ('Root','2021-04-14 19:55:48.484748','Root','2021-04-14 19:55:48.484776','houston','UpGenix','false','waris0129@hotmail.com','true','773946','TEXAS','ACTIVE','SUPPLIER','77025','2');
 
 insert into invoice1 (created_by, created_time, updated_by, updated_time, enabled, invoice_no, invoice_status, invoice_type, local_date, year, company_id, vendor_id)
-values ('Root','2021-04-14 19:56:14.233848','Root','2021-04-14 19:56:14.256971','true','STAR-2021_PURCHASE_001','PENDING','PURCHASE','2021-04-14','2021','2','1');
+values ('Root','2021-04-14 19:56:14.233848','Root','2021-04-14 19:56:14.256971','true','STAR-2021_PURCHASE_000','PENDING','PURCHASE','2021-04-14','2021','2','1');
 
 
 -- insert into product_name (created_by, created_time, updated_by, updated_time, description, enabled, low_limit_alert, product_name, tax, unit, category_id, company_id)

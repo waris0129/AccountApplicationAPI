@@ -26,22 +26,21 @@
 
                             <section class="panel panel-transparent">
                                 <header class="panel-heading">
-                                    <h2 class="panel-title">Purchase Invoice</h2>
+                                    <h2 class="panel-title">Purchase Invoice - Add Item</h2>
                                 </header>
 
                                 <div class="panel-body">
 
                                     <!-- ------------------------FORM START----------------------------- -->
-                                    <form class="needs-validation" novalidate th:action="@{/invoice/create-purchase}",  method="post" th:object="${purchaseInvoiceDTO}">
+                                    <form class="needs-validation" novalidate th:action="@{/invoice/add-item-purchase}",  method="post" th:object="${purchaseInvoiceDTO}">
                                         <div class="row">
                                             <div class="col-sm-9 col-md-9">
                                                 <div class="form-group">
                                                     <label for="invoiceNo" class="col-form-label">Choose Purchase No.</label>
-                                                    <input id="invoiceNo" type="invoiceNo"  class="form-control"
-                                                           th:field="*{invoiceNumber}" th:readonly="readonly" required>
-                                                    <div class="invalid-feedback">
-                                                        invalid input
-                                                    </div>
+                                                    <select name="invoiceNo" id="invoiceNo" th:field="*{invoiceNumber}"  class="custom-select" required="required">
+                                                        <option value="" selected >Select Invoice Number</option>
+                                                        <option th:each="eachinvoiceNo : ${purchaseInvoiceDTO.invoiceNumber}" th:value="${eachinvoiceNo}" th:text="${eachinvoiceNo}"></option>
+                                                    </select>
                                                 </div>
                                             </div>
                                         </div>
@@ -131,7 +130,7 @@
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            <tr th:each="each : ${selectInvoice.productList}">
+                                            <tr th:each="each : ${productList}">
                                                 <td th:text="${each.name.productName}">Product Name</td>
                                                 <td th:text="${each.category.category}">Category</td>
                                                 <td th:text="${each.inventoryNo}">Inventory No</td>
@@ -139,7 +138,7 @@
                                                 <td th:text="${each.price}">Cost</td>
                                                 <td th:text="${each.category.company.title}">Supplier</td>
                                                 <td class="actions">
-                                                    <a th:href=""><button type="button" class="btn btn-danger btn-sm">Delete</button></a>
+                                                    <a th:href="@{/invoice/delete-add-item(inventoryName=${each.inventoryNo},invoiceNo=${selectInvoice.invoiceNo})}"><button type="button" class="btn btn-danger btn-sm">Delete</button></a>
                                                 </td>
                                             </tr>
                                             </tbody>
