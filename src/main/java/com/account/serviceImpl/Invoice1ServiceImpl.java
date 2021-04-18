@@ -162,6 +162,27 @@ public class Invoice1ServiceImpl implements Invoice1Service {
 
 
     @Override
+    public Integer calculateTotalCost(String invoiceNumber) {
+
+        Invoice1 invoice1 = invoice1Repository.findByInvoiceNo(invoiceNumber).get();
+
+        invoice1.setTotalCost(invoice1.getProductList().stream().filter(p->p.getEnabled().equals(true)).mapToInt(p->p.getPrice()*p.getQty()).sum());
+
+        return invoice1.getTotalCost();
+    }
+
+
+    @Override
+    public Invoice1 updateTotalCost(String invoiceNumber) {
+
+        Invoice1 invoice1 = invoice1Repository.findByInvoiceNo(invoiceNumber).get();
+
+        invoice1.setTotalCost(invoice1.getProductList().stream().filter(p->p.getEnabled().equals(true)).mapToInt(p->p.getPrice()*p.getQty()).sum());
+
+        return invoice1Repository.save(invoice1);
+    }
+
+    @Override
     public InvoiceDTO1 addProductItem(String invoiceNumber, String productName, Integer price, Integer qty) throws CompanyNotFoundException, AccountingApplicationException {
         Optional<Invoice1> foundInvoiceProduct = invoice1Repository.findByInvoiceNumber(invoiceNumber);
         if(!foundInvoiceProduct.isPresent())
@@ -185,6 +206,8 @@ public class Invoice1ServiceImpl implements Invoice1Service {
         Product product = mapperUtility.convert(savedProduct,new Product());
 
         invoiceProduct.getProductList().add(product);
+
+        invoiceProduct.setTotalCost(calculateTotalCost(invoiceNumber));
 
         Invoice1 savedInvoiceProduct = invoice1Repository.save(invoiceProduct);
 
@@ -212,6 +235,20 @@ public class Invoice1ServiceImpl implements Invoice1Service {
     @Override
     public List<InvoiceDTO1> findAllPurchaseInvoiceByCompanyId(Integer companyId) {
         List<Invoice1> invoiceDTO1List = invoice1Repository.findAllPurchaseInvoiceByCompanyId(companyId);
+
+        return invoiceDTO1List.stream().map(p->mapperUtility.convert(p,new InvoiceDTO1())).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<InvoiceDTO1> findAllPurchaseInvoiceByCompanyId_NoSavedStatus(Integer companyId) {
+        List<Invoice1> invoiceDTO1List = invoice1Repository.findAllPurchaseInvoiceByCompanyId_NoSavedStatus(companyId);
+
+        return invoiceDTO1List.stream().map(p->mapperUtility.convert(p,new InvoiceDTO1())).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<InvoiceDTO1> findAllPurchaseInvoiceByCompanyId_SavedStatus(Integer companyId) {
+        List<Invoice1> invoiceDTO1List = invoice1Repository.findAllPurchaseInvoiceByCompanyId_SavedStatus(companyId);
 
         return invoiceDTO1List.stream().map(p->mapperUtility.convert(p,new InvoiceDTO1())).collect(Collectors.toList());
     }

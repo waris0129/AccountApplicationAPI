@@ -75,7 +75,7 @@ public class ProfitServiceImpl implements ProfitService {
 
         List<ProductDTO> allProductList = productService.findProductByName(productName);
 
-        Integer totalAvailableStock = allProductList.stream().mapToInt(p->p.getAvailableStock()).sum();
+        Integer totalAvailableStock = allProductList.stream().filter(p->p.getEnabled().equals(true)).mapToInt(p->p.getAvailableStock()).sum();
 
         if(totalSoldItem>totalAvailableStock)
             throw new AccountingApplicationException("Not enough stock in Inventory, Total Available Stock="+totalAvailableStock+", Total Sold Item="+totalSoldItem);

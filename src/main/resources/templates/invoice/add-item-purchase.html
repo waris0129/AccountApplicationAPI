@@ -45,6 +45,12 @@
                                             </div>
                                         </div>
 
+                                        <div class="col-sm-9 col-md-9">
+                                            <p th:text="${'Invoice Status: '+selectInvoice.invoiceStatus}" />
+                                        </div>
+
+
+
                                         <div class="row">
                                             <div class="col-sm-6 col-md-6">
                                                 <div class="form-group">
@@ -87,7 +93,13 @@
                                                     <button type="submit" class="btn btn-success">Add Item</button>
                                                 </div>
                                             </div>
+                                            <div class="col-sm-5 col-md-5">
+                                                <div class="float-left">
+                                                  <a th:href="@{/invoice/update-invoice-status(invoiceNo=${selectInvoice.invoiceNo}, status='Review')}">  <button type="button" class="btn btn-success">Save Invoice</button></a>
+                                                </div>
+                                            </div>
                                         </div>
+
 
 
                                     </form>

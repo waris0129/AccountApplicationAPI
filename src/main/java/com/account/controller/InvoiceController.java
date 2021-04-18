@@ -1,6 +1,7 @@
 package com.account.controller;
 
 import com.account.dto.*;
+import com.account.enums.InvoiceStatus;
 import com.account.enums.InvoiceType;
 import com.account.exceptionHandler.AccountingApplicationException;
 import com.account.exceptionHandler.CompanyNotFoundException;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/invoice")
@@ -86,15 +88,35 @@ public class InvoiceController {
     public String getPurchaseInvoiceObject(Model model){
 
         PurchaseInvoiceDTO purchaseInvoiceDTO = new PurchaseInvoiceDTO();
-        List<InvoiceDTO1> purchaseInvoiceNoList = invoice1Service.findAllPurchaseInvoiceByCompanyId(2);
+        List<InvoiceDTO1> purchaseInvoiceNoList = invoice1Service.findAllPurchaseInvoiceByCompanyId_NoSavedStatus(2);
+        List<ProductNameDTO> productNameDTOList = productNameService.getAllProductNameDTOByCompany(2);
+        InvoiceDTO1 invoiceDTO1 = new InvoiceDTO1();
+
+        model.addAttribute("purchaseInvoiceNoList",purchaseInvoiceNoList);
+        model.addAttribute("productNameList",productNameDTOList);
+        model.addAttribute("purchaseInvoiceDTO",purchaseInvoiceDTO);
+        model.addAttribute("selectedInvoice",invoiceDTO1);
+
+        return "invoice/purchase-invoice";
+    }
+
+    @GetMapping("/review-invoice")
+    public String reviewInvoice(@Param("invoiceNo")String invoiceNo,Model model) throws AccountingApplicationException {
+
+        InvoiceDTO1 invoiceDTO1 = invoice1Service.findInvoice(invoiceNo);
+
+
+        PurchaseInvoiceDTO purchaseInvoiceDTO = new PurchaseInvoiceDTO();
+        List<InvoiceDTO1> purchaseInvoiceNoList = invoice1Service.findAllPurchaseInvoiceByCompanyId_NoSavedStatus(2);
         List<ProductNameDTO> productNameDTOList = productNameService.getAllProductNameDTOByCompany(2);
 
 
         model.addAttribute("purchaseInvoiceNoList",purchaseInvoiceNoList);
         model.addAttribute("productNameList",productNameDTOList);
         model.addAttribute("purchaseInvoiceDTO",purchaseInvoiceDTO);
+        model.addAttribute("selectedInvoice",invoiceDTO1);
 
-        return "invoice/purchase-invoice";
+        return "redirect:/invoice/purchase-invoice";
     }
 
 
@@ -130,7 +152,7 @@ public class InvoiceController {
     @GetMapping("/delete-add-item")
     public String deleteAddItem(@Param("inventoryName") String inventoryName, @Param("invoiceNo") String invoiceNo, Model model) throws AccountingApplicationException, CompanyNotFoundException {
 
-        productService.deleteProduct(inventoryName);
+        productService.deleteProduct(invoiceNo,inventoryName);
 
         InvoiceDTO1 invoiceDTO1 = invoice1Service.findInvoice(invoiceNo);
 
@@ -158,6 +180,30 @@ public class InvoiceController {
         model.addAttribute("productList",productList);
 
         return "invoice/add-item-purchase";
+    }
+
+
+
+    @GetMapping("/update-invoice-status")
+    public String updateInvoiceStatus(@Param("invoiceNo")String invoiceNo, @Param("status") String status) throws AccountingApplicationException {
+
+        invoice1Service.updateInvoiceStatus(invoiceNo,status);
+
+
+        return "redirect:/invoice/saved-purchase-invoice";
+    }
+
+
+    @GetMapping("/saved-purchase-invoice")
+    public String savedPurchaseInvoice(Model model) throws AccountingApplicationException {
+
+        List<InvoiceDTO1> invoiceDTO1List = invoice1Service.findAllPurchaseInvoiceByCompanyId_SavedStatus(2);
+
+
+        model.addAttribute("invoiceList",invoiceDTO1List);
+
+
+        return "invoice/saved-purchase-invoice";
     }
 
 

@@ -27,6 +27,7 @@ public class InvoiceDTO1 {
     private Boolean enabled;
     private Integer year;
     private List<ProductDTO> productList = new ArrayList<>();
+    private Integer totalCost;
 
 
 }

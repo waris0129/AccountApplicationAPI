@@ -18,6 +18,7 @@ public interface ProductService {
     ProductDTO updateProduct(String name,ProductDTO productDTO) throws AccountingApplicationException;
     ProductDTO deleteProduct(String name) throws AccountingApplicationException;
     List<ProductDTO> findAllProduct();
+    ProductDTO deleteProduct(String invoiceNumber,String inventoryNo) throws AccountingApplicationException;
 
 
 

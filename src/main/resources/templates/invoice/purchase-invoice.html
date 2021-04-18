@@ -38,7 +38,7 @@
                                                 <div class="form-group">
                                                     <label for="invoiceNo" class="col-form-label">Choose Purchase No.</label>
                                                     <select name="invoiceNo" id="invoiceNo" th:field="*{invoiceNumber}"  class="custom-select" required="required">
-                                                        <option value="" selected >Select Invoice Number</option>
+                                                        <option value="" selected>Select Invoice Number</option>
                                                         <option th:each="eachinvoiceNo : ${purchaseInvoiceNoList}" th:value="${eachinvoiceNo.invoiceNo}" th:text="${eachinvoiceNo.invoiceNo}"></option>
                                                     </select>
                                                 </div>
@@ -130,7 +130,7 @@
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            <tr th:each="each : ${selectInvoice.productList}">
+                                            <tr th:each="each : ${selectedInvoice.productList}">
                                                 <td th:text="${each.name.productName}">Product Name</td>
                                                 <td th:text="${each.category.category}">Category</td>
                                                 <td th:text="${each.inventoryNo}">Inventory No</td>

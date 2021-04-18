@@ -3,13 +3,12 @@ package com.account.serviceImpl;
 import com.account.Mapper.MapperUtility;
 import com.account.dto.ProductDTO;
 import com.account.dto.ProductNameDTO;
-import com.account.entity.Category;
-import com.account.entity.Company;
-import com.account.entity.Product;
-import com.account.entity.ProductName;
+import com.account.entity.*;
 import com.account.exceptionHandler.AccountingApplicationException;
 import com.account.repository.CompanyRepository;
+import com.account.repository.Invoice1Repository;
 import com.account.repository.ProductRepository;
+import com.account.service.Invoice1Service;
 import com.account.service.ProductNameService;
 import com.account.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +29,10 @@ public class ProductServiceImpl implements ProductService {
     private CompanyRepository companyRepository;
     @Autowired
     private ProductNameService productNameService;
+    @Autowired
+    private Invoice1Repository invoice1Repository;
+    @Autowired
+    private Invoice1Service invoice1Service;
 
     private static Integer number = 0;
 
@@ -128,10 +131,14 @@ public class ProductServiceImpl implements ProductService {
 
         Optional<Product> foundProduct = productRepository.findByInventoryNo(inventoryNo.toUpperCase());
 
+
+
         if(!foundProduct.isPresent())
             throw new AccountingApplicationException("Product not found in system");
 
         Product product = foundProduct.get();
+
+
 
         product.setEnabled(false);
 
@@ -139,8 +146,44 @@ public class ProductServiceImpl implements ProductService {
 
         ProductDTO deleteDTO = mapperUtility.convert(deleteProduct, new ProductDTO());
 
+        // Update Purchase invoice total cost after delete product/inventory
+
+
+
         return deleteDTO;
     }
+
+    @Override
+    public ProductDTO deleteProduct(String invoiceNumber,String inventoryNo) throws AccountingApplicationException {
+
+        Optional<Product> foundProduct = productRepository.findByInventoryNo(inventoryNo.toUpperCase());
+
+
+
+        if(!foundProduct.isPresent())
+            throw new AccountingApplicationException("Product not found in system");
+
+        Product product = foundProduct.get();
+
+
+
+        product.setEnabled(false);
+
+        Product deleteProduct = productRepository.save(product);
+
+        ProductDTO deleteDTO = mapperUtility.convert(deleteProduct, new ProductDTO());
+
+        // Update Purchase invoice total cost after delete product/inventory
+        invoice1Service.updateTotalCost(invoiceNumber);
+
+
+
+        return deleteDTO;
+    }
+
+
+
+
 
     @Override
     public List<ProductDTO> findAllProduct() {

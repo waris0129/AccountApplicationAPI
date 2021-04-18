@@ -21,4 +21,8 @@ public interface Invoice1Service {
     List<InvoiceDTO1> findAllInvoiceByCompanyId(Integer companyId);
     List<InvoiceDTO1> findAllSalesInvoiceByCompanyId(Integer companyId);
     List<InvoiceDTO1> findAllPurchaseInvoiceByCompanyId(Integer companyId);
+    List<InvoiceDTO1> findAllPurchaseInvoiceByCompanyId_NoSavedStatus(Integer companyId);
+    List<InvoiceDTO1> findAllPurchaseInvoiceByCompanyId_SavedStatus(Integer companyId);
+    Integer calculateTotalCost(String invoiceNumber);
+    Invoice1 updateTotalCost(String invoiceNumber);
 }
