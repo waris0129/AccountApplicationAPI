@@ -43,7 +43,11 @@ public class ProfitServiceImpl implements ProfitService {
     private static int finalProfit;
     private static int totalSoldQty;
     private String invoiceNumber;
-    private ProfitDTO profitDTO= null;
+    private static ProfitDTO profitDTO;
+
+    static {
+        profitDTO = new ProfitDTO();
+    }
 
 
     @Override
@@ -90,7 +94,7 @@ public class ProfitServiceImpl implements ProfitService {
                     totalSoldItem = totalSoldItem - availableStock;
                     productDTO.setAvailableStock(0);
                     ProductDTO updateProduct = productService.updateProduct(inventoryNo,productDTO);
-                    ProductDTO deleteProduct = productService.deleteProduct(updateProduct.getInventoryNo());
+                //    ProductDTO deleteProduct = productService.deleteProduct(updateProduct.getInventoryNo());
                     collectItems.add(productDTO);
                 }
                 else if(availableStock>totalSoldItem){

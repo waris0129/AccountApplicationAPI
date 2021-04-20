@@ -26,20 +26,20 @@
 
                             <section class="panel panel-transparent">
                                 <header class="panel-heading">
-                                    <h2 class="panel-title">Purchase Invoice - Add Item</h2>
+                                    <h2 class="panel-title">Sales Invoice - Add Item</h2>
                                 </header>
 
                                 <div class="panel-body">
 
                                     <!-- ------------------------FORM START----------------------------- -->
-                                    <form class="needs-validation" novalidate th:action="@{/invoice/add-item-purchase}",  method="post"  th:object="${purchaseInvoiceDTO}">
+                                    <form class="needs-validation" novalidate th:action="@{/invoice/add-item-sales}",  method="post"  th:object="${salesInvoiceDTO}">
                                         <div class="row">
                                             <div class="col-sm-9 col-md-9">
                                                 <div class="form-group">
                                                     <label for="invoiceNo" class="col-form-label">Choose Purchase No.</label>
                                                     <select name="invoiceNo" id="invoiceNo" th:field="*{invoiceNumber}"  class="custom-select" required="required">
                                                         <option value="" selected>Select Invoice Number</option>
-                                                        <option th:each="eachinvoiceNo : ${purchaseInvoiceNoList}" th:value="${eachinvoiceNo.invoiceNo}" th:text="${eachinvoiceNo.invoiceNo}"></option>
+                                                        <option th:each="eachinvoiceNo : ${salesInvoiceNoList}" th:value="${eachinvoiceNo}" th:text="${eachinvoiceNo}"></option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -49,7 +49,7 @@
                                             <div class="col-sm-6 col-md-6">
                                                 <div class="form-group">
                                                     <label for="product" class="col-form-label">Choose Product</label>
-                                                    <select name="product" id="product" class="custom-select" th:field="*{productNameDTO}" >
+                                                    <select name="product" id="product" class="custom-select" th:field="*{productNameDTO}" required="required">
                                                         <option th:value=" ''" th:text="Select"></option>
                                                         <option th:each="eachproduct : ${productNameList}" th:value="${eachproduct.productName}" th:text="${eachproduct.productName}"></option>
                                                     </select>
@@ -62,7 +62,7 @@
                                                 <div class="form-group">
                                                     <label> Qty</label>
                                                     <input id="qty" class="form-control"
-                                                           th:field="*{qty}" >
+                                                           th:field="*{qty}" required="required">
                                                     <div class="invalid-feedback">
                                                         invalid input
                                                     </div>
@@ -72,7 +72,7 @@
                                                 <div class="form-group">
                                                     <label>Price</label>
                                                     <input id="cost" class="form-control"
-                                                           th:field="*{price}" >
+                                                           th:field="*{price}" required="required">
                                                     <div class="invalid-feedback">
                                                         invalid input
                                                     </div>
@@ -112,6 +112,7 @@
                     <div class="col-lg-12 col-md-12">
                         <div class="col-md-12">
                             <section class="panel">
+                                <p th:text="${errorMessage}"></p>
                                 <header class="panel-heading">
                                     <h2 class="panel-title">Item List</h2>
                                 </header>
@@ -122,23 +123,23 @@
                                             <tr>
                                                 <th scope="col">Product Name</th>
                                                 <th scope="col">Category</th>
-                                                <th scope="col">Inventory No</th>
+                                                <th scope="col">Sold Stock</th>
                                                 <th scope="col">Avail Stock</th>
-                                                <th scope="col">Cost</th>
-                                                <th scope="col">Supplier</th>
+                                                <th scope="col">Sell</th>
+                                                <th scope="col">Client</th>
                                                 <th scope="col">Action</th>
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            <tr th:each="each : ${selectedInvoice.productList}">
+                                            <tr th:each="each : ${productDTOList}">
                                                 <td th:text="${each.name.productName}">Product Name</td>
                                                 <td th:text="${each.category.category}">Category</td>
-                                                <td th:text="${each.inventoryNo}">Inventory No</td>
+                                                <td th:text="${each.qty - each.availableStock}">Sold Stock</td>
                                                 <td th:text="${each.availableStock}">Avail Stock</td>
-                                                <td th:text="${each.price}">Cost</td>
-                                                <td th:text="${each.category.company.title}">Supplier</td>
+                                                <td th:text="${each.price}">Sell Price</td>
+                                                <td th:text="${salesInvoice.vendor.companyName}">Client</td>
                                                 <td class="actions">
-                                                    <a th:href=""><button type="button" class="btn btn-danger btn-sm">Delete</button></a>
+                                                    <button type="button" class="btn btn-danger btn-sm">Delete</button>
                                                 </td>
                                             </tr>
                                             </tbody>

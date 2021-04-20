@@ -247,6 +247,21 @@ public class Invoice1ServiceImpl implements Invoice1Service {
     }
 
     @Override
+    public List<InvoiceDTO1> findAllSalesInvoiceByCompanyId_NoSavedStatus(Integer companyId) {
+        List<Invoice1> invoiceDTO1List = invoice1Repository.findAllSalesInvoiceByCompanyId_NoSavedStatus(companyId);
+
+        return invoiceDTO1List.stream().map(p->mapperUtility.convert(p,new InvoiceDTO1())).collect(Collectors.toList());
+    }
+
+
+    @Override
+    public List<InvoiceDTO1> findAllInvoiceByCompanyId_NoSavedStatus(Integer companyId) {
+        List<Invoice1> invoiceDTO1List = invoice1Repository.findAllInvoiceByCompanyId_NoSavedStatus(companyId);
+
+        return invoiceDTO1List.stream().map(p->mapperUtility.convert(p,new InvoiceDTO1())).collect(Collectors.toList());
+    }
+
+    @Override
     public List<InvoiceDTO1> findAllPurchaseInvoiceByCompanyId_SavedStatus(Integer companyId) {
         List<Invoice1> invoiceDTO1List = invoice1Repository.findAllPurchaseInvoiceByCompanyId_SavedStatus(companyId);
 

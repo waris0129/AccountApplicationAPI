@@ -40,6 +40,9 @@ public class InvoiceController {
     @Autowired
     private ProductService productService;
 
+    @Autowired
+    private ProfitService profitService;
+
 
 
 
@@ -50,12 +53,15 @@ public class InvoiceController {
 
         List<VendorDTO> vendorDTOList = vendorService.getAllActiveVendorByCompany(2);
         List<InvoiceType> invoiceTypeList = Arrays.asList(InvoiceType.values());
-        List<InvoiceDTO1> invoiceDTO1List = invoice1Service.findAllInvoiceByCompanyId(2);
+        List<InvoiceDTO1> invoiceDTO1List = invoice1Service.findAllInvoiceByCompanyId_NoSavedStatus(2);
+        List<InvoiceDTO1> invoiceDTO1List_Purchase= invoiceDTO1List.stream().filter(p->p.getInvoiceType().equals(InvoiceType.PURCHASE)).collect(Collectors.toList());
+        List<InvoiceDTO1> invoiceDTO1List_Sales= invoiceDTO1List.stream().filter(p->p.getInvoiceType().equals(InvoiceType.SALES)).collect(Collectors.toList());
 
         model.addAttribute("invoice",invoiceDTO1);
         model.addAttribute("vendors",vendorDTOList);
         model.addAttribute("invoiceTypes",invoiceTypeList);
-        model.addAttribute("invoiceList",invoiceDTO1List);
+        model.addAttribute("invoiceListPurchase",invoiceDTO1List_Purchase);
+        model.addAttribute("invoiceListSales",invoiceDTO1List_Sales);
 
         return "invoice/create-invoice";
     }
@@ -148,7 +154,7 @@ public class InvoiceController {
         return "invoice/add-item-purchase";
     }
 
-    private static String invoiceNumberFromDeleteAddItem = null;
+    private static String invoiceNumberFromOutside = null;
     @GetMapping("/delete-add-item")
     public String deleteAddItem(@Param("inventoryName") String inventoryName, @Param("invoiceNo") String invoiceNo, Model model) throws AccountingApplicationException, CompanyNotFoundException {
 
@@ -159,17 +165,36 @@ public class InvoiceController {
         PurchaseInvoiceDTO purchaseInvoiceDTO = new PurchaseInvoiceDTO();
         purchaseInvoiceDTO.setInvoiceNumber(invoiceNo);
 
-        invoiceNumberFromDeleteAddItem = invoiceNo;
+        invoiceNumberFromOutside = invoiceNo;
         return "redirect:/invoice/add-item-purchase";
     }
 
     @GetMapping("/add-item-purchase")
     public String getAddItemPurchase(Model model) throws CompanyNotFoundException, AccountingApplicationException {
 
-        InvoiceDTO1 invoiceDTO1 = invoiceDTO1 = invoice1Service.findInvoice(invoiceNumberFromDeleteAddItem);
+        InvoiceDTO1 invoiceDTO1 = invoiceDTO1 = invoice1Service.findInvoice(invoiceNumberFromOutside);
 
         PurchaseInvoiceDTO purchaseInvoiceDTO2 = new PurchaseInvoiceDTO();
-        purchaseInvoiceDTO2.setInvoiceNumber(invoiceNumberFromDeleteAddItem);
+        purchaseInvoiceDTO2.setInvoiceNumber(invoiceNumberFromOutside);
+
+        List<ProductNameDTO> productNameDTOList = productNameService.getAllProductNameDTOByCompany(2);
+        List<ProductDTO> productList = invoiceDTO1.getProductList();
+
+        model.addAttribute("productNameList",productNameDTOList);
+        model.addAttribute("purchaseInvoiceDTO",purchaseInvoiceDTO2);
+        model.addAttribute("selectInvoice",invoiceDTO1);
+        model.addAttribute("productList",productList);
+
+        return "invoice/add-item-purchase";
+    }
+
+    @GetMapping("/add-item-purchase/{invoiceNo}")
+    public String getAddItemPurchase2(@PathVariable("invoiceNo") String invoiceNo,Model model) throws CompanyNotFoundException, AccountingApplicationException {
+
+        InvoiceDTO1 invoiceDTO1 = invoiceDTO1 = invoice1Service.findInvoice(invoiceNo);
+
+        PurchaseInvoiceDTO purchaseInvoiceDTO2 = new PurchaseInvoiceDTO();
+        purchaseInvoiceDTO2.setInvoiceNumber(invoiceNo);
 
         List<ProductNameDTO> productNameDTOList = productNameService.getAllProductNameDTOByCompany(2);
         List<ProductDTO> productList = invoiceDTO1.getProductList();
@@ -190,11 +215,11 @@ public class InvoiceController {
         invoice1Service.updateInvoiceStatus(invoiceNo,status);
 
 
-        return "redirect:/invoice/saved-purchase-invoice";
+        return "redirect:/invoice/review-purchase";
     }
 
 
-    @GetMapping("/saved-purchase-invoice")
+    @GetMapping("/review-purchase")
     public String savedPurchaseInvoice(Model model) throws AccountingApplicationException {
 
         List<InvoiceDTO1> invoiceDTO1List = invoice1Service.findAllPurchaseInvoiceByCompanyId_SavedStatus(2);
@@ -203,7 +228,88 @@ public class InvoiceController {
         model.addAttribute("invoiceList",invoiceDTO1List);
 
 
-        return "invoice/saved-purchase-invoice";
+        return "invoice/review-purchase";
+    }
+
+
+
+    @GetMapping("/create-sales")
+    public String getSalesInvoiceObject(Model model){
+
+        SalesInvoiceDTO salesInvoiceDTO = new SalesInvoiceDTO();
+        List<InvoiceDTO1> salesInvoiceNoList = invoice1Service.findAllSalesInvoiceByCompanyId_NoSavedStatus(2);
+        List<ProductNameDTO> productNameDTOList = productNameService.getAllProductNameDTOByCompany(2);
+        InvoiceDTO1 invoiceDTO1 = new InvoiceDTO1();
+
+        model.addAttribute("salesInvoiceNoList",salesInvoiceNoList);
+        model.addAttribute("productNameList",productNameDTOList);
+        model.addAttribute("salesInvoiceDTO",salesInvoiceDTO);
+        model.addAttribute("selectedInvoice",invoiceDTO1);
+
+        return "invoice/sales-invoice";
+    }
+
+
+    @PostMapping("/add-item-sales")
+    public String addItemSales(@ModelAttribute("salesInvoiceDTO") SalesInvoiceDTO salesInvoiceDTO, Model model){
+
+        String invoiceNumber = salesInvoiceDTO.getInvoiceNumber();
+        String productDTO = salesInvoiceDTO.getProductNameDTO();
+        Integer price = salesInvoiceDTO.getPrice();
+        Integer qty = salesInvoiceDTO.getQty();
+
+        InvoiceDTO1 invoiceDTO1 = null;
+        List<ProductDTO> productDTOList = null;
+        try {
+            invoiceDTO1 = invoice1Service.findInvoice(invoiceNumber);
+            productDTOList = profitService.updateInventoryByFIFO(invoiceNumber,productDTO,qty,price);
+        } catch (AccountingApplicationException e) {
+            model.addAttribute("errorMessage",e.getMessage());
+        }
+
+        SalesInvoiceDTO salesInvoiceDTO1 = new SalesInvoiceDTO();
+        salesInvoiceDTO1.setInvoiceNumber(invoiceNumber);
+
+        List<ProductNameDTO> productNameDTOList = productNameService.getAllProductNameDTOByCompany(2);
+
+
+
+        model.addAttribute("salesInvoiceNoList",salesInvoiceDTO.getInvoiceNumber());
+        model.addAttribute("productNameList",productNameDTOList);
+        model.addAttribute("salesInvoiceDTO",salesInvoiceDTO1);
+        model.addAttribute("productDTOList",productDTOList);
+        model.addAttribute("salesInvoice",invoiceDTO1);
+
+
+        return "invoice/add-item-sales";
+    }
+
+
+
+    @GetMapping("/add-item-sales/{invoiceNo}")
+    public String addItemSales2(@PathVariable("invoiceNo") String invoiceNumber, Model model) throws AccountingApplicationException {
+
+     //   String invoiceNumber = salesInvoiceDTO.getInvoiceNumber();
+        String productDTO = null;
+        Integer price =0;
+        Integer qty=0;
+
+        InvoiceDTO1 invoiceDTO1 = invoiceDTO1 = invoice1Service.findInvoice(invoiceNumber);;
+
+        SalesInvoiceDTO salesInvoiceDTO1 = new SalesInvoiceDTO();
+        salesInvoiceDTO1.setInvoiceNumber(invoiceNumber);
+
+        List<ProductDTO> productList = invoiceDTO1.getProductList();
+        List<ProductNameDTO> productNameDTOList = productNameService.getAllProductNameDTOByCompany(2);
+
+        model.addAttribute("salesInvoiceNoList",invoiceNumber);
+        model.addAttribute("productNameList",productNameDTOList);
+        model.addAttribute("salesInvoiceDTO",salesInvoiceDTO1);
+        model.addAttribute("productDTOList",productList);
+        model.addAttribute("salesInvoice",invoiceDTO1);
+
+
+        return "invoice/add-item-sales";
     }
 
 

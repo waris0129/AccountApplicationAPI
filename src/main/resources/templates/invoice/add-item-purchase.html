@@ -135,7 +135,7 @@
                                                 <th scope="col">Product Name</th>
                                                 <th scope="col">Category</th>
                                                 <th scope="col">Inventory No</th>
-                                                <th scope="col">Avail Stock</th>
+                                                <th scope="col">Total Stock</th>
                                                 <th scope="col">Cost</th>
                                                 <th scope="col">Supplier</th>
                                                 <th scope="col">Action</th>
@@ -146,9 +146,9 @@
                                                 <td th:text="${each.name.productName}">Product Name</td>
                                                 <td th:text="${each.category.category}">Category</td>
                                                 <td th:text="${each.inventoryNo}">Inventory No</td>
-                                                <td th:text="${each.availableStock}">Avail Stock</td>
+                                                <td th:text="${each.qty}">Total Stock</td>
                                                 <td th:text="${each.price}">Cost</td>
-                                                <td th:text="${each.category.company.title}">Supplier</td>
+                                                <td th:text="${selectInvoice.vendor.companyName}">Supplier</td>
                                                 <td class="actions">
                                                     <a th:href="@{/invoice/delete-add-item(inventoryName=${each.inventoryNo},invoiceNo=${selectInvoice.invoiceNo})}"><button type="button" class="btn btn-danger btn-sm">Delete</button></a>
                                                 </td>

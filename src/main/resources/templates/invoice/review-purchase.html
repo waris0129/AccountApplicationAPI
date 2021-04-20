@@ -55,7 +55,7 @@
                         <div class="col-md-12">
                             <section class="panel">
                                 <header class="panel-heading">
-                                    <h2 class="panel-title">Purchase Invoice List - Status</h2>
+                                    <h2 class="panel-title">Purchase Invoice - Review List</h2>
                                 </header>
                                 <div class="panel-body">
                                     <div class="table-responsive">
@@ -76,7 +76,12 @@
                                                 <td th:text="${each.invoiceStatus}">Invoice Status</td>
                                                 <td th:text="${each.vendor.companyName}">Supplier</td>
                                                 <td class="actions">
-                                                    <button type="button" class="btn btn-danger btn-sm">Delete</button>
+                                                    <a th:href="@{/invoice/update-invoice-status(invoiceNo=${each.invoiceNo},status='PENDING')}">
+                                                        <button type="button" class="btn btn-warning btn-sm">PENDING</button></a>
+                                                    <a th:href="@{/invoice/update-invoice-status(invoiceNo=${each.invoiceNo},status='APPROVED')}">
+                                                        <button type="button" class="btn btn-success btn-sm">APPROVED</button></a>
+                                                    <a th:href="@{/invoice/update-invoice-status(invoiceNo=${each.invoiceNo},status='CANCEL')}">
+                                                        <button type="button" class="btn btn-danger btn-sm">CANCEL</button></a>
                                                 </td>
                                             </tr>
                                             </tbody>

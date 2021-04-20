@@ -85,15 +85,15 @@
                         <div class="col-md-12">
                             <section class="panel">
                                 <header class="panel-heading">
-                                    <h2 class="panel-title">Invoice List</h2>
+                                    <h2 class="panel-title">Invoice - Pending List</h2>
                                 </header>
                                 <div class="panel-body">
                                     <div class="table-responsive">
                                         <table class="table table-striped">
                                             <thead>
                                             <tr>
-                                                <th scope="col">Invoice No</th>
                                                 <th scope="col">Invoice Type</th>
+                                                <th scope="col">Invoice No</th>
                                                 <th scope="col">Invoice Status</th>
                                                 <th scope="col">Vendor Name</th>
                                                 <th scope="col">Vendor Type</th>
@@ -101,13 +101,39 @@
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            <tr th:each="each : ${invoiceList}">
-                                                <td th:text="${each.invoiceNo}">Invoice No</td>
+                                            <tr th:each="each : ${invoiceListPurchase}">
                                                 <td th:text="${each.invoiceType}">Invoice Type</td>
+                                                <td th:text="${each.invoiceNo}">Invoice No</td>
                                                 <td th:text="${each.invoiceStatus}">Invoice Status</td>
                                                 <td th:text="${each.vendor.companyName}">Vendor Name</td>
                                                 <td th:text="${each.vendor.type}">Vendor Type</td>
                                                 <td class="actions">
+                                                    <a th:href="@{/invoice/add-item-purchase/{invoiceNo}(invoiceNo = ${each.invoiceNo})}"><button type="button" class="btn btn-success btn-sm">Add Item</button></a>
+                                                    <a th:href="@{/invoice/delete-invoice/{invoiceNo}(invoiceNo = ${each.invoiceNo})}"><button type="button" class="btn btn-danger btn-sm">Delete</button></a>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                        <table class="table table-striped">
+                                            <thead>
+                                            <tr>
+                                                <th scope="col">Invoice Type</th>
+                                                <th scope="col">Invoice No</th>
+                                                <th scope="col">Invoice Status</th>
+                                                <th scope="col">Vendor Name</th>
+                                                <th scope="col">Vendor Type</th>
+                                                <th scope="col">Action</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr th:each="each : ${invoiceListSales}">
+                                                <td th:text="${each.invoiceType}">Invoice Type</td>
+                                                <td th:text="${each.invoiceNo}">Invoice No</td>
+                                                <td th:text="${each.invoiceStatus}">Invoice Status</td>
+                                                <td th:text="${each.vendor.companyName}">Vendor Name</td>
+                                                <td th:text="${each.vendor.type}">Vendor Type</td>
+                                                <td class="actions">
+                                                    <a th:href="@{/invoice/add-item-sales/{invoiceNo}(invoiceNo = ${each.invoiceNo})}"><button type="button" class="btn btn-success btn-sm">Add Item</button></a>
                                                     <a th:href="@{/invoice/delete-invoice/{invoiceNo}(invoiceNo = ${each.invoiceNo})}"><button type="button" class="btn btn-danger btn-sm">Delete</button></a>
                                                 </td>
                                             </tr>
