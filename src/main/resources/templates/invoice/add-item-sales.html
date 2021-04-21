@@ -87,6 +87,11 @@
                                                     <button type="submit" class="btn btn-success">Add Item</button>
                                                 </div>
                                             </div>
+                                            <div class="col-sm-5 col-md-5">
+                                                <div class="float-left">
+                                                    <a th:href="@{/invoice/update-invoice-status(invoiceNo=${salesInvoice.invoiceNo}, status='Review')}">  <button type="button" class="btn btn-success">Save Invoice</button></a>
+                                                </div>
+                                            </div>
                                         </div>
 
 

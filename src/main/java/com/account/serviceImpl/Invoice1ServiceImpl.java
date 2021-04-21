@@ -267,4 +267,13 @@ public class Invoice1ServiceImpl implements Invoice1Service {
 
         return invoiceDTO1List.stream().map(p->mapperUtility.convert(p,new InvoiceDTO1())).collect(Collectors.toList());
     }
+
+    //findAllSalesInvoiceByCompanyId_SavedStatus
+    @Override
+    public List<InvoiceDTO1> findAllSalesInvoiceByCompanyId_SavedStatus(Integer companyId) {
+        List<Invoice1> invoiceDTO1List = invoice1Repository.findAllSalesInvoiceByCompanyId_SavedStatus(companyId);
+
+        return invoiceDTO1List.stream().map(p->mapperUtility.convert(p,new InvoiceDTO1())).collect(Collectors.toList());
+    }
+
 }

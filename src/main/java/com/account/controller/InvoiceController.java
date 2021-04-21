@@ -212,10 +212,11 @@ public class InvoiceController {
     @GetMapping("/update-invoice-status")
     public String updateInvoiceStatus(@Param("invoiceNo")String invoiceNo, @Param("status") String status) throws AccountingApplicationException {
 
-        invoice1Service.updateInvoiceStatus(invoiceNo,status);
+        InvoiceDTO1 invoiceDTO1 = invoice1Service.updateInvoiceStatus(invoiceNo,status);
 
+        String view = invoiceDTO1.getInvoiceType().equals(InvoiceType.PURCHASE)?"redirect:/invoice/review-purchase":"redirect:/invoice/review-sales";
 
-        return "redirect:/invoice/review-purchase";
+        return view;
     }
 
 
@@ -229,6 +230,18 @@ public class InvoiceController {
 
 
         return "invoice/review-purchase";
+    }
+
+    @GetMapping("/review-sales")
+    public String savedSalesInvoice(Model model) throws AccountingApplicationException {
+
+        List<InvoiceDTO1> invoiceDTO1List = invoice1Service.findAllSalesInvoiceByCompanyId_SavedStatus(2);
+
+
+        model.addAttribute("invoiceList",invoiceDTO1List);
+
+
+        return "invoice/review-sales";
     }
 
 

@@ -55,7 +55,7 @@
                         <div class="col-md-12">
                             <section class="panel">
                                 <header class="panel-heading">
-                                    <h2 class="panel-title">Purchase Invoice - Review List</h2>
+                                    <h2 class="panel-title">Sales Invoice - Review List</h2>
                                 </header>
                                 <div class="panel-body">
                                     <div class="table-responsive">
@@ -63,18 +63,18 @@
                                             <thead>
                                             <tr>
                                                 <th scope="col">Invoice Number</th>
-                                                <th scope="col">Total Cost</th>
+                                                <th scope="col">Total Sales</th>
                                                 <th scope="col">Invoice Status</th>
-                                                <th scope="col">Supplier</th>
+                                                <th scope="col">Client</th>
                                                 <th scope="col">Action</th>
                                             </tr>
                                             </thead>
                                             <tbody>
                                             <tr th:each="each : ${invoiceList}">
                                                 <td th:text="${each.invoiceNo}">Invoice Number</td>
-                                                <td th:text="${each.totalCost}">Total Cost</td>
+                                                <td th:text="${each.totalCost}">Total Sales</td>
                                                 <td th:text="${each.invoiceStatus}">Invoice Status</td>
-                                                <td th:text="${each.vendor.companyName}">Supplier</td>
+                                                <td th:text="${each.vendor.companyName}">Client</td>
                                                 <td class="actions">
                                                     <a th:href="@{/invoice/update-invoice-status(invoiceNo=${each.invoiceNo},status='PENDING')}">
                                                         <button th:disabled="${!each.invoiceStatus.getValue().equals('Review')}" type="button" th:class="${each.invoiceStatus.getValue().equals('Review')}?'btn btn-warning btn-sm':'btn btn-secondary btn-sm'">PENDING</button></a>
@@ -108,11 +108,6 @@
 
     <div th:replace="/fragments/javascript :: js"></div>
 
-<script>
-    function myFunction(){
-        return false;
-    }
-</script>
 
 
 </body>
