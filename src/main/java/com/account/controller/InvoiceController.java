@@ -72,6 +72,7 @@ public class InvoiceController {
     @PostMapping("/create-invoice")
     public String createInvoice(InvoiceDTO1 invoiceDTO1,Model model) throws AccountingApplicationException, UserNotFoundInSystem, CompanyNotFoundException {
 
+
         InvoiceDTO1 invoiceDTO = invoice1Service.createNewInvoiceTemplate(invoiceDTO1.getVendor().getCompanyName(),invoiceDTO1.getInvoiceType().getValue());
 
         return "redirect:/invoice/create-invoice";
@@ -135,8 +136,13 @@ public class InvoiceController {
         Integer qty =  purchaseInvoiceDTO.getQty();
         InvoiceDTO1 invoiceDTO1 = null;
 
-        if(productDTO!=null)
-             invoiceDTO1 = invoice1Service.addProductItem(invoiceNumber,productDTO,price,qty);
+        if(productDTO!=null){
+            invoiceDTO1 = invoice1Service.addProductItem(invoiceNumber,productDTO,price,qty);
+            Integer totalQTY = invoiceDTO1.getProductList().stream().mapToInt(p->p.getQty()).sum();
+            invoiceDTO1.setTotalQTY(totalQTY);
+            invoice1Service.updateInvoice(invoiceNumber,invoiceDTO1);
+        }
+
         else
             invoiceDTO1 = invoice1Service.findInvoice(invoiceNumber);
 
@@ -172,7 +178,7 @@ public class InvoiceController {
     @GetMapping("/add-item-purchase")
     public String getAddItemPurchase(Model model) throws CompanyNotFoundException, AccountingApplicationException {
 
-        InvoiceDTO1 invoiceDTO1 = invoiceDTO1 = invoice1Service.findInvoice(invoiceNumberFromOutside);
+        InvoiceDTO1 invoiceDTO1 = invoice1Service.findInvoice(invoiceNumberFromOutside);
 
         PurchaseInvoiceDTO purchaseInvoiceDTO2 = new PurchaseInvoiceDTO();
         purchaseInvoiceDTO2.setInvoiceNumber(invoiceNumberFromOutside);
@@ -191,7 +197,7 @@ public class InvoiceController {
     @GetMapping("/add-item-purchase/{invoiceNo}")
     public String getAddItemPurchase2(@PathVariable("invoiceNo") String invoiceNo,Model model) throws CompanyNotFoundException, AccountingApplicationException {
 
-        InvoiceDTO1 invoiceDTO1 = invoiceDTO1 = invoice1Service.findInvoice(invoiceNo);
+        InvoiceDTO1 invoiceDTO1 = invoice1Service.findInvoice(invoiceNo);
 
         PurchaseInvoiceDTO purchaseInvoiceDTO2 = new PurchaseInvoiceDTO();
         purchaseInvoiceDTO2.setInvoiceNumber(invoiceNo);
@@ -262,7 +268,7 @@ public class InvoiceController {
         return "invoice/sales-invoice";
     }
 
-
+    public static int soldQTY;
     @PostMapping("/add-item-sales")
     public String addItemSales(@ModelAttribute("salesInvoiceDTO") SalesInvoiceDTO salesInvoiceDTO, Model model){
 
@@ -275,6 +281,8 @@ public class InvoiceController {
         List<ProductDTO> productDTOList = null;
         try {
             invoiceDTO1 = invoice1Service.findInvoice(invoiceNumber);
+            if(invoiceDTO1.getTotalQTY()==0)
+                soldQTY=0;
             productDTOList = profitService.updateInventoryByFIFO(invoiceNumber,productDTO,qty,price);
         } catch (AccountingApplicationException e) {
             model.addAttribute("errorMessage",e.getMessage());
@@ -285,14 +293,14 @@ public class InvoiceController {
 
         List<ProductNameDTO> productNameDTOList = productNameService.getAllProductNameDTOByCompany(2);
 
-
+        soldQTY += qty;
 
         model.addAttribute("salesInvoiceNoList",salesInvoiceDTO.getInvoiceNumber());
         model.addAttribute("productNameList",productNameDTOList);
         model.addAttribute("salesInvoiceDTO",salesInvoiceDTO1);
         model.addAttribute("productDTOList",productDTOList);
         model.addAttribute("salesInvoice",invoiceDTO1);
-
+        model.addAttribute("qty",soldQTY);
 
         return "invoice/add-item-sales";
     }
@@ -323,6 +331,16 @@ public class InvoiceController {
 
 
         return "invoice/add-item-sales";
+    }
+
+
+
+    @GetMapping("/cancel-sales-invoice")
+    public String cancelSalesInvoice(@Param("invoiceNo") String invoiceNo) throws AccountingApplicationException {
+
+        invoice1Service.cancelSalesInvoice(invoiceNo);
+
+        return "redirect:/invoice/review-sales";
     }
 
 

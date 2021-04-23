@@ -72,7 +72,7 @@
                                             <tbody>
                                             <tr th:each="each : ${invoiceList}">
                                                 <td th:text="${each.invoiceNo}">Invoice Number</td>
-                                                <td th:text="${each.totalCost}">Total Cost</td>
+                                                <td th:text="${each.getTotalPrice}">Total Cost</td>
                                                 <td th:text="${each.invoiceStatus}">Invoice Status</td>
                                                 <td th:text="${each.vendor.companyName}">Supplier</td>
                                                 <td class="actions">

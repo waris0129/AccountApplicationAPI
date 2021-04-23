@@ -16,5 +16,6 @@ public interface ProfitService {
     String createInvoiceNumber(String invoiceType) throws CompanyNotFoundException;
     InvoiceDTO1 createNewInvoiceTemplate(String vendorName, String invoiceType) throws UserNotFoundInSystem, AccountingApplicationException, CompanyNotFoundException;
     ProfitDTO saveProfitTransaction(String invoiceNumber) throws AccountingApplicationException;
+    List<ProductDTO> updateInventoryByFIFO_SalesCancel(String salesInvoiceNumber) throws AccountingApplicationException;
 
 }

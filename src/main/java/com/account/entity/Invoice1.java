@@ -46,6 +46,7 @@ public class Invoice1 extends BaseEntity{
     private Company company;
     private Boolean enabled;
 
-    private Integer totalCost;
+    private Integer totalPrice;
+    private Integer totalQTY;
 
 }

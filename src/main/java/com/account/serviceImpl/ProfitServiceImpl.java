@@ -4,8 +4,7 @@ import com.account.Mapper.MapperUtility;
 import com.account.dto.InvoiceDTO1;
 import com.account.dto.ProductDTO;
 import com.account.dto.ProfitDTO;
-import com.account.entity.Product;
-import com.account.entity.ProductName;
+import com.account.dto.SalesInvoiceDTO;
 import com.account.entity.Profit;
 import com.account.exceptionHandler.AccountingApplicationException;
 import com.account.exceptionHandler.CompanyNotFoundException;
@@ -68,9 +67,22 @@ public class ProfitServiceImpl implements ProfitService {
 
     @Override
     public List<ProductDTO> updateInventoryByFIFO(String salesInvoiceNumber, String productName, Integer totalSoldItem, Integer salesPrice) throws AccountingApplicationException {
-        profitDTO.setSalesInvoiceNo(invoice1Service.findInvoice(salesInvoiceNumber));
+
+        InvoiceDTO1 invoiceDTO1 = invoice1Service.findInvoice(salesInvoiceNumber);
+
+        if(invoiceDTO1.getTotalQTY()==0)
+            totalSoldQty =0;
+        if(invoiceDTO1.getTotalPrice()==0)
+            totalSales = 0;
+
+
+
+        profitDTO.setSalesInvoiceNo(invoiceDTO1);
         totalSales += totalSoldItem * salesPrice;
         totalSoldQty +=totalSoldItem;
+
+
+
 
         if(!profitDTO.getProductName().stream().filter(p->p.getProductName().equals(productName)).findAny().isPresent())
             profitDTO.getProductName().add(productNameService.findProductNameDTO(productName));
@@ -107,6 +119,44 @@ public class ProfitServiceImpl implements ProfitService {
                 }
             }
 
+        invoiceDTO1.setTotalPrice(totalSales);
+        invoiceDTO1.setTotalQTY(totalSoldQty);
+//        invoiceDTO1.setProductList(allProductList);
+
+        invoice1Service.updateInvoice(salesInvoiceNumber,invoiceDTO1);
+
+        return collectItems;
+    }
+
+
+    @Override
+    public List<ProductDTO> updateInventoryByFIFO_SalesCancel(String salesInvoiceNumber) throws AccountingApplicationException {
+
+        InvoiceDTO1  salesInvoiceDTO = invoice1Service.findInvoice(salesInvoiceNumber);
+
+        List<String> inventoryList = salesInvoiceDTO.getProductList().stream().map(p->p.getInventoryNo()).sorted().collect(Collectors.toList());
+        Integer totalSoldItem = salesInvoiceDTO.getTotalQTY();
+
+
+        List<ProductDTO> collectItems = new ArrayList<>();
+
+        for(String inventoryNo : inventoryList){
+
+            ProductDTO foundProductItem = productService.findProductByInventoryNo(inventoryNo);
+
+            Integer availStock = foundProductItem.getAvailableStock();
+            Integer qty = foundProductItem.getQty();
+
+            while (availStock!=qty){
+                ++availStock;
+                --totalSoldItem;
+            }
+
+            foundProductItem.setAvailableStock(availStock);
+
+            ProductDTO updateProduct = productService.updateProduct(inventoryNo,foundProductItem);
+            collectItems.add(updateProduct);
+        }
 
         return collectItems;
     }

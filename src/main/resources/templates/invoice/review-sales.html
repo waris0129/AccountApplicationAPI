@@ -72,15 +72,13 @@
                                             <tbody>
                                             <tr th:each="each : ${invoiceList}">
                                                 <td th:text="${each.invoiceNo}">Invoice Number</td>
-                                                <td th:text="${each.totalCost}">Total Sales</td>
+                                                <td th:text="${each.getTotalPrice}">Total Sales</td>
                                                 <td th:text="${each.invoiceStatus}">Invoice Status</td>
                                                 <td th:text="${each.vendor.companyName}">Client</td>
                                                 <td class="actions">
-                                                    <a th:href="@{/invoice/update-invoice-status(invoiceNo=${each.invoiceNo},status='PENDING')}">
-                                                        <button th:disabled="${!each.invoiceStatus.getValue().equals('Review')}" type="button" th:class="${each.invoiceStatus.getValue().equals('Review')}?'btn btn-warning btn-sm':'btn btn-secondary btn-sm'">PENDING</button></a>
                                                     <a th:href="@{/invoice/update-invoice-status(invoiceNo=${each.invoiceNo},status='APPROVED')}">
                                                         <button type="button" class="btn btn-success btn-sm">APPROVED</button></a>
-                                                    <a th:href="@{/invoice/update-invoice-status(invoiceNo=${each.invoiceNo},status='CANCEL')}">
+                                                    <a th:href="@{/invoice/cancel-sales-invoice(invoiceNo=${each.invoiceNo})}">
                                                         <button th:disabled="${!each.invoiceStatus.getValue().equals('Review')}" type="button" th:class="${each.invoiceStatus.getValue().equals('Review')}?'btn btn-danger btn-sm':'btn btn-secondary btn-sm'">CANCEL</button></a>
                                                 </td>
                                             </tr>

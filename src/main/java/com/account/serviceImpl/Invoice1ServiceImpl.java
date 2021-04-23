@@ -37,6 +37,8 @@ public class Invoice1ServiceImpl implements Invoice1Service {
     private ProductNameService productNameService;
     @Autowired
     private ProductService productService;
+    @Autowired
+    private ProfitService profitService;
 
 
     private static InvoiceDTO1 invoiceDTO1;
@@ -101,6 +103,8 @@ public class Invoice1ServiceImpl implements Invoice1Service {
         invoice1.setInvoiceStatus(InvoiceStatus.PENDING);
         invoice1.setLocalDate(LocalDate.now());
         invoice1.setEnabled(true);
+        invoice1.setTotalPrice(0);
+        invoice1.setTotalQTY(0);
 
         Invoice1 savedInvoice = invoice1Repository.save(invoice1);
 
@@ -127,6 +131,29 @@ public class Invoice1ServiceImpl implements Invoice1Service {
         return dto;
     }
 
+
+    @Override
+    public InvoiceDTO1 updateInvoice(String invoiceNumber, InvoiceDTO1 invoiceDTO1) throws AccountingApplicationException {
+        Optional<Invoice1> foundInvoice = invoice1Repository.findByInvoiceNo(invoiceNumber);
+
+        if(!foundInvoice.isPresent())
+            throw new AccountingApplicationException("Invoice not found in system");
+
+        Invoice1 invoice = foundInvoice.get();
+
+        Integer id = invoice.getId();
+
+        invoiceDTO1.setId(id);
+
+        Invoice1 invoice2 = mapperUtility.convert(invoiceDTO1,new Invoice1());
+
+        Invoice1 savedInvoice = invoice1Repository.save(invoice2);
+
+        InvoiceDTO1 dto = mapperUtility.convert(savedInvoice,new InvoiceDTO1());
+
+        return dto;
+    }
+
     @Override
     public InvoiceDTO1 cancelInvoice(String invoiceNumber) throws AccountingApplicationException {
         Optional<Invoice1> foundInvoice = invoice1Repository.findByInvoiceNo(invoiceNumber);
@@ -144,6 +171,33 @@ public class Invoice1ServiceImpl implements Invoice1Service {
         InvoiceDTO1 invoiceDTO = mapperUtility.convert(savedInvoice,new InvoiceDTO1());
 
         return invoiceDTO;
+    }
+
+    @Override
+    public InvoiceDTO1 cancelSalesInvoice(String salesInvoiceNumber) throws AccountingApplicationException {
+
+
+        Optional<Invoice1> foundInvoice = invoice1Repository.findByInvoiceNo(salesInvoiceNumber);
+
+        if(!foundInvoice.isPresent())
+            throw new AccountingApplicationException("Invoice not found in system");
+
+        Invoice1 invoice = foundInvoice.get();
+
+        // update product available Stock
+        profitService.updateInventoryByFIFO_SalesCancel(salesInvoiceNumber);
+
+        invoice.setInvoiceStatus(InvoiceStatus.CANCEL);
+        invoice.setEnabled(false);
+
+        Invoice1 savedInvoice = invoice1Repository.save(invoice);
+
+        InvoiceDTO1 invoiceDTO = mapperUtility.convert(savedInvoice,new InvoiceDTO1());
+
+
+
+
+        return null;
     }
 
     @Override
@@ -166,9 +220,11 @@ public class Invoice1ServiceImpl implements Invoice1Service {
 
         Invoice1 invoice1 = invoice1Repository.findByInvoiceNo(invoiceNumber).get();
 
-        invoice1.setTotalCost(invoice1.getProductList().stream().filter(p->p.getEnabled().equals(true)).mapToInt(p->p.getPrice()*p.getQty()).sum());
+        Integer price = invoice1.getProductList().stream().filter(p->p.getEnabled().equals(true)).mapToInt(p->p.getPrice()*p.getQty()).sum();
 
-        return invoice1.getTotalCost();
+        invoice1.setTotalPrice(price);
+
+        return invoice1.getTotalPrice();
     }
 
 
@@ -177,7 +233,7 @@ public class Invoice1ServiceImpl implements Invoice1Service {
 
         Invoice1 invoice1 = invoice1Repository.findByInvoiceNo(invoiceNumber).get();
 
-        invoice1.setTotalCost(invoice1.getProductList().stream().filter(p->p.getEnabled().equals(true)).mapToInt(p->p.getPrice()*p.getQty()).sum());
+        invoice1.setTotalPrice(invoice1.getProductList().stream().filter(p->p.getEnabled().equals(true)).mapToInt(p->p.getPrice()*p.getQty()).sum());
 
         return invoice1Repository.save(invoice1);
     }
@@ -207,7 +263,7 @@ public class Invoice1ServiceImpl implements Invoice1Service {
 
         invoiceProduct.getProductList().add(product);
 
-        invoiceProduct.setTotalCost(calculateTotalCost(invoiceNumber));
+        invoiceProduct.setTotalPrice(calculateTotalCost(invoiceNumber));
 
         Invoice1 savedInvoiceProduct = invoice1Repository.save(invoiceProduct);
 

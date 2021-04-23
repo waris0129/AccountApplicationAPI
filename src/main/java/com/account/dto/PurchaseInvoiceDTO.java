@@ -17,7 +17,8 @@ public class PurchaseInvoiceDTO {
     private String productNameDTO;
     private Integer qty;
     private Integer price;
-
+    private Integer totalPrice;
+    private Integer totalQTY;
 
 
 }
