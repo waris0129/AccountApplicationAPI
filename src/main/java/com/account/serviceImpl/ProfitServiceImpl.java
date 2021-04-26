@@ -6,6 +6,7 @@ import com.account.dto.ProductDTO;
 import com.account.dto.ProfitDTO;
 import com.account.dto.SalesInvoiceDTO;
 import com.account.entity.Profit;
+import com.account.enums.InvoiceStatus;
 import com.account.exceptionHandler.AccountingApplicationException;
 import com.account.exceptionHandler.CompanyNotFoundException;
 import com.account.exceptionHandler.UserNotFoundInSystem;
@@ -164,12 +165,16 @@ public class ProfitServiceImpl implements ProfitService {
 
     @Override
     public ProfitDTO saveProfitTransaction(String invoiceNumber) throws AccountingApplicationException {
+        InvoiceDTO1 invoiceDTO1 = invoice1Service.findInvoice(invoiceNumber);
+        invoiceDTO1.setInvoiceStatus(InvoiceStatus.COMPLETE);
+        InvoiceDTO1 updateInvoice= invoice1Service.updateInvoice(invoiceNumber,invoiceDTO1);
+
         finalProfit = totalSales-totalCost;
 
         profitDTO.setSoldQty(totalSoldQty);
         profitDTO.setTotalCost(BigDecimal.valueOf(totalCost));
         profitDTO.setTotalSales(BigDecimal.valueOf(totalSales));
-        profitDTO.setSalesInvoiceNo(invoice1Service.findInvoice(invoiceNumber));
+        profitDTO.setSalesInvoiceNo(updateInvoice);
         profitDTO.setProfit(BigDecimal.valueOf(finalProfit));
 
         Profit profit = mapperUtility.convert(profitDTO,new Profit());
@@ -178,4 +183,26 @@ public class ProfitServiceImpl implements ProfitService {
 
         return mapperUtility.convert(savedProfit, new ProfitDTO());
     }
+
+    @Override
+    public List<ProfitDTO> getAllProfit(){
+
+        List<Profit> profits = profitRepository.getAllProfitByCompanyId(2);
+
+        List<ProfitDTO> profitDTOList = profits.stream().map(p->mapperUtility.convert(p,new ProfitDTO())).collect(Collectors.toList());
+
+        return profitDTOList;
+    }
+
+
+    @Override
+    public ProfitDTO findProfitByInvoiceId(String salesInvoiceNumber){
+
+        Profit profit = profitRepository.findProfitByInvoiceId(Integer.parseInt(salesInvoiceNumber));
+
+        ProfitDTO profitDTO = mapperUtility.convert(profit,new ProfitDTO());
+
+        return profitDTO;
+    }
+
 }

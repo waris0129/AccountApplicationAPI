@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="/fragments/head :: header"></head>
+
+<body>
+
+<div class="dashboard-main-wrapper">
+
+    <div th:replace="/fragments/header :: header"></div>
+
+    <div th:replace="/fragments/left-sidebar :: left-sidebar"></div>
+
+    <div class="dashboard-wrapper">
+
+        <div class="dashboard-ecommerce">
+
+            <div class="container-fluid dashboard-content">
+
+                <div class="ecommerce-widget">
+
+                    <div class="row">
+
+                        <div class="col-lg-6 col-md-12">
+
+                            <section class="panel panel-transparent">
+                                <header class="panel-heading">
+                                    <h2 class="panel-title">Profit</h2>
+                                </header>
+
+                                <div class="panel-body">
+
+                                    <!-- ------------------------FORM START----------------------------- -->
+                                    <form class="needs-validation" novalidate th:action="@{/profit/save}" method="post" th:object="${invoiceNo}">
+                                        <div class="row">
+                                            <div class="col-sm-6 col-md-6">
+                                                <div class="form-group">
+                                                    <label for="type" class="col-form-label">Choose Sales Invoice</label>
+                                                    <select name="type" id="type" th:field="*{invoiceNo}" class="custom-select" required="required">
+                                                        <option th:value=" ''" th:text="Select"></option>
+                                                        <option th:each="each : ${salesInvoiceList}" th:value="${each.invoiceNo}" th:text="${each.invoiceNo}"></option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-sm-6 col-md-6">
+                                                <div class="float-left">
+                                                    <button type="submit" class="btn btn-success">Get Profit</button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                    </form>
+                                    <!-- ------------------------FORM END----------------------------- -->
+
+                                </div>
+
+                            </section>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- ------------------------TABLE START----------------------------- -->
+                <br>
+                <div class="row">
+                    <div class="col-lg-12 col-md-12">
+                        <div class="col-md-12">
+                            <section class="panel">
+                                <header class="panel-heading">
+                                    <h2 class="panel-title">Profit List</h2>
+                                </header>
+                                <div class="panel-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-striped">
+                                            <thead>
+                                            <tr>
+                                                <th scope="col">Invoice No</th>
+                                                <th scope="col">Sold QTY</th>
+                                                <th scope="col">Sold Cost</th>
+                                                <th scope="col">Sold Sales</th>
+                                                <th scope="col">Profit</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr th:each="each : ${profitList}">
+                                                <td th:text="${each.salesInvoiceNo.invoiceNo}">Invoice No</td>
+                                                <td th:text="${each.soldQty}">Sold QTY</td>
+                                                <td th:text="${each.totalCost}">Total Cost</td>
+                                                <td th:text="${each.totalSales}">Total Sales</td>
+                                                <td th:text="${each.profit}">Profit</td>
+                                                <td class="actions">
+                                                    <a th:href="@{/profit/print/invoiceNo/{id}(id=${each.salesInvoiceNo.id})}"><button type="button" class="btn btn-success btn-sm">Print</button></a>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ------------------------TABLE END----------------------------- -->
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div th:replace="/fragments/footer :: footer"></div>
+
+</div>
+
+    <div th:replace="/fragments/javascript :: js"></div>
+
+
+
+</body>
+
+</html>

@@ -1,21 +1,17 @@
 package com.account.controller;
 
 import com.account.dto.InvoiceDTO1;
-import com.account.dto.ProductDTO;
 import com.account.dto.ProfitDTO;
-import com.account.entity.Product;
-import com.account.entity.Profit;
 import com.account.exceptionHandler.AccountingApplicationException;
-import com.account.exceptionHandler.CompanyNotFoundException;
 import com.account.exceptionHandler.ResponseWrapper;
-import com.account.exceptionHandler.UserNotFoundInSystem;
+import com.account.service.Invoice1Service;
 import com.account.service.ProfitService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import javax.websocket.server.PathParam;
 import java.util.List;
 
 @Controller
@@ -24,33 +20,40 @@ public class ProfitController {
 
     @Autowired
     private ProfitService profitService;
+    @Autowired
+    private Invoice1Service invoice1Service;
 
+    @GetMapping()
+    public String getProfitObject(Model model) {
 
-    @PostMapping("/new")
-    public ResponseEntity<ResponseWrapper> createNewSalesInvoice(@RequestParam String vendor, @RequestParam String type) throws UserNotFoundInSystem, AccountingApplicationException, CompanyNotFoundException {
+        List<InvoiceDTO1> salesInvoiceList = invoice1Service.findAllSalesInvoiceByCompanyId_SavedStatus(2);
+        List<ProfitDTO> profitDTOList = profitService.getAllProfit();
 
-        InvoiceDTO1 invoiceDTO = profitService.createNewInvoiceTemplate(vendor,type);
+        model.addAttribute("salesInvoiceList",salesInvoiceList);
+        model.addAttribute("profitList",profitDTOList);
+        model.addAttribute("invoiceNo",new InvoiceDTO1());
 
-        return ResponseEntity.status(201).body(ResponseWrapper.builder().code(201).success(true).message("Open new invoice successfully").data(invoiceDTO).build());
+        return "profit/profit";
     }
 
+    @PostMapping("/save")
+    public String saveProfit(InvoiceDTO1 invoiceDTO1) throws AccountingApplicationException {
 
-    @PutMapping("/update/{salesInvoiceNumber}")
-    public List<ProductDTO> updateInventoryByFIFO(@PathVariable("salesInvoiceNumber") String salesInvoiceNumber, @RequestParam String productName, @RequestParam Integer totalSoldItem, @RequestParam Integer salesPrice) throws AccountingApplicationException {
-        List<ProductDTO> updateProductFIFO = profitService.updateInventoryByFIFO(salesInvoiceNumber,productName,totalSoldItem,salesPrice);
-        return updateProductFIFO;
+        ProfitDTO profitDTO = profitService.saveProfitTransaction(invoiceDTO1.getInvoiceNo());
+
+        return "redirect:/profit";
     }
 
+    @GetMapping("/print/invoiceNo/{invoiceNo}")
+    public String printProfit(@PathVariable("invoiceNo") String invoiceNo, Model model){
 
-    @PostMapping("/new/{invoiceNumber}")
-    public ResponseEntity<ResponseWrapper> createNewSalesInvoice(@PathVariable("invoiceNumber") String invoiceNumber) throws AccountingApplicationException {
+        ProfitDTO profitDTO = profitService.findProfitByInvoiceId(invoiceNo);
 
-        ProfitDTO profitDTO = profitService.saveProfitTransaction(invoiceNumber);
+        model.addAttribute("profit",profitDTO);
 
-        return ResponseEntity.status(201).body(ResponseWrapper.builder().code(201).success(true).message("Sales and Profit are created ").data(profitDTO).build());
+
+        return "profit/print";
     }
-
-
 
 
 
