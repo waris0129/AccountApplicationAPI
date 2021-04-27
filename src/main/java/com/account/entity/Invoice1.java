@@ -3,6 +3,7 @@ package com.account.entity;
 
 import com.account.enums.InvoiceStatus;
 import com.account.enums.InvoiceType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -48,5 +49,8 @@ public class Invoice1 extends BaseEntity{
 
     private Integer totalPrice;
     private Integer totalQTY;
+
+    @JsonIgnore
+    private LocalDate dueDate;
 
 }

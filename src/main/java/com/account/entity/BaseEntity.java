@@ -38,6 +38,7 @@ public class BaseEntity {
         createdTime = LocalDateTime.now();
         updatedBy = "Root";
         updatedTime = LocalDateTime.now();
+
     }
 
     @PreUpdate // preUpdate to be updated after performing authentication part

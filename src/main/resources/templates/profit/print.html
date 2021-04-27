@@ -20,29 +20,25 @@
             <div class="container-fluid dashboard-content ecommerce-widget">
                 <div class="row">
                     <div class="col-md-12">
-                        <div class="card" id="invoice">
+                        <div class="card" id="invoice" th:object="${profit}">
                             <div class="card-body">
                                 <div class="row">
-                                    <h3>Sales Profit</h3>
+                                    <h3>Profit</h3>
                                 </div>
                                 <div class="row">
                                     <div class="col-sm-6">
-                                        <div class="mb-4 pull-left">
-
-                                            <ul class="list list-unstyled mb-0 text-left">
-                                                <li>2269 Six Sigma</li>
-                                                <li>New york city</li>
-                                                <li>+1 474 44737 47 </li>
-                                            </ul>
+                                        <div class="fa-pull-left">
+                                            <h5><p th:value="*{'Company Name: '+salesInvoiceNo.company.title}" th:text="*{'Company Name: '+salesInvoiceNo.company.title}"></p></h5>
+                                            <p th:text="*{'Address: '+salesInvoiceNo.company.address1}"></p>
                                         </div>
                                     </div>
                                     <div class="col-sm-6">
                                         <div class="mb-4 ">
                                             <div class="text-sm-right">
-                                                <h4 class="invoice-color mb-2 mt-md-2">Invoice #BBB1243</h4>
+                                                <h4 class="invoice-color mb-2 mt-md-2" th:text="*{salesInvoiceNo.invoiceNo}"></h4>
                                                 <ul class="list list-unstyled mb-0">
-                                                    <li>Date: <span class="font-weight-semibold">March 15, 2020</span></li>
-                                                    <li>Due date: <span class="font-weight-semibold">March 30, 2020</span></li>
+                                                    <li>Invoice Created Date: <span class="font-weight-semibold" th:text="*{salesInvoiceNo.localDate}"></span></li>
+                                                    <li>Payment Due date: <span class="font-weight-semibold" th:text="*{salesInvoiceNo.dueDate}"></span></li>
                                                 </ul>
                                             </div>
                                         </div>
@@ -52,14 +48,10 @@
                                     <div class="mb-4 mb-md-2 text-left"> <span class="text-muted">Invoice To:</span>
                                         <ul class="list list-unstyled mb-0">
                                             <li>
-                                                <h5 class="my-2">Tibco Turang</h5>
+                                                <h5 class="my-2" th:text="*{salesInvoiceNo.vendor.companyName}">vendor name</h5>
                                             </li>
-                                            <li><span class="font-weight-semibold">Samantha Mutual funds Ltd</span></li>
-                                            <li>Gurung Street</li>
-                                            <li>23 BB Lane</li>
-                                            <li>Hong kong</li>
-                                            <li>234 456 5678</li>
-                                            <li><a href="#" data-abc="true">tibco@samantha.com</a></li>
+                                            <li th:text="*{salesInvoiceNo.vendor.address}">address</li>
+                                            <li><a href="#" data-abc="true" th:text="*{salesInvoiceNo.vendor.email}">vendor email</a></li>
                                         </ul>
                                     </div>
                                     <div class="mb-2 ml-auto"> <span class="text-muted">Payment Details:</span>
@@ -77,7 +69,7 @@
                                             </ul>
                                             <ul class="list list-unstyled text-right mb-0 ml-auto">
                                                 <li>
-                                                    <h5 class="font-weight-semibold my-2">$1,090</h5>
+                                                    <h5 class="font-weight-semibold my-2" th:text="*{salesInvoiceNo.totalPrice}">$1,090</h5>
                                                 </li>
                                                 <li><span class="font-weight-semibold">Hong Kong Bank</span></li>
                                                 <li>Hong Kong</li>
@@ -90,48 +82,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="table-responsive">
-                                <table class="table table-lg">
-                                    <thead>
-                                    <tr>
-                                        <th>Description</th>
-                                        <th>Rate</th>
-                                        <th>Hours</th>
-                                        <th>Total</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr>
-                                        <td>
-                                            <h6 class="mb-0">Arts and design template</h6> <span class="text-muted">in
-                                            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-                                            pariatur.Duis aute irure dolor in reprehenderit</span>
-                                        </td>
-                                        <td>$120</td>
-                                        <td>180</td>
-                                        <td><span class="font-weight-semibold">$300</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <h6 class="mb-0">Template for desnging the arts</h6> <span class="text-muted">Lorem
-                                            ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor</span>
-                                        </td>
-                                        <td>$140</td>
-                                        <td>100</td>
-                                        <td><span class="font-weight-semibold">$240</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <h6 class="mb-0">Technical support international</h6> <span class="text-muted">Lorem
-                                            ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor</span>
-                                        </td>
-                                        <td>$250</td>
-                                        <td>$250</td>
-                                        <td><span class="font-weight-semibold">$500</span></td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </div>
+
                             <div class="card-body">
                                 <div class="d-md-flex flex-md-wrap">
                                     <div class="pt-2 mb-3 wmin-md-400 ml-auto">
@@ -140,36 +91,22 @@
                                             <table class="table">
                                                 <tbody>
                                                 <tr>
-                                                    <th class="text-left">Subtotal:</th>
-                                                    <td class="text-right">$1,090</td>
+                                                    <th class="text-left">Total Sales:</th>
+                                                    <td class="text-right" th:text="*{totalSales}"></td>
                                                 </tr>
                                                 <tr>
-                                                    <th class="text-left">Tax: <span class="font-weight-normal">(25%)</span></th>
-                                                    <td class="text-right">$27</td>
+                                                    <th class="text-left">Total Cost:</th>
+                                                    <td class="text-right" th:text="*{totalCost}"></td>
                                                 </tr>
                                                 <tr>
-                                                    <th class="text-left">Total:</th>
+                                                    <th class="text-left">Total Profit:</th>
                                                     <td class="text-right text-primary">
-                                                        <h5 class="font-weight-semibold">$1,160</h5>
+                                                        <h5 class="font-weight-semibold" th:text="*{profit}"></h5>
                                                     </td>
                                                 </tr>
                                                 </tbody>
                                             </table>
                                         </div>
-
-                                        <div class="row">
-                                            <div class="col-sm-6 col-md-6">
-                                                <div class="float-left">
-                                                    <button type="submit" id="email" class="btn btn-primary">Send invoice</button>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-6 col-md-6">
-                                                <div class="float-left">
-                                                    <button  id="download" class="btn btn-primary">download pdf</button>
-                                                </div>
-                                            </div>
-                                        </div>
-
                                     </div>
                                 </div>
                             </div>
@@ -178,6 +115,13 @@
                             ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
                             consequat.Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
                             fugiat nulla pariatur.Duis aute irure dolor in reprehenderit</span> </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12 col-md-12">
+                                    <div class="float-right">
+                                        <button  id="download" class="btn btn-primary">download pdf</button>
+                                    </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -210,19 +154,19 @@
                 };
                 html2pdf().from(invoice).set(opt).save();
 
-                var x = document.getElementById("download");
-                    if (x.style.display === "none") {
-                        x.style.display = "block";
-                    } else {
-                        x.style.display = "none";
-                    }
-
-                var y = document.getElementById("email");
-                if (y.style.display === "none") {
-                    y.style.display = "block";
-                } else {
-                    y.style.display = "none";
-                }
+                // var x = document.getElementById("download");
+                //     if (x.style.display === "none") {
+                //         x.style.display = "block";
+                //     } else {
+                //         x.style.display = "none";
+                //     }
+                //
+                // var y = document.getElementById("email");
+                // if (y.style.display === "none") {
+                //     y.style.display = "block";
+                // } else {
+                //     y.style.display = "none";
+                // }
             })
 </script>
 

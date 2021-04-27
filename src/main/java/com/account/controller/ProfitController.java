@@ -48,6 +48,9 @@ public class ProfitController {
     public String printProfit(@PathVariable("invoiceNo") String invoiceNo, Model model){
 
         ProfitDTO profitDTO = profitService.findProfitByInvoiceId(invoiceNo);
+        List<ProfitDTO> profitDTOList = profitService.getAllProfit();
+
+        model.addAttribute("profitList",profitDTOList);
 
         model.addAttribute("profit",profitDTO);
 

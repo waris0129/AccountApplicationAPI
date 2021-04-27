@@ -2,6 +2,7 @@ package com.account.dto;
 
 import com.account.enums.InvoiceStatus;
 import com.account.enums.InvoiceType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,5 +30,6 @@ public class InvoiceDTO1 {
     private List<ProductDTO> productList = new ArrayList<>();
     private Integer totalPrice;
     private Integer totalQTY;
+    private LocalDate dueDate;
 
 }

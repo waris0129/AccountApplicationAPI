@@ -102,6 +102,7 @@ public class Invoice1ServiceImpl implements Invoice1Service {
         invoice1.setVendor(mapperUtility.convert(vendorDTO,new Vendor()));
         invoice1.setInvoiceStatus(InvoiceStatus.PENDING);
         invoice1.setLocalDate(LocalDate.now());
+        invoice1.setDueDate(LocalDate.now().plusDays(30));
         invoice1.setEnabled(true);
         invoice1.setTotalPrice(0);
         invoice1.setTotalQTY(0);

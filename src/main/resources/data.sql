@@ -26,11 +26,11 @@ VALUES ('Root','2021-04-14 19:56:07.047276','Root','2021-04-14 19:56:07.047293',
 
 
 insert into vendor (created_by, created_time, updated_by, updated_time, address, company_name, deleted, email, enabled, phone, state, status, type, zip_code, company_id)
-VALUES ('Root','2021-04-14 19:55:48.484748','Root','2021-04-14 19:55:48.484776','houston','UpGenix','false','waris0129@hotmail.com','true','773946','TEXAS','ACTIVE','SUPPLIER','77025','2');
+VALUES ('Root','2021-04-14 19:55:48.484748','Root','2021-04-14 19:55:48.484776','3507 Airplane Avenue st','UpGenix','false','waris0129@hotmail.com','true','773946','TEXAS','ACTIVE','SUPPLIER','77025','2');
 
-insert into invoice1 (created_by, created_time, updated_by, updated_time, enabled, invoice_no, invoice_status, invoice_type, local_date, total_price,totalqty,year, company_id, vendor_id)
-values ('Root','2021-04-14 19:56:14.233848','Root','2021-04-14 19:56:14.256971','true','STAR-2021_PURCHASE_000','PENDING','PURCHASE','2021-04-14',0,0,'2021','2','1'),
-       ('Root','2021-04-14 19:56:14.233848','Root','2021-04-14 19:56:14.256971','true','STAR-2021_SALES_000','PENDING','SALES','2021-04-14',0,0,'2021','2','1');
+insert into invoice1 (created_by, created_time, updated_by, updated_time, enabled, invoice_no, invoice_status, invoice_type, local_date, total_price,totalqty,year, company_id, vendor_id,due_date)
+values ('Root','2021-04-14 19:56:14.233848','Root','2021-04-14 19:56:14.256971','true','STAR-2021_PURCHASE_000','PENDING','PURCHASE','2021-04-14',0,0,'2021','2','1','2021-05-14'),
+       ('Root','2021-04-14 19:56:14.233848','Root','2021-04-14 19:56:14.256971','true','STAR-2021_SALES_000','PENDING','SALES','2021-04-14',0,0,'2021','2','1','2021-05-14');
 
 
 -- insert into product_name (created_by, created_time, updated_by, updated_time, description, enabled, low_limit_alert, product_name, tax, unit, category_id, company_id)
