@@ -12,32 +12,32 @@
  
 	<div class="splash-container">
 		<div class="card ">
-		
 			<div class="card-header text-center">
-				<img class="logo-img" th:src="@{/images/Cybertek_Logo.png}" height="45" alt="logo">
+				<img class="logo-img" th:src="@{/images/TGM.png}" height="45" alt="logo">
 			</div>
-			
 			<div class="card-body">
-				<form method="GET" th:action="@{/welcome}">
-				
-					<div class="form-group">
-						<input class="form-control form-control-lg" id="username" type="text" placeholder="Username" autocomplete="off"> 
+				<div th:if="${param.error}">
+					<div class="alert alert-danger"> Invalid email or password.
 					</div>
-					
+				</div>
+				<form th:action="@{/login}" method="post">
 					<div class="form-group">
-						<input class="form-control form-control-lg" id="password" type="password" placeholder="Password"> 
+						<label for="username" class="float-left">Email</label>:
+						<input type="text" id="username" name="username" class="form-control" placeholder="username"/>
 					</div>
-					
+					<div class="form-group">
+						<label for="password" class="float-left">Password</label>:
+						<input type="password" id="password" name="password" class="form-control" placeholder="Password"/>
+					</div>
 					<div class="form-group">
 						<label class="custom-control custom-checkbox">
-							<input class="custom-control-input" type="checkbox"><span class="custom-control-label">Remember Me</span> </label>
+							<input class="custom-control-input" name="remember-me" type="checkbox"><span class="custom-control-label">Remember Me</span>
+						</label>
 					</div>
-					
-					<button type="submit" class="btn btn-primary btn-lg btn-block">Sign in</button>
-					
+					<input type="submit" name="login-submit" id="login-submit"
+						   class="form-control btn btn-primary btn-lg btn-block" value="Log In"/>
 				</form>
 			</div>
-			
 		</div>
 	</div>
 	
