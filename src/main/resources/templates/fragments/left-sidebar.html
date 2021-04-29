@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 
 <body>
@@ -27,7 +28,7 @@
               <ul class="navbar-nav flex-column">
                 <li class="nav-divider"></li>
                 <!--Owner-->
-                <li class="nav-item">
+                <li class="nav-item" sec:authorize="hasAnyAuthority('Root','Owner')">
                   <a
                     class="nav-link active"
                     href="#"
@@ -55,7 +56,7 @@
                 </li>
 
                 <!--Management-->
-                <li class="nav-item">
+                <li class="nav-item" sec:authorize="hasAnyAuthority('Manager','Admin','Owner')">
                   <a
                     class="nav-link"
                     href="#"
@@ -68,10 +69,10 @@
                   >
                   <div id="submenu-2" class="collapse submenu" style="">
                     <ul class="nav flex-column">
-                      <li class="nav-item">
+                      <li class="nav-item" sec:authorize="hasAnyAuthority('Manager','Owner')">
                         <a class="nav-link" th:href="@{/manager/vendor-registration}">Vendor/Client Registration</a>
                       </li>
-                      <li class="nav-item">
+                      <li class="nav-item" sec:authorize="hasAnyAuthority('Admin','Owner')">
                         <a class="nav-link" th:href="@{/manager/user-registration}"
                           >User Registration
                           <span class="badge badge-secondary">New</span></a>
@@ -82,7 +83,7 @@
                 </li>
 
                 <!--Inventory-->
-                <li class="nav-item">
+                <li class="nav-item" sec:authorize="hasAnyAuthority('Manager','Owner')">
                   <a
                     class="nav-link"
                     href="#"
@@ -110,7 +111,7 @@
                 </li>
 
                 <!--Invoices-->
-                <li class="nav-item">
+                <li class="nav-item" sec:authorize="hasAnyAuthority('Employee','Owner')">
                   <a
                           class="nav-link"
                           href="#"
@@ -144,7 +145,7 @@
                 </li>
 
                 <!--Report-->
-                <li class="nav-item">
+                <li class="nav-item" sec:authorize="hasAnyAuthority('Manager','Owner')">
                   <a
                           class="nav-link"
                           href="#"
@@ -159,12 +160,6 @@
                       <li class="nav-item">
                         <a class="nav-link" th:href="@{/profit/}"
                         >Profit</a
-                        >
-                      </li>
-
-                      <li class="nav-item">
-                        <a class="nav-link" th:href="@{/task/employee/archive}"
-                        >Inventory</a
                         >
                       </li>
                     </ul>

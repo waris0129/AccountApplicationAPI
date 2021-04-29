@@ -10,15 +10,15 @@ import com.account.enums.UserRole;
 import com.account.exceptionHandler.AccountingApplicationException;
 import com.account.exceptionHandler.CompanyNotFoundException;
 import com.account.exceptionHandler.UserNotFoundInSystem;
-import com.account.service.CompanyService;
-import com.account.service.ConfirmationTokenService;
-import com.account.service.UserService;
-import com.account.service.VendorService;
+import com.account.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -28,13 +28,31 @@ import java.util.stream.Collectors;
 @RequestMapping("/manager")
 public class ManagerController {
 
-    @Autowired
     private CompanyService companyService;
-    @Autowired
     private VendorService vendorService;
-
-    @Autowired
     private UserService userService;
+
+    public ManagerController(CompanyService companyService, VendorService vendorService, UserService userService) {
+        this.companyService = companyService;
+        this.vendorService = vendorService;
+        this.userService = userService;
+    }
+
+
+    private Integer getLoginCompanyId() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        UserDto securityUser  = null;
+        try {
+            securityUser = this.userService.getUser(username);
+        } catch (UserNotFoundInSystem userNotFoundInSystem) {
+            userNotFoundInSystem.printStackTrace();
+        } catch (AccountingApplicationException e) {
+            e.printStackTrace();
+        }
+        Integer id =  securityUser.getCompany().getId();
+
+        return id;
+    }
 
 
     @GetMapping("/vendor-registration")
@@ -102,13 +120,16 @@ public class ManagerController {
 
 
     @GetMapping("/user-registration")
-    public String getUserObject(UserDto userDto, Model model) throws AccountingApplicationException {
+    public String getUserObject(UserDto userDto, Model model) throws AccountingApplicationException, UserNotFoundInSystem {
         UserDto dto = new UserDto();
-        List<UserDto> userDtoList = userService.getUserListByCompany(2);
+
+
+
+        List<UserDto> userDtoList = userService.getUserListByCompany(getLoginCompanyId());
         CompanyDTO companyDTO = null;
 
         try {
-            companyDTO = companyService.findById(2);
+            companyDTO = companyService.findById(getLoginCompanyId());
             userDto.setCompany(companyDTO);
         }catch (CompanyNotFoundException e){
             model.addAttribute("errorMessage",e.getMessage());
