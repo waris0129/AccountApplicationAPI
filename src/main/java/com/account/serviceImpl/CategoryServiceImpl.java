@@ -43,16 +43,23 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryDTO findCategory(String category) throws AccountingApplicationException {
+    public CategoryDTO findCategory(String category){
 
         category = category.toUpperCase();
 
+        CategoryDTO dto = new CategoryDTO();
+
         Optional<Category> category1 = categoryRepository.findByCategory(category);
 
-        if(!category1.isPresent())
-            throw new AccountingApplicationException("Category not found in system");
-
-        CategoryDTO dto = mapperUtility.convert(category1.get(), new CategoryDTO());
+        if(!category1.isPresent()){
+            try {
+                throw new AccountingApplicationException("Category not found in system");
+            } catch (AccountingApplicationException e) {
+                e.printStackTrace();
+            }
+        }else {
+            dto = mapperUtility.convert(category1.get(), new CategoryDTO());
+        }
 
         return dto;
     }
@@ -61,6 +68,7 @@ public class CategoryServiceImpl implements CategoryService {
     public CategoryDTO deleteCategory(String category) throws AccountingApplicationException {
 
         CategoryDTO foundDto = findCategory(category);
+
 
         foundDto.setEnabled(false);
 

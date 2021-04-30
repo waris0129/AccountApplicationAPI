@@ -11,6 +11,7 @@ import org.dom4j.rule.Mode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.repository.query.Param;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -32,9 +33,6 @@ public class InvoiceController {
     private VendorService vendorService;
 
     @Autowired
-    private CompanyService companyService;
-
-    @Autowired
     private ProductNameService productNameService;
 
     @Autowired
@@ -42,6 +40,25 @@ public class InvoiceController {
 
     @Autowired
     private ProfitService profitService;
+
+    @Autowired
+    private UserService userService;
+
+
+    private Integer getLoginCompanyId() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        UserDto securityUser  = null;
+        try {
+            securityUser = this.userService.getUser(username);
+        } catch (UserNotFoundInSystem userNotFoundInSystem) {
+            userNotFoundInSystem.printStackTrace();
+        } catch (AccountingApplicationException e) {
+            e.printStackTrace();
+        }
+        Integer id =  securityUser.getCompany().getId();
+
+        return id;
+    }
 
 
 
@@ -51,9 +68,9 @@ public class InvoiceController {
     public String getInvoiceObject(Model model){
         InvoiceDTO1 invoiceDTO1 = new InvoiceDTO1();
 
-        List<VendorDTO> vendorDTOList = vendorService.getAllActiveVendorByCompany(2);
+        List<VendorDTO> vendorDTOList = vendorService.getAllActiveVendorByCompany(getLoginCompanyId());
         List<InvoiceType> invoiceTypeList = Arrays.asList(InvoiceType.values());
-        List<InvoiceDTO1> invoiceDTO1List = invoice1Service.findAllInvoiceByCompanyId_NoSavedStatus(2);
+        List<InvoiceDTO1> invoiceDTO1List = invoice1Service.findAllInvoiceByCompanyId_NoSavedStatus(getLoginCompanyId());
         List<InvoiceDTO1> invoiceDTO1List_Purchase= invoiceDTO1List.stream().filter(p->p.getInvoiceType().equals(InvoiceType.PURCHASE)).collect(Collectors.toList());
         List<InvoiceDTO1> invoiceDTO1List_Sales= invoiceDTO1List.stream().filter(p->p.getInvoiceType().equals(InvoiceType.SALES)).collect(Collectors.toList());
 
@@ -95,8 +112,8 @@ public class InvoiceController {
     public String getPurchaseInvoiceObject(Model model){
 
         PurchaseInvoiceDTO purchaseInvoiceDTO = new PurchaseInvoiceDTO();
-        List<InvoiceDTO1> purchaseInvoiceNoList = invoice1Service.findAllPurchaseInvoiceByCompanyId_NoSavedStatus(2);
-        List<ProductNameDTO> productNameDTOList = productNameService.getAllProductNameDTOByCompany(2);
+        List<InvoiceDTO1> purchaseInvoiceNoList = invoice1Service.findAllPurchaseInvoiceByCompanyId_NoSavedStatus(getLoginCompanyId());
+        List<ProductNameDTO> productNameDTOList = productNameService.getAllProductNameDTOByCompany(getLoginCompanyId());
         InvoiceDTO1 invoiceDTO1 = new InvoiceDTO1();
 
         model.addAttribute("purchaseInvoiceNoList",purchaseInvoiceNoList);
@@ -114,8 +131,8 @@ public class InvoiceController {
 
 
         PurchaseInvoiceDTO purchaseInvoiceDTO = new PurchaseInvoiceDTO();
-        List<InvoiceDTO1> purchaseInvoiceNoList = invoice1Service.findAllPurchaseInvoiceByCompanyId_NoSavedStatus(2);
-        List<ProductNameDTO> productNameDTOList = productNameService.getAllProductNameDTOByCompany(2);
+        List<InvoiceDTO1> purchaseInvoiceNoList = invoice1Service.findAllPurchaseInvoiceByCompanyId_NoSavedStatus(getLoginCompanyId());
+        List<ProductNameDTO> productNameDTOList = productNameService.getAllProductNameDTOByCompany(getLoginCompanyId());
 
 
         model.addAttribute("purchaseInvoiceNoList",purchaseInvoiceNoList);
@@ -149,7 +166,7 @@ public class InvoiceController {
         PurchaseInvoiceDTO purchaseInvoiceDTO2 = new PurchaseInvoiceDTO();
         purchaseInvoiceDTO2.setInvoiceNumber(invoiceNumber);
 
-        List<ProductNameDTO> productNameDTOList = productNameService.getAllProductNameDTOByCompany(2);
+        List<ProductNameDTO> productNameDTOList = productNameService.getAllProductNameDTOByCompany(getLoginCompanyId());
         List<ProductDTO> productList = invoiceDTO1.getProductList();
 
         model.addAttribute("productNameList",productNameDTOList);
@@ -183,7 +200,7 @@ public class InvoiceController {
         PurchaseInvoiceDTO purchaseInvoiceDTO2 = new PurchaseInvoiceDTO();
         purchaseInvoiceDTO2.setInvoiceNumber(invoiceNumberFromOutside);
 
-        List<ProductNameDTO> productNameDTOList = productNameService.getAllProductNameDTOByCompany(2);
+        List<ProductNameDTO> productNameDTOList = productNameService.getAllProductNameDTOByCompany(getLoginCompanyId());
         List<ProductDTO> productList = invoiceDTO1.getProductList();
 
         model.addAttribute("productNameList",productNameDTOList);
@@ -202,7 +219,7 @@ public class InvoiceController {
         PurchaseInvoiceDTO purchaseInvoiceDTO2 = new PurchaseInvoiceDTO();
         purchaseInvoiceDTO2.setInvoiceNumber(invoiceNo);
 
-        List<ProductNameDTO> productNameDTOList = productNameService.getAllProductNameDTOByCompany(2);
+        List<ProductNameDTO> productNameDTOList = productNameService.getAllProductNameDTOByCompany(getLoginCompanyId());
         List<ProductDTO> productList = invoiceDTO1.getProductList();
 
         model.addAttribute("productNameList",productNameDTOList);
@@ -229,7 +246,7 @@ public class InvoiceController {
     @GetMapping("/review-purchase")
     public String savedPurchaseInvoice(Model model) throws AccountingApplicationException {
 
-        List<InvoiceDTO1> invoiceDTO1List = invoice1Service.findAllPurchaseInvoiceByCompanyId_SavedStatus(2);
+        List<InvoiceDTO1> invoiceDTO1List = invoice1Service.findAllPurchaseInvoiceByCompanyId_SavedStatus(getLoginCompanyId());
 
 
         model.addAttribute("invoiceList",invoiceDTO1List);
@@ -241,7 +258,7 @@ public class InvoiceController {
     @GetMapping("/review-sales")
     public String savedSalesInvoice(Model model) throws AccountingApplicationException {
 
-        List<InvoiceDTO1> invoiceDTO1List = invoice1Service.findAllSalesInvoiceByCompanyId_SavedStatus(2);
+        List<InvoiceDTO1> invoiceDTO1List = invoice1Service.findAllSalesInvoiceByCompanyId_SavedStatus(getLoginCompanyId());
 
 
         model.addAttribute("invoiceList",invoiceDTO1List);
@@ -256,8 +273,8 @@ public class InvoiceController {
     public String getSalesInvoiceObject(Model model){
 
         SalesInvoiceDTO salesInvoiceDTO = new SalesInvoiceDTO();
-        List<InvoiceDTO1> salesInvoiceNoList = invoice1Service.findAllSalesInvoiceByCompanyId_NoSavedStatus(2);
-        List<ProductNameDTO> productNameDTOList = productNameService.getAllProductNameDTOByCompany(2);
+        List<InvoiceDTO1> salesInvoiceNoList = invoice1Service.findAllSalesInvoiceByCompanyId_NoSavedStatus(getLoginCompanyId());
+        List<ProductNameDTO> productNameDTOList = productNameService.getAllProductNameDTOByCompany(getLoginCompanyId());
         InvoiceDTO1 invoiceDTO1 = new InvoiceDTO1();
 
         model.addAttribute("salesInvoiceNoList",salesInvoiceNoList);
@@ -291,7 +308,7 @@ public class InvoiceController {
         SalesInvoiceDTO salesInvoiceDTO1 = new SalesInvoiceDTO();
         salesInvoiceDTO1.setInvoiceNumber(invoiceNumber);
 
-        List<ProductNameDTO> productNameDTOList = productNameService.getAllProductNameDTOByCompany(2);
+        List<ProductNameDTO> productNameDTOList = productNameService.getAllProductNameDTOByCompany(getLoginCompanyId());
 
         soldQTY += qty;
 
@@ -321,7 +338,7 @@ public class InvoiceController {
         salesInvoiceDTO1.setInvoiceNumber(invoiceNumber);
 
         List<ProductDTO> productList = invoiceDTO1.getProductList();
-        List<ProductNameDTO> productNameDTOList = productNameService.getAllProductNameDTOByCompany(2);
+        List<ProductNameDTO> productNameDTOList = productNameService.getAllProductNameDTOByCompany(getLoginCompanyId());
 
         model.addAttribute("salesInvoiceNoList",invoiceNumber);
         model.addAttribute("productNameList",productNameDTOList);

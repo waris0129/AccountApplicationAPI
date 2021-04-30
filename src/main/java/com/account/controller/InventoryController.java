@@ -3,13 +3,17 @@ package com.account.controller;
 import com.account.dto.CategoryDTO;
 import com.account.dto.CompanyDTO;
 import com.account.dto.ProductNameDTO;
+import com.account.dto.UserDto;
 import com.account.enums.Unit;
 import com.account.exceptionHandler.AccountingApplicationException;
 import com.account.exceptionHandler.CompanyNotFoundException;
+import com.account.exceptionHandler.UserNotFoundInSystem;
 import com.account.service.CategoryService;
 import com.account.service.CompanyService;
 import com.account.service.ProductNameService;
+import com.account.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -27,19 +31,42 @@ public class InventoryController {
     private CompanyService companyService;
     @Autowired
     private ProductNameService productNameService;
+    @Autowired
+    private UserService userService;
 
+
+    private Integer getLoginCompanyId() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        UserDto securityUser  = null;
+        try {
+            securityUser = this.userService.getUser(username);
+        } catch (UserNotFoundInSystem userNotFoundInSystem) {
+            userNotFoundInSystem.printStackTrace();
+        } catch (AccountingApplicationException e) {
+            e.printStackTrace();
+        }
+        Integer id =  securityUser.getCompany().getId();
+
+        return id;
+    }
+
+
+
+
+    String error = null;
     @GetMapping("/category-registration")
     public String emptyCategory(Model model) throws CompanyNotFoundException {
 
         CategoryDTO categoryDTO = new CategoryDTO();
 
-        categoryDTO.setCompany(companyService.findById(2));
+        categoryDTO.setCompany(companyService.findById(getLoginCompanyId()));
 
-        List<CategoryDTO> categoryDTOList = categoryService.getAllCategoriesByCompany(2);
+        List<CategoryDTO> categoryDTOList = categoryService.getAllCategoriesByCompany(getLoginCompanyId());
 
         model.addAttribute("category",categoryDTO);
         model.addAttribute("categoryList",categoryDTOList);
-
+        model.addAttribute("error",error);
+        error = null;
         return "inventory/category-registration";
 
 
@@ -47,11 +74,16 @@ public class InventoryController {
 
 
     @PostMapping("/category-registration")
-    public String saveCategory(@ModelAttribute("category") CategoryDTO categoryDTO) throws CompanyNotFoundException, AccountingApplicationException {
+    public String saveCategory(@ModelAttribute("category") CategoryDTO categoryDTO,Model model) throws CompanyNotFoundException{
 
-        categoryDTO.setCompany(companyService.findById(2));
+        categoryDTO.setCompany(companyService.findById(getLoginCompanyId()));
 
-        categoryService.saveCategory(categoryDTO);
+        try {
+            categoryService.saveCategory(categoryDTO);
+        } catch (AccountingApplicationException e) {
+            error = e.getMessage();
+            model.addAttribute("error",error);
+        }
 
         return "redirect:/inventory/category-registration";
 
@@ -76,14 +108,14 @@ public class InventoryController {
         ProductNameDTO productNameDTO = new ProductNameDTO();
         CompanyDTO companyDTO = null;
         try {
-            companyDTO = companyService.findById(2);
+            companyDTO = companyService.findById(getLoginCompanyId());
         } catch (CompanyNotFoundException e) {
             model.addAttribute("errorMessage",e.getMessage());
         }
         productNameDTO.setCompany(companyDTO);
-        List<CategoryDTO> categoryDTOList = categoryService.getAllCategoriesByCompany(2);
+        List<CategoryDTO> categoryDTOList = categoryService.getAllCategoriesByCompany(getLoginCompanyId());
         List<Unit>unitList = Arrays.asList(Unit.values());
-        List<ProductNameDTO>productNameDTOList = productNameService.getAllProductNameDTOByCompany(2);
+        List<ProductNameDTO>productNameDTOList = productNameService.getAllProductNameDTOByCompany(getLoginCompanyId());
 
         model.addAttribute("product",productNameDTO);
         model.addAttribute("categoryList",categoryDTOList);
@@ -99,7 +131,7 @@ public class InventoryController {
     @PostMapping("/product-registration")
     public String saveProductName(@ModelAttribute("product") ProductNameDTO productNameDTO) throws AccountingApplicationException, CompanyNotFoundException {
 
-        productNameDTO.setCompany(companyService.findById(2));
+        productNameDTO.setCompany(companyService.findById(getLoginCompanyId()));
 
         productNameService.saveProductNameDTO(productNameDTO);
 
@@ -114,9 +146,9 @@ public class InventoryController {
 
         ProductNameDTO productNameDTO = productNameService.findProductNameDTO(productName);
 
-        List<CategoryDTO> categoryDTOList = categoryService.getAllCategoriesByCompany(2);
+        List<CategoryDTO> categoryDTOList = categoryService.getAllCategoriesByCompany(getLoginCompanyId());
         List<Unit>unitList = Arrays.asList(Unit.values());
-        List<ProductNameDTO>productNameDTOList = productNameService.getAllProductNameDTOByCompany(2);
+        List<ProductNameDTO>productNameDTOList = productNameService.getAllProductNameDTOByCompany(getLoginCompanyId());
 
         model.addAttribute("product",productNameDTO);
         model.addAttribute("categoryList",categoryDTOList);

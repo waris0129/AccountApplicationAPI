@@ -149,7 +149,7 @@ public class ManagerController {
     @PostMapping("/user-registration")
     public String saveUser(UserDto userDto, Model model) throws AccountingApplicationException, CompanyNotFoundException {
 
-        userDto.setCompany(companyService.findById(2));
+        userDto.setCompany(companyService.findById(getLoginCompanyId()));
 
         UserDto dto = userService.save(userDto);
 
@@ -160,11 +160,11 @@ public class ManagerController {
     @GetMapping("/get/user/{id}")
     public String findAdmin(@PathVariable("id") String id,Model model) throws AccountingApplicationException, CompanyNotFoundException {
         UserDto userDto = userService.getUserById(Integer.parseInt(id));
-        List<UserDto> userDtoList = userService.getUserListByCompany(2);
+        List<UserDto> userDtoList = userService.getUserListByCompany(getLoginCompanyId());
         CompanyDTO companyDTO = null;
 
         try {
-            companyDTO = companyService.findById(2);
+            companyDTO = companyService.findById(getLoginCompanyId());
             userDto.setCompany(companyDTO);
         }catch (CompanyNotFoundException e){
             model.addAttribute("errorMessage",e.getMessage());
@@ -180,7 +180,7 @@ public class ManagerController {
     @PostMapping("/update/user/{id}")
     public String updateAdmin(@PathVariable("id") String id, @ModelAttribute ("user") UserDto userDto, Model model) throws UserNotFoundInSystem, CompanyNotFoundException {
 
-        userDto.setCompany(companyService.findById(2));
+        userDto.setCompany(companyService.findById(getLoginCompanyId()));
 
         UserDto dto = userService.updateById(id,userDto);
 

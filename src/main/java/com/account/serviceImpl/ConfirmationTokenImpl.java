@@ -70,7 +70,7 @@ public class ConfirmationTokenImpl implements ConfirmationTokenService {
         String url = URL;
         String token = confirmationToken.getToken();
         String subject = "User Confirm Registration";
-        String message = "please click following url: "+url+"/user/confirmation?token="+token;
+        String message = "please click following url: "+url+"/confirmation-user?token="+token;
 
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setTo(emailTo);
@@ -93,7 +93,7 @@ public class ConfirmationTokenImpl implements ConfirmationTokenService {
         String url = URL;
         String token = confirmationToken.getToken();
         String subject = "Company Confirm Registration";
-        String message = "please click following url: "+url+"/company/confirmation?token="+token;
+        String message = "please click following url: "+url+"/confirmation-company?token="+token;
 
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setTo(emailTo);

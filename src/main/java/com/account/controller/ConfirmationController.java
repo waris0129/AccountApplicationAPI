@@ -20,7 +20,7 @@ public class ConfirmationController {
     @Autowired
     private ConfirmationTokenService confirmationTokenService;
 
-    @GetMapping("/company/confirmation")
+    @GetMapping("/confirmation-company")
     public String confirmCompanyRegister(@RequestParam String token) throws InvalidTokenException{
         ConfirmationToken confirmationToken = confirmationTokenService.readByToken(token);
 
@@ -33,12 +33,12 @@ public class ConfirmationController {
 
         confirmationTokenService.save(confirmationToken);
 
-        return "redirect:/owner/company-registration";
+        return "redirect:/";
     }
 
 
 
-    @GetMapping("/user/confirmation")
+    @GetMapping("/confirmation-user")
     public String confirmUser(@RequestParam String token) throws InvalidTokenException {
 
         ConfirmationToken confirmationToken = confirmationTokenService.readByToken(token);
@@ -51,7 +51,7 @@ public class ConfirmationController {
 
         confirmationTokenService.save(confirmationToken);
 
-        return "redirect:/welcome";
+        return "redirect:/";
     }
 
 

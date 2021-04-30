@@ -41,7 +41,7 @@
                                                     <header class="panel-heading">
                                                         <h4 class="panel-title">Name</h4>
                                                     </header>
-                                                    <input id="firstName" type="text" placeholder="First Name" class="form-control"
+                                                    <input id="firstName" type="text" placeholder="Category" class="form-control"
                                                            th:field="*{category}" required>
                                                     <div class="invalid-feedback">
                                                         invalid input
@@ -77,6 +77,9 @@
                                                     </div>
                                                 </section>
                                             </div>
+                                        </div>
+                                        <div class="row">
+                                            <span th:text="${error}"/>
                                         </div>
 
                                     </form>

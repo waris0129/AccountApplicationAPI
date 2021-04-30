@@ -32,6 +32,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(
                         "/",
                         "/login",
+                        "/confirmation-company",
+                        "/confirmation-user",
                         "/fragments/**",
                         "/assets/**",
                         "/images/**"

@@ -114,7 +114,8 @@ public class OwnerController {
 
 
     @PostMapping("/admin-registration")
-    public String saveAdmin(UserDto userDto, Model model) throws AccountingApplicationException {
+    public String saveAdmin(UserDto userDto, Model model) throws AccountingApplicationException, CompanyNotFoundException {
+
         UserDto dto = userService.save(userDto);
 
         return "redirect:/owner/admin-registration";
