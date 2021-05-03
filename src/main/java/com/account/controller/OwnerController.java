@@ -37,6 +37,8 @@ public class OwnerController {
     @Autowired
     private UserService userService;
 
+    private String error;
+
     @GetMapping("/company-registration")
     public String getEmptyCompanyDTOObject(Model model){
 
@@ -49,8 +51,9 @@ public class OwnerController {
         model.addAttribute("company",companyDTO);
         model.addAttribute("stateList",stateList);
         model.addAttribute("companyList",companyDTOList);
+        model.addAttribute("error",error);
 
-
+        error = null;
 
         return "owner/company-registration";
     }
@@ -65,12 +68,22 @@ public class OwnerController {
 
 
     @GetMapping("/get/company/{title}")
-    public String findCompanyByTitle(@PathVariable("title") String title,Model model) throws CompanyNotFoundException {
-        CompanyDTO foundCompanyDTO = companyService.findByTitle(title);
+    public String findCompanyByTitle(@PathVariable("title") String title,Model model){
+        try {
+            CompanyDTO foundCompanyDTO = companyService.findByTitle(title);
+        } catch (CompanyNotFoundException e) {
+            error = e.getMessage()+" or not activated";
+            model.addAttribute("error",error);
+            return "redirect:/owner/company-registration";
+        }
         List<CompanyDTO> companyDTOList = companyService.findAllCompanies();
         List<States>stateList = Arrays.stream(States.values()).collect(Collectors.toList());
 
-        model.addAttribute("company",companyService.findByTitle(title));
+        try {
+            model.addAttribute("company",companyService.findByTitle(title));
+        } catch (CompanyNotFoundException e) {
+            e.printStackTrace();
+        }
         model.addAttribute("companyList",companyDTOList);
         model.addAttribute("stateList",stateList);
 
@@ -87,9 +100,15 @@ public class OwnerController {
 
 
     @GetMapping("/delete/company/{title}")
-    public String deleteCompany(@PathVariable("title") String title) throws CompanyNotFoundException {
+    public String deleteCompany(@PathVariable("title") String title,Model model){
 
-        CompanyDTO companyDTO = companyService.delete(title);
+        try {
+            CompanyDTO companyDTO = companyService.delete(title);
+        } catch (CompanyNotFoundException e) {
+            error = e.getMessage()+" or not activated";
+            model.addAttribute("error",error);
+            return "redirect:/owner/company-registration";
+        }
 
         return "redirect:/owner/company-registration";
     }

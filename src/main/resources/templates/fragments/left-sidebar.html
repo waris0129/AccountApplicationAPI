@@ -111,7 +111,7 @@
                 </li>
 
                 <!--Invoices-->
-                <li class="nav-item" sec:authorize="hasAnyAuthority('Employee','Owner')">
+                <li class="nav-item" sec:authorize="hasAnyAuthority('Employee','Owner','Manager')">
                   <a
                           class="nav-link"
                           href="#"
@@ -124,19 +124,19 @@
                   >
                   <div id="submenu-4" class="collapse submenu" style="">
                     <ul class="nav flex-column">
-                      <li class="nav-item">
+                      <li class="nav-item" sec:authorize="hasAnyAuthority('Employee','Owner')">
                         <a class="nav-link" th:href="@{/invoice/create-invoice}">Create Invoice</a>
                       </li>
-                      <li class="nav-item">
+                      <li class="nav-item" sec:authorize="hasAnyAuthority('Employee','Owner')">
                         <a class="nav-link" th:href="@{/invoice/create-purchase}">Purchase</a>
                       </li>
-                      <li class="nav-item">
+                      <li class="nav-item" sec:authorize="hasAnyAuthority('Employee','Owner','Manager')">
                         <a class="nav-link" th:href="@{/invoice/review-purchase}">Review Purchase</a>
                       </li>
-                      <li class="nav-item">
+                      <li class="nav-item" sec:authorize="hasAnyAuthority('Employee','Owner')">
                         <a class="nav-link" th:href="@{/invoice/create-sales}">Sales</a>
                       </li>
-                      <li class="nav-item">
+                      <li class="nav-item" sec:authorize="hasAnyAuthority('Employee','Owner','Manager')">
                         <a class="nav-link" th:href="@{/invoice/review-sales}">Review Sales</a>
                       </li>
 

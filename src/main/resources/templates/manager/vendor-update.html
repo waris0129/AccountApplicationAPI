@@ -38,7 +38,7 @@
                                                 <div class="form-group">
                                                     <label for="id" class="col-form-label">Company Name</label>
                                                     <input id="id" type="text" placeholder="Company Name" class="form-control"
-                                                           th:field="*{companyName}" required>
+                                                           th:field="*{companyName}" th:readonly="readonly" required>
                                                     <div class="invalid-feedback">
                                                         invalid input
                                                     </div>

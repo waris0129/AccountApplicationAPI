@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head th:replace="/fragments/head :: header"></head>
 
@@ -76,11 +76,11 @@
                                                 <td th:text="${each.invoiceStatus}">Invoice Status</td>
                                                 <td th:text="${each.vendor.companyName}">Supplier</td>
                                                 <td class="actions">
-                                                    <a th:href="@{/invoice/update-invoice-status(invoiceNo=${each.invoiceNo},status='PENDING')}">
-                                                        <button th:disabled="${!each.invoiceStatus.getValue().equals('Review')}" type="button" th:class="${each.invoiceStatus.getValue().equals('Review')}?'btn btn-warning btn-sm':'btn btn-secondary btn-sm'">PENDING</button></a>
-                                                    <a th:href="@{/invoice/update-invoice-status(invoiceNo=${each.invoiceNo},status='APPROVED')}">
+                                                    <a sec:authorize="hasAuthority('Employee')">
+                                                        <button type="button" class="btn btn-success btn-sm" th:text="${each.invoiceStatus}">status</button></a>
+                                                    <a th:href="@{/invoice/update-invoice-status(invoiceNo=${each.invoiceNo},status='APPROVED')}" sec:authorize="hasAuthority('Manager')">
                                                         <button type="button" class="btn btn-success btn-sm">APPROVED</button></a>
-                                                    <a th:href="@{/invoice/update-invoice-status(invoiceNo=${each.invoiceNo},status='CANCEL')}">
+                                                    <a th:href="@{/invoice/update-invoice-status(invoiceNo=${each.invoiceNo},status='CANCEL')}" sec:authorize="hasAuthority('Manager')">
                                                         <button th:disabled="${!each.invoiceStatus.getValue().equals('Review')}" type="button" th:class="${each.invoiceStatus.getValue().equals('Review')}?'btn btn-danger btn-sm':'btn btn-secondary btn-sm'">CANCEL</button></a>
                                                 </td>
                                             </tr>
