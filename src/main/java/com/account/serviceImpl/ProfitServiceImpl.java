@@ -185,9 +185,9 @@ public class ProfitServiceImpl implements ProfitService {
     }
 
     @Override
-    public List<ProfitDTO> getAllProfit(){
+    public List<ProfitDTO> getAllProfit(Integer companyId){
 
-        List<Profit> profits = profitRepository.getAllProfitByCompanyId(2);
+        List<Profit> profits = profitRepository.getAllProfitByCompanyId(companyId);
 
         List<ProfitDTO> profitDTOList = profits.stream().map(p->mapperUtility.convert(p,new ProfitDTO())).collect(Collectors.toList());
 

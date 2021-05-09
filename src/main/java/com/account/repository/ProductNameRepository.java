@@ -11,7 +11,7 @@ public interface ProductNameRepository extends JpaRepository<ProductName,Integer
 
     Optional<ProductName> findByProductName(String productName);
 
-    @Query("select p from ProductName p where p.company.deleted=false and p.category.enabled=true")
+    @Query("select p from ProductName p where p.company.deleted=false and p.category.enabled=true and p.company.id=?1")
     List<ProductName> getAllProductNameDTOByCompany(Integer companyId);
 
 }

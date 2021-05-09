@@ -121,9 +121,9 @@ public class VendorServiceImpl implements VendorService {
     }
 
     @Override
-    public List<VendorDTO> getAllVendorList() {
+    public List<VendorDTO> getAllVendorList(Integer companyId) {
 
-        List<Vendor> vendorList = vendorRepository.getAllVendorList();
+        List<Vendor> vendorList = vendorRepository.getAllVendorList(companyId);
 
         List<VendorDTO> vendorDTOList = vendorList.stream().map(entity-> mapperUtility.convert(entity,new VendorDTO())).collect(Collectors.toList());
 

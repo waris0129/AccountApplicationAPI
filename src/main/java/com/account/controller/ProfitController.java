@@ -54,7 +54,7 @@ public class ProfitController {
     public String getProfitObject(Model model) {
 
         List<InvoiceDTO1> salesInvoiceList = invoice1Service.findAllSalesInvoiceByCompanyId_SavedStatus(getLoginCompanyId());
-        List<ProfitDTO> profitDTOList = profitService.getAllProfit();
+        List<ProfitDTO> profitDTOList = profitService.getAllProfit(getLoginCompanyId());
 
         model.addAttribute("salesInvoiceList",salesInvoiceList);
         model.addAttribute("profitList",profitDTOList);
@@ -75,7 +75,7 @@ public class ProfitController {
     public String printProfit(@PathVariable("invoiceNo") String invoiceNo, Model model){
 
         ProfitDTO profitDTO = profitService.findProfitByInvoiceId(invoiceNo);
-        List<ProfitDTO> profitDTOList = profitService.getAllProfit();
+        List<ProfitDTO> profitDTOList = profitService.getAllProfit(getLoginCompanyId());
 
         model.addAttribute("profitList",profitDTOList);
 

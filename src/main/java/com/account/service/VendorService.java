@@ -15,7 +15,7 @@ public interface VendorService {
     VendorDTO get(String companyName) throws UserNotFoundInSystem;
     VendorDTO update(String companyName, VendorDTO vendorDTO) throws UserNotFoundInSystem;
     VendorDTO delete(String companyName) throws UserNotFoundInSystem;
-    List<VendorDTO> getAllVendorList();
+    List<VendorDTO> getAllVendorList(Integer companyId);
     List<VendorDTO> getAllVendorByStatus(String status) throws AccountingApplicationException;
     List<VendorDTO> getAllActiveVendorByCompany(Integer companyId);
 

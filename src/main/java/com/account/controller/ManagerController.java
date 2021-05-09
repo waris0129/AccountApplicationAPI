@@ -62,7 +62,7 @@ public class ManagerController {
 
         List<States>stateList = Arrays.stream(States.values()).collect(Collectors.toList());
         List<RegistrationType>typeList = Arrays.stream(RegistrationType.values()).collect(Collectors.toList());
-        List<VendorDTO> vendorList = vendorService.getAllVendorList();
+        List<VendorDTO> vendorList = vendorService.getAllVendorList(getLoginCompanyId());
         //vendor type
 
         model.addAttribute("company",vendorDTO);
@@ -89,7 +89,7 @@ public class ManagerController {
         VendorDTO foundVendor = vendorService.get(companyName);
         List<States>stateList = Arrays.stream(States.values()).collect(Collectors.toList());
         List<RegistrationType>typeList = Arrays.stream(RegistrationType.values()).collect(Collectors.toList());
-        List<VendorDTO> vendorList = vendorService.getAllVendorList();
+        List<VendorDTO> vendorList = vendorService.getAllVendorList(getLoginCompanyId());
 
         model.addAttribute("company",foundVendor);
         model.addAttribute("companyList",vendorList);

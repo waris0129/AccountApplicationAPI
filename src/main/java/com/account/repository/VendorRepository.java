@@ -21,7 +21,7 @@ public interface VendorRepository extends JpaRepository<Vendor,Integer> {
     @Query("SELECT p from Vendor p where p.status = 'ACTIVE' and p.company.id=?1 and p.company.deleted=false")
     List<Vendor> getAllActiveVendorByCompany(Integer companyId);
 
-    @Query("SELECT p from Vendor p where p.company.deleted=false ")
-    List<Vendor> getAllVendorList();
+    @Query("SELECT p from Vendor p where p.company.deleted=false and p.company.id=?1")
+    List<Vendor> getAllVendorList(Integer companyId);
 
 }

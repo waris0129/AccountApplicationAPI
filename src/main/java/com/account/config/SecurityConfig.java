@@ -25,10 +25,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http
                 .authorizeRequests()
-                .antMatchers("/user/**").hasAuthority("Admin")
-                .antMatchers("/project/**").hasAuthority("Manager")
-                .antMatchers("/task/employee/**").hasAuthority("Employee")
-                .antMatchers("/task/**").hasAuthority("Manager")
+//                .antMatchers("/user/**").hasAuthority("Admin")
+//                .antMatchers("/project/**").hasAuthority("Manager")
+//                .antMatchers("/task/employee/**").hasAuthority("Employee")
+//                .antMatchers("/task/**").hasAuthority("Manager")
                 .antMatchers(
                         "/",
                         "/login",
