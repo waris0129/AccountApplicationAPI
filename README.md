@@ -1,2 +1,2 @@
 # AccountApplication
-Accounting Application MVC Version
+Accounting Application API Version
