@@ -1,21 +1,77 @@
 package com.account.controller;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 
-@Controller
-public class LoginController {
+import com.account.Mapper.MapperUtility;
+import com.account.dto.AuthenticateRequest;
+import com.account.dto.UserDto;
+import com.account.entity.BaseEntity;
+import com.account.entity.ConfirmationToken;
+import com.account.entity.User;
+import com.account.enums.UserStatus;
+import com.account.exceptionHandler.AccountingApplicationException;
+import com.account.exceptionHandler.InvalidTokenException;
+import com.account.exceptionHandler.ResponseWrapper;
+import com.account.exceptionHandler.UserNotFoundInSystem;
+import com.account.securities.JwtUtil;
+import com.account.service.ConfirmationTokenService;
+import com.account.service.SecurityService;
+import com.account.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.*;
 
-    @RequestMapping(value = {"/login","/"})
-    public String login(){
+import javax.persistence.EntityListeners;
+import javax.persistence.PreUpdate;
+import java.time.LocalDateTime;
 
-        return "login";
-    }
 
-    @RequestMapping("/welcome")
-    public String welcome(){
-        return "welcome";
+@RestController
+@Tag(name = "Authentication Controller",description = "Authenticate API")
+public class LoginController{
+
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private AuthenticationManager authenticationManager;
+    @Autowired
+    private MapperUtility mapperUtil;
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    public static String role;
+
+
+    @PostMapping({"/login","/"})
+    @Operation(summary = "Login to application")
+    public ResponseEntity<ResponseWrapper> doLogin(@RequestBody AuthenticateRequest request) throws InvalidTokenException, UserNotFoundInSystem, AccountingApplicationException {
+
+        String email = request.getEmail();
+        String password = request.getPassword();
+
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(email,password);
+        authenticationManager.authenticate(authenticationToken); // --> ProviderManager class --> Authentication --> retrieve user --> passwordEncoder.matches
+
+        UserDto userDTO = userService.getUser(email);
+
+        User userEntity = mapperUtil.convert(userDTO, new User());
+
+        if(userEntity.getEnabled()==false)
+            throw new InvalidTokenException("User is not verified yet");
+
+
+        String token = jwtUtil.generateToken(userEntity);
+
+        return ResponseEntity.ok(new ResponseWrapper("user is successfully login",token));
+
+
     }
 
 }

@@ -6,14 +6,17 @@ import com.account.entity.User;
 import com.account.enums.CompanyStatus;
 import com.account.enums.UserStatus;
 import com.account.exceptionHandler.InvalidTokenException;
+import com.account.exceptionHandler.ResponseWrapper;
 import com.account.service.ConfirmationTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
 @RequestMapping("/")
 public class ConfirmationController {
 
@@ -21,7 +24,7 @@ public class ConfirmationController {
     private ConfirmationTokenService confirmationTokenService;
 
     @GetMapping("/confirmation-company")
-    public String confirmCompanyRegister(@RequestParam String token) throws InvalidTokenException{
+    public ResponseEntity<ResponseWrapper> confirmCompanyRegister(@RequestParam String token) throws InvalidTokenException{
         ConfirmationToken confirmationToken = confirmationTokenService.readByToken(token);
 
         Company company = confirmationToken.getCompany();
@@ -33,13 +36,13 @@ public class ConfirmationController {
 
         confirmationTokenService.save(confirmationToken);
 
-        return "redirect:/";
+        return ResponseEntity.ok(new ResponseWrapper("Company is confirmed: ",company.getTitle()));
     }
 
 
 
     @GetMapping("/confirmation-user")
-    public String confirmUser(@RequestParam String token) throws InvalidTokenException {
+    public ResponseEntity<ResponseWrapper> confirmUser(@RequestParam String token) throws InvalidTokenException {
 
         ConfirmationToken confirmationToken = confirmationTokenService.readByToken(token);
 
@@ -51,7 +54,7 @@ public class ConfirmationController {
 
         confirmationTokenService.save(confirmationToken);
 
-        return "redirect:/";
+        return ResponseEntity.ok(new ResponseWrapper("User is confirmed: ",user.getEmail()));
     }
 
 

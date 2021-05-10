@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -26,8 +27,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Controller
+@RestController
 @RequestMapping("/owner")
+@PreAuthorize("hasAnyAuthority({'Root','Owner'})")
 public class OwnerController {
 
     @Autowired
@@ -40,138 +42,90 @@ public class OwnerController {
     private String error;
 
     @GetMapping("/company-registration")
-    public String getEmptyCompanyDTOObject(Model model){
+    public CompanyDTO getEmptyCompanyDTOObject(Model model){
 
-        CompanyDTO companyDTO = new CompanyDTO();
+        return new CompanyDTO();
 
-        List<States>stateList = Arrays.stream(States.values()).collect(Collectors.toList());
-        List<CompanyDTO> companyDTOList = companyService.findAllCompanies();
-
-
-        model.addAttribute("company",companyDTO);
-        model.addAttribute("stateList",stateList);
-        model.addAttribute("companyList",companyDTOList);
-        model.addAttribute("error",error);
-
-        error = null;
-
-        return "owner/company-registration";
     }
 
     @PostMapping("/company-registration")
-    public String saveCompany(@ModelAttribute ("company") CompanyDTO companyDTO, Model model) throws AccountingApplicationException {
+    public ResponseEntity<ResponseWrapper> saveCompany(@RequestBody CompanyDTO companyDTO, Model model) throws AccountingApplicationException {
 
         CompanyDTO createdCompanyDTO = companyService.save(companyDTO);
-
-        return "redirect:/owner/company-registration";
+        return ResponseEntity.status(HttpStatus.CREATED).body(ResponseWrapper.builder().code(HttpStatus.CREATED.value()).success(true).message("Company created successfully").data(createdCompanyDTO).build());
     }
 
 
     @GetMapping("/get/company/{title}")
-    public String findCompanyByTitle(@PathVariable("title") String title,Model model){
-        try {
-            CompanyDTO foundCompanyDTO = companyService.findByTitle(title);
-        } catch (CompanyNotFoundException e) {
-            error = e.getMessage()+" or not activated";
-            model.addAttribute("error",error);
-            return "redirect:/owner/company-registration";
-        }
-        List<CompanyDTO> companyDTOList = companyService.findAllCompanies();
-        List<States>stateList = Arrays.stream(States.values()).collect(Collectors.toList());
-
-        try {
-            model.addAttribute("company",companyService.findByTitle(title));
-        } catch (CompanyNotFoundException e) {
-            e.printStackTrace();
-        }
-        model.addAttribute("companyList",companyDTOList);
-        model.addAttribute("stateList",stateList);
-
-        return "owner/company-update";
+    public ResponseEntity<ResponseWrapper> findCompanyByTitle(@PathVariable("title") String title,Model model) throws CompanyNotFoundException {
+        CompanyDTO foundCompanyDTO = companyService.findByTitle(title);
+        return ResponseEntity.status(HttpStatus.OK).body(ResponseWrapper.builder().code(HttpStatus.OK.value()).success(true).message("Company found successfully").data(foundCompanyDTO).build());
     }
 
     @PostMapping("/update/company/{title}")
-    public String updateCompany(@PathVariable("title") String title, @ModelAttribute ("company") CompanyDTO companyDTO, Model model) throws CompanyNotFoundException {
+    public ResponseEntity<ResponseWrapper> updateCompany(@PathVariable("title") String title, @RequestBody CompanyDTO companyDTO, Model model) throws CompanyNotFoundException {
         CompanyDTO updatedCompany = companyService.update(title, companyDTO);
-
-        return "redirect:/owner/company-registration";
+        return ResponseEntity.ok(ResponseWrapper.builder().code(HttpStatus.OK.value()).success(true).message("Company updated successfully").data(updatedCompany).build());
     }
 
 
 
     @GetMapping("/delete/company/{title}")
-    public String deleteCompany(@PathVariable("title") String title,Model model){
+    public ResponseEntity<ResponseWrapper> deleteCompany(@PathVariable("title") String title,Model model) throws CompanyNotFoundException {
 
-        try {
-            CompanyDTO companyDTO = companyService.delete(title);
-        } catch (CompanyNotFoundException e) {
-            error = e.getMessage()+" or not activated";
-            model.addAttribute("error",error);
-            return "redirect:/owner/company-registration";
-        }
+        CompanyDTO companyDTO = companyService.delete(title);
+        return ResponseEntity.ok(ResponseWrapper.builder().code(HttpStatus.OK.value()).success(true).message("Company deleted successfully").build());
 
-        return "redirect:/owner/company-registration";
+    }
+
+    @GetMapping("/all-companyList")
+    public ResponseEntity<ResponseWrapper> getAllCompany(){
+        List<CompanyDTO> companyDTOS = companyService.findAllCompanies();
+        return ResponseEntity.status(HttpStatus.OK).body(ResponseWrapper.builder().code(HttpStatus.OK.value()).success(true).message("Get All Company List successfully").data(companyDTOS).build());
     }
 
 
 
 
     @GetMapping("/admin-registration")
-    public String getAdminObject(UserDto userDto, Model model) throws AccountingApplicationException {
-        UserDto dto = new UserDto();
-        List<UserDto> userDtoList = userService.getUserByRole(UserRole.Admin);
-        List<CompanyDTO> companyDTOList = companyService.findAllCompaniesByStatus(CompanyStatus.ACTIVE);
-
-        model.addAttribute("user",userDto);
-        model.addAttribute("companyList",companyDTOList);
-        model.addAttribute("userList",userDtoList);
-
-
-        return "owner/admin-registration";
+    public UserDto getAdminObject(UserDto userDto, Model model){
+        return new UserDto();
     }
 
 
 
     @PostMapping("/admin-registration")
-    public String saveAdmin(UserDto userDto, Model model) throws AccountingApplicationException, CompanyNotFoundException {
+    public ResponseEntity<ResponseWrapper> saveAdmin(@RequestBody UserDto userDto, Model model) throws AccountingApplicationException, CompanyNotFoundException {
 
         UserDto dto = userService.save(userDto);
 
-        return "redirect:/owner/admin-registration";
+        return ResponseEntity.status(HttpStatus.CREATED).body(ResponseWrapper.builder().code(HttpStatus.CREATED.value()).success(true).message("Admin is created").data(dto).build());
     }
 
 
     @GetMapping("/get/admin/{id}")
-    public String findAdmin(@PathVariable("id") String id,Model model) throws AccountingApplicationException {
-        UserDto userDto = userService.getUserById(Integer.parseInt(id));
-        List<UserDto> userDtoList = userService.getUserByRole(UserRole.Admin);
-        List<CompanyDTO> companyDTOList = companyService.findAllCompaniesByStatus(CompanyStatus.ACTIVE);
+    public ResponseEntity<ResponseWrapper> findAdmin(@PathVariable("id") String id,Model model) throws AccountingApplicationException {
+        UserDto dto = userService.getUserById(Integer.parseInt(id));
 
-
-        model.addAttribute("user",userDto);
-        model.addAttribute("companyList",companyDTOList);
-        model.addAttribute("userList",userDtoList);
-
-        return "owner/admin-update";
+        return ResponseEntity.status(HttpStatus.OK).body(ResponseWrapper.builder().code(HttpStatus.OK.value()).success(true).message("User is found").data(dto).build());
     }
 
     @PostMapping("/update/admin/{id}")
-    public String updateAdmin(@PathVariable("id") String id, @ModelAttribute ("user") UserDto userDto, Model model) throws UserNotFoundInSystem {
+    public ResponseEntity<ResponseWrapper> updateAdmin(@PathVariable("id") String id, @RequestBody UserDto userDto, Model model) throws UserNotFoundInSystem {
 
         UserDto dto = userService.updateById(id,userDto);
 
-
-        return "redirect:/owner/admin-registration";
+        return ResponseEntity.status(HttpStatus.OK).body(ResponseWrapper.builder().code(HttpStatus.OK.value()).success(true).message("User is updated successfully").data(dto).build());
     }
 
 
 
     @GetMapping("/delete/admin/{id}")
-    public String deleteAdmin(@PathVariable("id") String id) throws UserNotFoundInSystem {
+    public ResponseEntity<ResponseWrapper> deleteAdmin(@PathVariable("id") String id) throws UserNotFoundInSystem {
 
         UserDto userDto = userService.deleteUserById(id);
 
-        return "redirect:/owner/admin-registration";
+        return ResponseEntity.ok(ResponseWrapper.builder().code(HttpStatus.OK.value()).success(true).message("User is deleted successfully").build());
     }
 
 
