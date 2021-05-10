@@ -1,25 +1,25 @@
 app:
   local-url: http://localhost:${server.port}
 server:
-  port: 2020
+  port: 3030
 spring:
   application:
     name: spring-rest-security
   profiles:
     active: default
   datasource:
-    url: jdbc:postgresql://localhost:5432/accountMVC
+    url: jdbc:postgresql://localhost:5432/accountWarehouse
     username: postgres
     password: waris
     driver-class-name: org.postgresql.Driver
-#    initialization-mode: always
+    initialization-mode: always
     data: classpath:data1.sql
   jpa:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
-      ddl_auto: update
+      ddl_auto: create
     show_sql: false
   mail:
     host: smtp.gmail.com
