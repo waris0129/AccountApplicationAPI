@@ -1,6 +1,7 @@
 package com.account.repository;
 
 import com.account.entity.Invoice1;
+import com.account.enums.InvoiceStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -18,6 +19,9 @@ public interface Invoice1Repository extends JpaRepository<Invoice1,Integer> {
 
     @Query("SELECT p FROM Invoice1 p where p.invoiceNo=?1")
     Optional<Invoice1> findByInvoiceNumber(String invoiceNo);
+
+    @Query("SELECT p FROM Invoice1 p where p.invoiceNo=?1 and p.invoiceStatus='APPROVED'")
+    Optional<Invoice1> findByInvoiceNumberApproveStatus(String invoiceNo);
 
     @Query("SELECT p FROM Invoice1 p where p.company.id=?1")
     List<Invoice1> findAllInvoiceByCompanyId(Integer companyId);

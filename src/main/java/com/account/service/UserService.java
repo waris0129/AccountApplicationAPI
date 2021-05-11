@@ -15,7 +15,7 @@ public interface UserService {
     UserDto save(UserDto userDto) throws AccountingApplicationException;
     UserDto update(String email, UserDto userDto) throws UserNotFoundInSystem, AccountingApplicationException;
     UserDto update(UserDto userDto);
-    UserDto getUserById(Integer id);
+    UserDto getUserById(Integer id) throws UserNotFoundInSystem;
     UserDto getUser(String email) throws UserNotFoundInSystem, AccountingApplicationException;
     UserDto deleteUser(String email) throws UserNotFoundInSystem, AccountingApplicationException;
     List<UserDto> getUserList() throws AccountingApplicationException;

@@ -333,4 +333,18 @@ public class Invoice1ServiceImpl implements Invoice1Service {
         return invoiceDTO1List.stream().map(p->mapperUtility.convert(p,new InvoiceDTO1())).collect(Collectors.toList());
     }
 
+
+    @Override
+    public InvoiceDTO1 findByInvoiceNumberApproveStatus(String invoiceNo) throws AccountingApplicationException {
+        Optional<Invoice1> foundInvoice = invoice1Repository.findByInvoiceNumberApproveStatus(invoiceNo);
+
+        if(!foundInvoice.isPresent())
+            throw new AccountingApplicationException("Invoice is not Approved status");
+
+        Invoice1 invoice = foundInvoice.get();
+
+        InvoiceDTO1 invoiceDTO = mapperUtility.convert(invoice, new InvoiceDTO1());
+
+        return invoiceDTO;
+    }
 }

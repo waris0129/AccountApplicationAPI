@@ -30,4 +30,6 @@ public interface Invoice1Service {
     List<InvoiceDTO1> findAllInvoiceByCompanyId_NoSavedStatus(Integer companyId);
     List<InvoiceDTO1> findAllSalesInvoiceByCompanyId_NoSavedStatus(Integer companyId);
     List<InvoiceDTO1> findAllSalesInvoiceByCompanyId_SavedStatus(Integer companyId);
+
+    InvoiceDTO1 findByInvoiceNumberApproveStatus(String invoiceNo) throws AccountingApplicationException;
 }

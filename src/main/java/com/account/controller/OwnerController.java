@@ -104,10 +104,10 @@ public class OwnerController {
 
 
     @GetMapping("/get/admin/{id}")
-    public ResponseEntity<ResponseWrapper> findAdmin(@PathVariable("id") String id,Model model) throws AccountingApplicationException {
+    public ResponseEntity<ResponseWrapper> findAdmin(@PathVariable("id") String id,Model model) throws AccountingApplicationException, UserNotFoundInSystem {
         UserDto dto = userService.getUserById(Integer.parseInt(id));
 
-        return ResponseEntity.status(HttpStatus.OK).body(ResponseWrapper.builder().code(HttpStatus.OK.value()).success(true).message("User is found").data(dto).build());
+        return ResponseEntity.status(HttpStatus.OK).body(ResponseWrapper.builder().code(HttpStatus.OK.value()).success(true).message("Admin is found").data(dto).build());
     }
 
     @PostMapping("/update/admin/{id}")
@@ -115,7 +115,7 @@ public class OwnerController {
 
         UserDto dto = userService.updateById(id,userDto);
 
-        return ResponseEntity.status(HttpStatus.OK).body(ResponseWrapper.builder().code(HttpStatus.OK.value()).success(true).message("User is updated successfully").data(dto).build());
+        return ResponseEntity.status(HttpStatus.OK).body(ResponseWrapper.builder().code(HttpStatus.OK.value()).success(true).message("Admin is updated successfully").data(dto).build());
     }
 
 
@@ -125,7 +125,15 @@ public class OwnerController {
 
         UserDto userDto = userService.deleteUserById(id);
 
-        return ResponseEntity.ok(ResponseWrapper.builder().code(HttpStatus.OK.value()).success(true).message("User is deleted successfully").build());
+        return ResponseEntity.ok(ResponseWrapper.builder().code(HttpStatus.OK.value()).success(true).message("Admin is deleted successfully").build());
+    }
+
+
+    @GetMapping("/all-adminList")
+    public ResponseEntity<ResponseWrapper> getUserList(){
+        List<UserDto> adminDtoList = userService.getAllByRoleAndStatus(UserRole.Admin, CompanyStatus.ACTIVE);
+
+        return ResponseEntity.status(HttpStatus.OK).body(ResponseWrapper.builder().code(HttpStatus.OK.value()).success(true).message("Get All User List successfully").data(adminDtoList).build());
     }
 
 

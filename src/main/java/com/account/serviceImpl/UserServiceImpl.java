@@ -60,11 +60,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto getUserById(Integer id) {
+    public UserDto getUserById(Integer id) throws UserNotFoundInSystem {
 
-        User user = userRepository.findById(id).get();
+        Optional<User> user = userRepository.findById(id);
 
-        return mapperUtility.convert(user,new UserDto());
+        if(!user.isPresent())
+            throw new UserNotFoundInSystem("User not found in system");
+
+        return mapperUtility.convert(user.get(),new UserDto());
     }
 
     @Override

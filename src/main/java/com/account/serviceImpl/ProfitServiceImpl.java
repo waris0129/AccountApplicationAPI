@@ -165,7 +165,7 @@ public class ProfitServiceImpl implements ProfitService {
 
     @Override
     public ProfitDTO saveProfitTransaction(String invoiceNumber) throws AccountingApplicationException {
-        InvoiceDTO1 invoiceDTO1 = invoice1Service.findInvoice(invoiceNumber);
+        InvoiceDTO1 invoiceDTO1 = invoice1Service.findByInvoiceNumberApproveStatus(invoiceNumber);
         invoiceDTO1.setInvoiceStatus(InvoiceStatus.COMPLETE);
         InvoiceDTO1 updateInvoice= invoice1Service.updateInvoice(invoiceNumber,invoiceDTO1);
 

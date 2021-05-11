@@ -5,12 +5,16 @@ import com.account.enums.InvoiceStatus;
 import com.account.enums.InvoiceType;
 import com.account.exceptionHandler.AccountingApplicationException;
 import com.account.exceptionHandler.CompanyNotFoundException;
+import com.account.exceptionHandler.ResponseWrapper;
 import com.account.exceptionHandler.UserNotFoundInSystem;
 import com.account.service.*;
 import org.dom4j.rule.Mode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.repository.query.Param;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,8 +26,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Controller
+@RestController
 @RequestMapping("/invoice")
+@PreAuthorize("hasAnyAuthority({'Employee'})")
 public class InvoiceController {
 
     @Autowired
@@ -44,6 +49,9 @@ public class InvoiceController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private CompanyService companyService;
+
 
     private Integer getLoginCompanyId() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -60,49 +68,56 @@ public class InvoiceController {
         return id;
     }
 
+    private CompanyDTO getCurrentContextCompany() throws CompanyNotFoundException {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        UserDto securityUser  = null;
+        try {
+            securityUser = this.userService.getUser(username);
+        } catch (UserNotFoundInSystem userNotFoundInSystem) {
+            userNotFoundInSystem.printStackTrace();
+        } catch (AccountingApplicationException e) {
+            e.printStackTrace();
+        }
+        Integer id =  securityUser.getCompany().getId();
+
+        CompanyDTO companyDTO= companyService.findById(id);
+
+        return companyDTO;
+    }
+
 
 
 
 
     @GetMapping("/create-invoice")
-    public String getInvoiceObject(Model model){
+    public InvoiceDTO1 getInvoiceObject(Model model) throws CompanyNotFoundException {
+
         InvoiceDTO1 invoiceDTO1 = new InvoiceDTO1();
+        invoiceDTO1.setCompany(getCurrentContextCompany());
 
-        List<VendorDTO> vendorDTOList = vendorService.getAllActiveVendorByCompany(getLoginCompanyId());
-        List<InvoiceType> invoiceTypeList = Arrays.asList(InvoiceType.values());
-        List<InvoiceDTO1> invoiceDTO1List = invoice1Service.findAllInvoiceByCompanyId_NoSavedStatus(getLoginCompanyId());
-        List<InvoiceDTO1> invoiceDTO1List_Purchase= invoiceDTO1List.stream().filter(p->p.getInvoiceType().equals(InvoiceType.PURCHASE)).collect(Collectors.toList());
-        List<InvoiceDTO1> invoiceDTO1List_Sales= invoiceDTO1List.stream().filter(p->p.getInvoiceType().equals(InvoiceType.SALES)).collect(Collectors.toList());
-
-        model.addAttribute("invoice",invoiceDTO1);
-        model.addAttribute("vendors",vendorDTOList);
-        model.addAttribute("invoiceTypes",invoiceTypeList);
-        model.addAttribute("invoiceListPurchase",invoiceDTO1List_Purchase);
-        model.addAttribute("invoiceListSales",invoiceDTO1List_Sales);
-
-        return "invoice/create-invoice";
+        return invoiceDTO1;
     }
 
 
 
 
     @PostMapping("/create-invoice")
-    public String createInvoice(InvoiceDTO1 invoiceDTO1,Model model) throws AccountingApplicationException, UserNotFoundInSystem, CompanyNotFoundException {
+    public ResponseEntity<ResponseWrapper> createInvoice(@RequestParam String vendorName, @RequestParam String invoiceType) throws AccountingApplicationException, UserNotFoundInSystem, CompanyNotFoundException {
 
+        InvoiceDTO1 invoiceDTO = invoice1Service.createNewInvoiceTemplate(vendorName,invoiceType);
 
-        InvoiceDTO1 invoiceDTO = invoice1Service.createNewInvoiceTemplate(invoiceDTO1.getVendor().getCompanyName(),invoiceDTO1.getInvoiceType().getValue());
-
-        return "redirect:/invoice/create-invoice";
+        return ResponseEntity.status(HttpStatus.CREATED).body(ResponseWrapper.builder().code(HttpStatus.CREATED.value()).success(true).message("Invoice is created").data(invoiceDTO).build());
     }
 
 
 
+
     @GetMapping("/delete-invoice/{invoiceNo}")
-    public String deleteInvoice(@PathVariable("invoiceNo") String invoiceNo) throws AccountingApplicationException {
+    public ResponseEntity<ResponseWrapper> deleteInvoice(@PathVariable("invoiceNo") String invoiceNo) throws AccountingApplicationException {
 
         invoice1Service.cancelInvoice(invoiceNo);
 
-        return "redirect:/invoice/create-invoice";
+        return ResponseEntity.status(HttpStatus.OK).body(ResponseWrapper.builder().code(HttpStatus.OK.value()).success(true).message("Invoice: "+invoiceNo+" is deleted").build());
     }
 
 
@@ -125,27 +140,16 @@ public class InvoiceController {
     }
 
     @GetMapping("/review-invoice")
-    public String reviewInvoice(@Param("invoiceNo")String invoiceNo,Model model) throws AccountingApplicationException {
+    public ResponseEntity<ResponseWrapper> reviewInvoice(@RequestParam String invoiceNo,Model model) throws AccountingApplicationException {
 
         InvoiceDTO1 invoiceDTO1 = invoice1Service.findInvoice(invoiceNo);
 
-
-        PurchaseInvoiceDTO purchaseInvoiceDTO = new PurchaseInvoiceDTO();
-        List<InvoiceDTO1> purchaseInvoiceNoList = invoice1Service.findAllPurchaseInvoiceByCompanyId_NoSavedStatus(getLoginCompanyId());
-        List<ProductNameDTO> productNameDTOList = productNameService.getAllProductNameDTOByCompany(getLoginCompanyId());
-
-
-        model.addAttribute("purchaseInvoiceNoList",purchaseInvoiceNoList);
-        model.addAttribute("productNameList",productNameDTOList);
-        model.addAttribute("purchaseInvoiceDTO",purchaseInvoiceDTO);
-        model.addAttribute("selectedInvoice",invoiceDTO1);
-
-        return "redirect:/invoice/purchase-invoice";
+        return ResponseEntity.status(HttpStatus.OK).body(ResponseWrapper.builder().code(HttpStatus.OK.value()).success(true).message("Invoice is found").data(invoiceDTO1).build());
     }
 
 
     @PostMapping("/add-item-purchase")
-    public String AddItemPurchase(@ModelAttribute("purchaseInvoiceDTO") PurchaseInvoiceDTO purchaseInvoiceDTO,Model model) throws CompanyNotFoundException, AccountingApplicationException {
+    public ResponseEntity<ResponseWrapper> AddItemPurchase(@RequestBody PurchaseInvoiceDTO purchaseInvoiceDTO,Model model) throws CompanyNotFoundException, AccountingApplicationException {
 
         String invoiceNumber = purchaseInvoiceDTO.getInvoiceNumber();
         String productDTO   =  purchaseInvoiceDTO.getProductNameDTO();
@@ -163,23 +167,14 @@ public class InvoiceController {
         else
             invoiceDTO1 = invoice1Service.findInvoice(invoiceNumber);
 
-        PurchaseInvoiceDTO purchaseInvoiceDTO2 = new PurchaseInvoiceDTO();
-        purchaseInvoiceDTO2.setInvoiceNumber(invoiceNumber);
-
-        List<ProductNameDTO> productNameDTOList = productNameService.getAllProductNameDTOByCompany(getLoginCompanyId());
-        List<ProductDTO> productList = invoiceDTO1.getProductList();
-
-        model.addAttribute("productNameList",productNameDTOList);
-        model.addAttribute("purchaseInvoiceDTO",purchaseInvoiceDTO2);
-        model.addAttribute("selectInvoice",invoiceDTO1);
-        model.addAttribute("productList",productList);
-
-        return "invoice/add-item-purchase";
+        return ResponseEntity.status(HttpStatus.OK).body(ResponseWrapper.builder().code(HttpStatus.OK.value()).success(true).message("Item is added").data(invoiceDTO1).build());
     }
+
+
 
     private static String invoiceNumberFromOutside = null;
     @GetMapping("/delete-add-item")
-    public String deleteAddItem(@Param("inventoryName") String inventoryName, @Param("invoiceNo") String invoiceNo, Model model) throws AccountingApplicationException, CompanyNotFoundException {
+    public ResponseEntity<ResponseWrapper> deleteAddItem(@RequestParam String inventoryName, @RequestParam String invoiceNo, Model model) throws AccountingApplicationException, CompanyNotFoundException {
 
         productService.deleteProduct(invoiceNo,inventoryName);
 
@@ -189,7 +184,8 @@ public class InvoiceController {
         purchaseInvoiceDTO.setInvoiceNumber(invoiceNo);
 
         invoiceNumberFromOutside = invoiceNo;
-        return "redirect:/invoice/add-item-purchase";
+
+        return ResponseEntity.status(HttpStatus.OK).body(ResponseWrapper.builder().code(HttpStatus.OK.value()).success(true).message("Item is added").data(invoiceDTO1).build());
     }
 
     @GetMapping("/add-item-purchase")
@@ -231,15 +227,13 @@ public class InvoiceController {
     }
 
 
-
+    @PreAuthorize("hasAnyAuthority({'Manager'})")
     @GetMapping("/update-invoice-status")
-    public String updateInvoiceStatus(@Param("invoiceNo")String invoiceNo, @Param("status") String status) throws AccountingApplicationException {
+    public ResponseEntity<ResponseWrapper> updateInvoiceStatus(@RequestParam String invoiceNo, @RequestParam String status) throws AccountingApplicationException {
 
         InvoiceDTO1 invoiceDTO1 = invoice1Service.updateInvoiceStatus(invoiceNo,status);
 
-        String view = invoiceDTO1.getInvoiceType().equals(InvoiceType.PURCHASE)?"redirect:/invoice/review-purchase":"redirect:/invoice/review-sales";
-
-        return view;
+        return ResponseEntity.status(HttpStatus.OK).body(ResponseWrapper.builder().code(HttpStatus.OK.value()).success(true).message("Invoice: "+invoiceNo+" Updated: "+status).data(invoiceDTO1).build());
     }
 
 
@@ -287,23 +281,20 @@ public class InvoiceController {
 
     public static int soldQTY;
     @PostMapping("/add-item-sales")
-    public String addItemSales(@ModelAttribute("salesInvoiceDTO") SalesInvoiceDTO salesInvoiceDTO, Model model){
+    public ResponseEntity<ResponseWrapper> addItemSales(@RequestBody SalesInvoiceDTO salesInvoiceDTO, Model model) throws AccountingApplicationException {
 
         String invoiceNumber = salesInvoiceDTO.getInvoiceNumber();
         String productDTO = salesInvoiceDTO.getProductNameDTO();
         Integer price = salesInvoiceDTO.getPrice();
         Integer qty = salesInvoiceDTO.getQty();
 
-        InvoiceDTO1 invoiceDTO1 = null;
-        List<ProductDTO> productDTOList = null;
-        try {
-            invoiceDTO1 = invoice1Service.findInvoice(invoiceNumber);
+        InvoiceDTO1 invoiceDTO1 = invoiceDTO1 = invoice1Service.findInvoice(invoiceNumber);
+        List<ProductDTO> productDTOList = profitService.updateInventoryByFIFO(invoiceNumber,productDTO,qty,price);
             if(invoiceDTO1.getTotalQTY()==0)
                 soldQTY=0;
-            productDTOList = profitService.updateInventoryByFIFO(invoiceNumber,productDTO,qty,price);
-        } catch (AccountingApplicationException e) {
-            model.addAttribute("errorMessage",e.getMessage());
-        }
+
+            invoiceDTO1.setProductList(productDTOList);
+
 
         SalesInvoiceDTO salesInvoiceDTO1 = new SalesInvoiceDTO();
         salesInvoiceDTO1.setInvoiceNumber(invoiceNumber);
@@ -319,7 +310,7 @@ public class InvoiceController {
         model.addAttribute("salesInvoice",invoiceDTO1);
         model.addAttribute("qty",soldQTY);
 
-        return "invoice/add-item-sales";
+        return ResponseEntity.status(HttpStatus.OK).body(ResponseWrapper.builder().code(HttpStatus.OK.value()).success(true).message("Sales item is added").data(invoiceDTO1).build());
     }
 
 

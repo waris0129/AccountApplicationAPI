@@ -10,6 +10,7 @@ import com.account.service.Invoice1Service;
 import com.account.service.ProfitService;
 import com.account.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -63,12 +64,12 @@ public class ProfitController {
         return "profit/profit";
     }
 
-    @PostMapping("/save")
-    public String saveProfit(InvoiceDTO1 invoiceDTO1) throws AccountingApplicationException {
+    @PostMapping("/save/{invoiceNo}")
+    public ResponseEntity<ResponseWrapper> saveProfit(@PathVariable("invoiceNo") String invoiceNo) throws AccountingApplicationException {
 
-        ProfitDTO profitDTO = profitService.saveProfitTransaction(invoiceDTO1.getInvoiceNo());
+        ProfitDTO profitDTO = profitService.saveProfitTransaction(invoiceNo);
 
-        return "redirect:/profit";
+        return ResponseEntity.status(HttpStatus.OK).body(ResponseWrapper.builder().code(HttpStatus.OK.value()).success(true).message("Profit is calculated").data(profitDTO).build());
     }
 
     @GetMapping("/print/invoiceNo/{invoiceNo}")
